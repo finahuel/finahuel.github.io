@@ -4,539 +4,553 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Ice Cream Rolls — Pedidos</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
 <style>
-  :root{
-    --bg:#e7f6fa;           /* celeste suave desde logo */
-    --accent:#f46da0;       /* rosa fresa del logo */
-    --accent-2:#ffd66b;     /* amarillo suave */
-    --card:#ffffff;
-    --muted:#6b6b6b;
-    --shadow: 0 10px 30px rgba(12,12,12,0.06);
-    --pill-radius:14px;
-  }
-  *{box-sizing:border-box}
-  body{
-    font-family:Inter,system-ui,-apple-system,"Helvetica Neue",Arial;
-    margin:0;
-    background:linear-gradient(180deg,var(--bg) 0%, #ffffff 120%);
-    -webkit-font-smoothing:antialiased;
-    color:#111;
-  }
+    :root{
+        --bg:#e7f6fa;
+        --accent:#f46da0;
+        --accent-2:#ffd66b;
+        --card:#ffffff;
+        --muted:#6b6b6b;
+        --shadow: 0 10px 30px rgba(12,12,12,0.06);
+    }
 
-  /* ---------- Layout ---------- */
-  .wrap{max-width:980px;margin:0 auto;padding:18px;}
-  header{display:flex;align-items:center;gap:14px;padding:10px 6px}
-  .brand{
-    display:flex;align-items:center;gap:12px;width:100%;
-  }
-  .logo{
-    width:72px;height:72px;border-radius:14px;flex:0 0 72px;overflow:hidden;box-shadow:var(--shadow);
-    background:linear-gradient(135deg, rgba(255,255,255,0.6), rgba(255,255,255,0.2));
-    display:flex;align-items:center;justify-content:center;
-  }
-  .logo img{width:100%;height:100%;object-fit:cover;display:block}
-  .brand-text{display:flex;flex-direction:column;gap:2px}
-  h1{font-size:18px;margin:0;font-weight:700}
-  .lead{font-size:13px;color:var(--muted);margin:0}
+    *{ box-sizing:border-box; }
 
-  /* ---------- Main layout ---------- */
-  .layout{display:grid;grid-template-columns:1fr 380px;gap:18px;padding:8px}
-  @media(max-width:980px){ .layout{grid-template-columns:1fr;padding:12px} }
+    /* --- FIX: evitar desbordes horizontales --- */
+    html, body{ overflow-x:hidden; }
 
-  .card{
-    background:var(--card);padding:14px;border-radius:16px;box-shadow:var(--shadow);
-  }
+    body{
+        font-family:Inter,system-ui,"Helvetica Neue",Arial;
+        margin:0;
+        background:linear-gradient(180deg,var(--bg) 0%, #ffffff 120%);
+        -webkit-font-smoothing:antialiased;
+    }
 
-  /* ---------- Product grid ---------- */
-  .products{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
-  .product{border-radius:12px;overflow:hidden;background:linear-gradient(#fff,#fffefc);display:flex;flex-direction:column}
-  .product img{width:100%;height:150px;object-fit:cover;display:block}
-  .product-body{padding:12px;display:flex;flex-direction:column;gap:8px}
-  .product-title{font-weight:700;font-size:15px}
-  .price{font-weight:800;color:var(--accent)}
-  .product-foot{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
-  .note{font-size:12px;color:var(--muted)}
+    .wrap{max-width:980px;margin:0 auto;padding:18px;}
+    header{display:flex;align-items:center;gap:14px;padding:10px 6px}
+    .brand{display:flex;align-items:center;gap:12px;width:100%;}
+    .logo{
+        width:72px;height:72px;border-radius:14px;flex:0 0 72px;overflow:hidden;box-shadow:var(--shadow);
+        display:flex;align-items:center;justify-content:center;
+    }
+    .logo img{width:100%;height:100%;object-fit:cover;}
 
-  .btn{padding:8px 12px;border-radius:10px;border:0;cursor:pointer;font-weight:700}
-  .btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white;box-shadow:0 6px 16px rgba(244,109,160,0.14)}
-  .btn-ghost{background:transparent;border:1px solid #eee;color:inherit}
+    h1{margin:0;font-size:18px;font-weight:700}
+    .lead{font-size:13px;color:var(--muted);margin:0}
 
-  /* ---------- Modal ---------- */
-  #modal{position:fixed;left:0;top:0;width:100%;height:100%;display:none;align-items:center;justify-content:center;padding:18px;z-index:80}
-  #modal .sheet{width:100%;max-width:760px;background:var(--card);border-radius:14px;padding:14px;box-shadow:var(--shadow);max-height:90vh;overflow:auto}
-  #modal img{width:140px;height:110px;object-fit:cover;border-radius:8px}
+    .layout{display:grid;grid-template-columns:1fr 380px;gap:18px;padding:8px}
+    @media(max-width:980px){
+        .layout{grid-template-columns:1fr;padding:12px}
+    }
 
-  .topping-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
-  .chip{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:12px;border:1px solid #eee;background:#fff;cursor:pointer}
-  .chip input{margin-right:6px}
-  .chip.active{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;border-color:transparent}
+    .card{
+        background:#fff;padding:14px;border-radius:16px;
+        box-shadow:var(--shadow);
+    }
 
-  .sauce-list{display:flex;gap:8px;margin-top:8px}
-  .sauce{padding:8px 12px;border-radius:12px;border:1px solid #eee;cursor:pointer;background:#fff}
-  .sauce.active{background:var(--accent);color:white;border-color:var(--accent)}
+    /* Productos */
+    .products{
+        display:grid;
+        grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+        gap:12px;
+    }
 
-  /* ---------- Cart (right) ---------- */
-  .cart{position:sticky;top:18px;display:flex;flex-direction:column;gap:12px}
-  .cart-list{max-height:360px;overflow:auto;padding-right:6px}
-  .cart-row{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid #f4f4f4}
-  .qty{display:inline-flex;align-items:center;gap:6px}
-  .small{font-size:13px;color:var(--muted)}
-  .subtotal-row{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+    .product{border-radius:12px;overflow:hidden;background:#fffefc}
+    .product img{width:100%;height:150px;object-fit:cover;}
+    .product-body{padding:12px;display:flex;flex-direction:column;gap:8px}
+    .product-title{font-weight:700;font-size:15px}
+    .price{font-weight:800;color:var(--accent)}
 
-  /* ---------- Fixed bottom bar ---------- */
-  .fixed-footer{
-    position:fixed;left:0;right:0;bottom:0;background:linear-gradient(180deg,#ffffff, #fafafa);padding:12px;border-top:1px solid rgba(0,0,0,0.06);box-shadow:0 -10px 30px rgba(12,12,12,0.06);z-index:90;
-    display:flex;align-items:center;gap:12px;justify-content:space-between;padding-left:20px;padding-right:20px;
-  }
-  .fixed-total{font-weight:800;font-size:18px;color:#111}
-  .fixed-button{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white;padding:12px 16px;border-radius:12px;border:0;font-weight:800;box-shadow:0 8px 22px rgba(244,109,160,0.18);cursor:pointer}
-  .fixed-button:active{opacity:0.95}
+    .btn{padding:8px 12px;border-radius:10px;border:0;cursor:pointer;font-weight:700}
+    .btn-primary{
+        background:linear-gradient(90deg,var(--accent),var(--accent-2));
+        color:#fff;
+    }
+    .btn-ghost{
+        background:transparent;border:1px solid #ddd;
+    }
 
-  /* responsive tweaks */
-  @media (max-width:560px){
-    .layout{grid-template-columns:1fr;gap:12px}
-    header{padding-left:10px;padding-right:10px}
-    .wrap{padding:12px}
-    .product img{height:140px}
-    .cart{position:relative;top:auto}
-    .cart-list{max-height:320px}
-    .fixed-footer{padding-left:12px;padding-right:12px}
-  }
+    /* Modal */
+    #modal{
+        position:fixed;left:0;top:0;width:100%;height:100%;
+        display:none;align-items:center;justify-content:center;
+        padding:18px;z-index:80;
+    }
+
+    #modal .sheet{
+        width:100%;max-width:760px;
+        background:#fff;border-radius:14px;
+        padding:14px;box-shadow:var(--shadow);
+        max-height:90vh;overflow:auto;
+        -webkit-overflow-scrolling:touch;
+    }
+
+    #modal img{
+        width:140px;height:110px;object-fit:cover;border-radius:8px
+    }
+
+    /* --- FIX: modal full-screen en mobile --- */
+    @media(max-width:560px){
+        #modal .sheet{
+            width:100%;height:100%;max-height:none;
+            border-radius:0;padding:16px;
+        }
+        #modal .sheet > div{flex-wrap:wrap;}
+        #modal img{
+            width:100%;height:auto;max-height:180px;margin-bottom:12px;
+        }
+    }
+
+    /* Toppings */
+    .topping-grid{
+        display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;
+    }
+
+    .chip{
+        padding:8px 10px;border-radius:12px;
+        border:1px solid #eee;cursor:pointer;
+        background:#fff;
+    }
+    .chip.active{
+        background:linear-gradient(90deg,var(--accent),var(--accent-2));
+        color:#fff;border-color:transparent;
+    }
+
+    /* Salsas */
+    .sauce-list{display:flex;gap:8px;margin-top:8px;}
+
+    /* --- FIX: salsas no se salen en mobile --- */
+    @media(max-width:560px){
+        .sauce-list{flex-wrap:wrap;}
+    }
+
+    .sauce{
+        padding:8px 12px;border-radius:12px;
+        border:1px solid #eee;cursor:pointer;background:#fff;
+    }
+    .sauce.active{
+        background:var(--accent);color:white;
+    }
+
+    /* Carrito */
+    .cart{display:flex;flex-direction:column;gap:12px}
+    .cart-list{max-height:320px;overflow:auto;padding-right:6px}
+
+    .cart-row{
+        display:flex;justify-content:space-between;gap:10px;
+        padding:10px 0;border-bottom:1px solid #eee;
+    }
+
+    /* Footer fijo */
+    .fixed-footer{
+        position:fixed;left:0;right:0;bottom:0;
+        background:#fff;padding:12px;border-top:1px solid #eee;
+        display:flex;justify-content:space-between;align-items:center;
+        z-index:90;
+    }
+
+    .fixed-total{font-weight:800;font-size:18px}
+    .fixed-button{
+        background:linear-gradient(90deg,var(--accent),var(--accent-2));
+        color:#fff;padding:12px 16px;border-radius:12px;border:0;
+        font-weight:800;cursor:pointer;
+    }
+
+    /* --- FIX: botón + precio hacen wrap cuando no entra --- */
+    @media(max-width:560px){
+        .actions-row{
+            flex-wrap:wrap;
+            width:100%;
+        }
+        .actions-row button{
+            width:100%;
+        }
+    }
+
 </style>
 </head>
+
 <body>
 
 <div class="wrap">
-  <header>
+<header>
     <div class="brand">
-      <div class="logo">
-        <!-- LOGO: si podés reemplaza LOGO_URL por el link directo a la imagen (termina en .jpg/.png) -->
-        <a href="https://i.imgur.com/7eiCAM6.jpeg" target="_blank" rel="noopener">
-          <img id="brandLogo" src="https://i.imgur.com/7eiCAM6.jpeg" alt="logo">
-        </a>
-      </div>
-      <div class="brand-text">
-        <h1>Ice Cream Rolls — Pedidos</h1>
-        <p class="lead">Artesanales • Personalizá tu roll • Pedí al instante</p>
-      </div>
+        <div class="logo">
+            <img src="https://i.imgur.com/7eiCAM6.jpeg">
+        </div>
+        <div>
+            <h1>Ice Cream Rolls — Pedidos</h1>
+            <p class="lead">Artesanales • Personalizá tu roll • Pedí al instante</p>
+        </div>
     </div>
-  </header>
+</header>
+<div class="layout">
 
-  <div class="layout">
-    <!-- LEFT: builder -->
-    <main>
-      <div class="card builder">
-        <h2 style="margin:0 0 8px 0">Elige y personalizá</h2>
-        <p class="small" style="margin-bottom:12px">Seleccioná sabor, salsas y toppings. Luego agregá al carrito (pueden existir varias líneas del mismo sabor).</p>
+    <!-- Sección de productos -->
+    <div class="card">
+        <h2>Elegí tus sabores</h2>
+        <p class="lead" style="font-size:13px">Podés personalizar cada roll y agregar varios.</p>
+
+        <div style="height:10px"></div>
 
         <div id="productsArea" class="products"></div>
+    </div>
 
-        <div style="margin-top:12px" class="card">
-          <h4 style="margin:0 0 6px 0">Instrucciones</h4>
-          <p class="small" style="margin:0">Toca "Agregar" en el producto, configura cantidad, toppings y salsa en el panel que aparece y luego "Agregar al carrito".</p>
+
+    <!-- Carrito -->
+    <div class="card">
+        <h2>Tu pedido</h2>
+
+        <div class="cart">
+            <div id="cartList" class="cart-list"></div>
+
+            <div class="subtotal-row">
+                <div>Total</div>
+                <div id="total" style="font-weight:800">$0</div>
+            </div>
+
+            <!-- Formulario del cliente -->
+            <div style="margin-top:12px">
+                <label class="lead" style="font-size:13px">Nombre</label>
+                <input id="custName" type="text" placeholder="Tu nombre" style="width:100%;margin-top:4px">
+
+                <label class="lead" style="font-size:13px;margin-top:10px;display:block">Teléfono</label>
+                <input id="custPhone" type="text" placeholder="Ej: 3764xxxxxx" style="width:100%;margin-top:4px">
+
+                <label class="lead" style="font-size:13px;margin-top:10px;display:block">Entrega</label>
+                <select id="deliveryMode" style="width:100%;margin-top:4px">
+                    <option value="pickup">Retiro en local</option>
+                    <option value="delivery">Envío a domicilio</option>
+                </select>
+
+                <div id="addressBlock" style="display:none;margin-top:8px">
+                    <label class="lead" style="font-size:13px">Dirección</label>
+                    <input id="custAddress" type="text" placeholder="Calle, número..." style="width:100%;margin-top:4px">
+                </div>
+
+                <label class="lead" style="font-size:13px;margin-top:10px;display:block">Método de pago</label>
+                <select id="paymentMethod" style="width:100%;margin-top:4px">
+                    <option value="cash">Efectivo</option>
+                    <option value="transfer">Transferencia</option>
+                </select>
+
+                <label class="lead" style="font-size:13px;margin-top:10px;display:block">Notas</label>
+                <textarea id="custNotes" rows="2" style="width:100%;margin-top:4px" placeholder="Opcional"></textarea>
+            </div>
         </div>
-      </div>
+    </div>
 
-      <div style="height:12px"></div>
+</div><!-- END layout -->
 
-      <div class="card">
-        <h3 style="margin:0 0 8px 0">Información</h3>
-        <p class="small" style="margin:0">Horario: 11:00 — 22:00 • Retiro o Envío (según zona) • Pago: Efectivo o Transferencia</p>
-      </div>
-    </main>
 
-    <!-- RIGHT: cart -->
-    <aside class="card cart">
-      <div>
-        <h3 style="margin:0 0 8px 0">Tu pedido</h3>
-        <div class="cart-list" id="cartList"><div class="small">No hay items todavía</div></div>
-      </div>
+</div><!-- END wrap -->
 
-      <div class="card" style="padding:12px">
-        <h4 style="margin:0 0 8px 0">Datos del cliente</h4>
-        <div style="display:grid;gap:8px">
-          <div><label class="small">Nombre</label><input id="custName" type="text" placeholder="Tu nombre"></div>
-          <div><label class="small">Teléfono</label><input id="custPhone" type="tel" placeholder="Ej: 3764xxxxxx"></div>
-          <div><label class="small">Retiro o Envío</label>
-            <select id="deliveryMode" aria-label="Retiro o Envío">
-              <option value="pickup">Retiro en local</option>
-              <option value="delivery">Envío a domicilio</option>
-            </select>
-          </div>
-          <div id="addressBlock" style="display:none">
-            <label class="small">Dirección de entrega</label>
-            <input id="custAddress" type="text" placeholder="Calle, número, localidad">
-          </div>
-          <div><label class="small">Método de pago</label>
-            <select id="paymentMethod" aria-label="Método de pago">
-              <option value="cash">Efectivo</option>
-              <option value="transfer">Transferencia</option>
-            </select>
-          </div>
-          <div><label class="small">Notas (opcional)</label>
-            <textarea id="custNotes" rows="2" placeholder="Ej: sin azúcar / venir a tal hora"></textarea>
-          </div>
-        </div>
-      </div>
 
-      <div class="card" style="padding:12px">
-        <div class="subtotal-row">
-          <div class="small">Subtotal</div>
-          <div id="subtotal" style="font-weight:800">$0</div>
-        </div>
-        <div class="subtotal-row" style="margin-top:6px">
-          <div class="small">Total</div>
-          <div id="total" style="font-weight:900;color:var(--accent);">$0</div>
-        </div>
-
-        <div style="display:flex;gap:8px;margin-top:12px">
-          <button id="clearCartBtn" class="btn btn-ghost" style="flex:1">Vaciar</button>
-        </div>
-        <div style="margin-top:10px" class="small">Al enviar se abrirá WhatsApp con el pedido listo al número: +54 9 3764 102637</div>
-      </div>
-    </aside>
-  </div>
+<!-- Footer fijo -->
+<div class="fixed-footer">
+    <div class="fixed-total">
+        Total: <span id="fixedTotal">$0</span>
+    </div>
+    <button class="fixed-button" id="fixedSendBtn">Enviar pedido</button>
 </div>
 
-<!-- Modal / Panel -->
-<div id="modal" aria-hidden="true">
-  <div class="sheet" role="dialog" aria-modal="true">
-    <div style="display:flex;gap:12px;align-items:flex-start">
-      <img id="modalImg" src="" alt="">
-      <div style="flex:1">
-        <h3 id="modalTitle" style="margin:0 0 6px 0"></h3>
-        <div class="small" id="modalBasePrice"></div>
 
-        <div style="margin-top:10px">
-          <label class="small">Cantidad</label>
-          <input id="modalQty" type="number" min="1" value="1" style="width:120px">
+<!-- Modal -->
+<div id="modal">
+    <div class="sheet">
+
+        <div style="display:flex;gap:14px;align-items:center;">
+            <img id="modalImg" src="">
+            <div>
+                <h2 id="modalTitle" style="margin:0;font-size:18px;font-weight:700"></h2>
+                <div id="modalBasePrice" class="lead" style="font-size:13px"></div>
+            </div>
         </div>
 
-        <div style="margin-top:10px">
-          <label class="small">Toppings</label>
-          <div id="modalToppings" class="topping-grid"></div>
-          <div class="small" style="margin-top:8px;color:var(--muted)">Primer topping gratis (se calcula automáticamente)</div>
+        <h3 style="margin-top:18px">Toppings</h3>
+        <div id="modalToppings" class="topping-grid"></div>
+        <div class="lead" style="font-size:12px;color:#777;margin-top:4px">
+            El primer topping es gratis
         </div>
 
-        <div style="margin-top:10px">
-          <label class="small">Salsa</label>
-          <div id="modalSauces" class="sauce-list">
+        <h3 style="margin-top:18px">Salsas</h3>
+        <div id="modalSauces" class="sauce-list">
             <div class="sauce" data-s="Chocolate">Chocolate</div>
             <div class="sauce" data-s="Dulce de leche">Dulce de leche</div>
             <div class="sauce" data-s="Frutilla">Frutilla</div>
-          </div>
         </div>
 
-        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px;align-items:center">
-          <div id="modalLinePrice" class="small" style="font-weight:800">$0</div>
-          <button id="addToCartBtn" class="btn btn-primary">Agregar al carrito</button>
-          <button id="closeModal" class="btn btn-ghost">Cancelar</button>
+        <h3 style="margin-top:18px">Cantidad</h3>
+        <input id="modalQty" type="number" min="1" value="1" style="width:120px">
+
+        <!-- FIX aplicado: actions-row -->
+        <div class="actions-row" style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px;align-items:center">
+            <div id="modalLinePrice" style="font-weight:700;color:var(--accent);">$0</div>
+            <button id="addToCartBtn" class="btn btn-primary">Agregar al carrito</button>
+            <button class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
         </div>
 
-      </div>
     </div>
-  </div>
 </div>
 
-<!-- FIXED FOOTER -->
-<div class="fixed-footer" role="region" aria-label="Enviar pedido">
-  <div class="fixed-total">Total: <span id="fixedTotal">$0</span></div>
-  <button class="fixed-button" id="fixedSendBtn">Enviar pedido</button>
-</div>
+
+
+<!-- ======================= -->
+<!--        JAVASCRIPT       -->
+<!-- ======================= -->
 
 <script>
-/* ========== CONFIG ========== */
-const PHONE = "5493764102637"; // número destino WhatsApp
+/* CONFIG */
+const PHONE = "5493764102637";
 const BASE_PRICE_DEFAULT = 2500;
 const TOPPING_EXTRA_PRICE = 300;
 
-const LOGO_URL = "https://i.imgur.com/7eiCAM6.jpeg"; // Si podés, reemplazá por el enlace directo de la imagen (.jpg/.png)
-
-/* Productos (mismo img para todos por ahora) */
+/* Productos (con misma imagen) */
 const flavors = [
-  { id:"oreo", name:"Oreo", price:2500, img:"https://images.unsplash.com/photo-1505250469679-203ad9ced0cb?q=80&w=900&auto=format&fit=crop&ixlib=rb-4.0.3&s=example" },
-  { id:"choco", name:"Chocolate", price:2500, img:"https://images.unsplash.com/photo-1604908177522-61d4f14a3f18?q=80&w=900&auto=format&fit=crop&ixlib=rb-4.0.3&s=example" },
-  { id:"frutilla", name:"Frutilla", price:2500, img:"https://images.unsplash.com/photo-1497534446932-c925b458314e?q=80&w=900&auto=format&fit=crop&ixlib=rb-4.0.3&s=example" },
-  { id:"chocotorta", name:"Chocotorta", price:2500, img:"https://images.unsplash.com/photo-1606312619344-7b26f0f1f9e6?q=80&w=900&auto=format&fit=crop&ixlib=rb-4.0.3&s=example" },
-  { id:"tiramisu", name:"Tiramisu", price:2500, img:"https://images.unsplash.com/photo-1529655683826-aba9b3e77383?q=80&w=900&auto=format&fit=crop&ixlib=rb-4.0.3&s=example" }
+  { id:"oreo", name:"Oreo", price:2500, img:"https://i.imgur.com/7eiCAM6.jpeg" },
+  { id:"choco", name:"Chocolate", price:2500, img:"https://i.imgur.com/7eiCAM6.jpeg" },
+  { id:"fruit", name:"Frutilla", price:2500, img:"https://i.imgur.com/7eiCAM6.jpeg" },
+  { id:"chocot", name:"Chocotorta", price:2500, img:"https://i.imgur.com/7eiCAM6.jpeg" },
+  { id:"tira", name:"Tiramisu", price:2500, img:"https://i.imgur.com/7eiCAM6.jpeg" }
 ];
 
 const toppings = ["Maní","Chips de colores","Chips de chocolate","Oreo","Rocklets","Coco rallado"];
 
-let cart = []; // cada item: {id, flavorId, flavorName, unitPrice, qty, toppings:[], sauce}
+let cart = [];
+let editingItemId = null;
+let currentFlavor = null;
 
-/* ---------- Init brand logo if available ---------- */
-document.addEventListener('DOMContentLoaded', () => {
-  const logo = document.getElementById('brandLogo');
-  if (logo && LOGO_URL) logo.src = LOGO_URL;
-});
 
-/* ====== Helpers ====== */
-function fmt(n){ return "$" + Number(n).toLocaleString('es-AR'); }
-function $$(sel, ctx=document){ return Array.from(ctx.querySelectorAll(sel)); }
-function $(sel){ return document.querySelector(sel); }
-function createEl(tag, cls){ const e = document.createElement(tag); if(cls) e.className = cls; return e; }
+/* Helpers */
+function $(s){ return document.querySelector(s); }
+function $$(s){ return document.querySelectorAll(s); }
+function fmt(n){ return "$" + Number(n).toLocaleString("es-AR"); }
 
-/* ====== Render products ====== */
+
+/* Render productos */
 function renderProducts(){
-  const area = $('#productsArea');
-  area.innerHTML = '';
-  flavors.forEach(f=>{
-    const box = createEl('div', 'product card');
-    box.innerHTML = `
-      <img src="${f.img}" alt="${f.name}">
-      <div class="product-body">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <div>
-            <div class="product-title">${f.name}</div>
-            <div class="small">Roll artesanal</div>
-          </div>
-          <div class="price">${fmt(f.price)}</div>
-        </div>
-        <div class="product-foot">
-          <div class="note small">Primer topping gratis</div>
-          <div><button class="btn btn-primary" data-flavor="${f.id}">Agregar</button></div>
-        </div>
-      </div>
-    `;
-    area.appendChild(box);
-  });
-
-  // attach events
-  $$('.product .btn-primary').forEach(btn=>{
-    btn.addEventListener('click', (e)=>{
-      const id = e.currentTarget.dataset.flavor;
-      openModal(id);
+    const area = $("#productsArea");
+    area.innerHTML = "";
+    flavors.forEach(f=>{
+        const box = document.createElement("div");
+        box.className = "product";
+        box.innerHTML = `
+            <img src="${f.img}">
+            <div class="product-body">
+                <div class="product-title">${f.name}</div>
+                <div class="product-foot" style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
+                    <div class="price">${fmt(f.price)}</div>
+                    <button class="btn btn-primary" onclick="openModal('${f.id}','${f.name}')">Armar</button>
+                </div>
+            </div>
+        `;
+        area.appendChild(box);
     });
-  });
 }
 
-/* ====== Modal (customize item) ====== */
-let currentFlavor = null;
-function openModal(flavorId){
-  currentFlavor = flavors.find(f=>f.id===flavorId);
-  $('#modalImg').src = currentFlavor.img;
-  $('#modalTitle').textContent = currentFlavor.name;
-  $('#modalBasePrice').textContent = "Base: " + fmt(currentFlavor.price);
-  $('#modalQty').value = 1;
 
-  // toppings
-  const tcont = $('#modalToppings');
-  tcont.innerHTML = '';
-  toppings.forEach(t=>{
-    const lbl = createEl('label','chip');
-    lbl.innerHTML = `<input type="checkbox" value="${t}"> ${t}`;
-    lbl.querySelector('input').addEventListener('change', updateModalPrice);
-    tcont.appendChild(lbl);
-  });
+/* Modal */
+function openModal(id,name){
+    editingItemId = null;
+    currentFlavor = flavors.find(f=>f.id===id);
 
-  // sauces reset
-  $$('#modalSauces .sauce').forEach(s => { s.classList.remove('active'); s.onclick = ()=> {
-      $$('#modalSauces .sauce').forEach(x=>x.classList.remove('active'));
-      s.classList.add('active');
-      updateModalPrice();
-  }});
+    $("#modalTitle").textContent = name;
+    $("#modalImg").src = currentFlavor.img;
+    $("#modalBasePrice").textContent = "Base: " + fmt(currentFlavor.price);
+    $("#modalQty").value = 1;
 
-  updateModalPrice();
-  $('#modal').style.display = 'flex';
-  $('#modal').setAttribute('aria-hidden','false');
-  document.body.style.overflow = 'hidden';
+    // toppings
+    const t = $("#modalToppings");
+    t.innerHTML = "";
+    toppings.forEach(tp=>{
+        const el = document.createElement("label");
+        el.className="chip";
+        el.innerHTML = `<input type="checkbox" value="${tp}"> ${tp}`;
+        el.querySelector("input").addEventListener("change", updateModalPrice);
+        t.appendChild(el);
+    });
+
+    // sauces
+    $("#modalSauces").querySelectorAll(".sauce").forEach(s=>{
+        s.classList.remove("active");
+        s.onclick = ()=>{
+            $("#modalSauces").querySelectorAll(".sauce").forEach(x=>x.classList.remove("active"));
+            s.classList.add("active");
+            updateModalPrice();
+        }
+    });
+
+    updateModalPrice();
+
+    $("#modal").style.display="flex";
+    document.body.style.overflow="hidden";
 }
 
 function closeModal(){
-  $('#modal').style.display = 'none';
-  $('#modal').setAttribute('aria-hidden','true');
-  document.body.style.overflow = '';
+    $("#modal").style.display="none";
+    document.body.style.overflow="auto";
 }
 
 function updateModalPrice(){
-  const qty = Math.max(1, parseInt($('#modalQty').value || '1', 10));
-  const checked = $$('#modalToppings input:checked').map(i=>i.value);
-  const extraPerUnit = Math.max(0, checked.length - 1) * TOPPING_EXTRA_PRICE;
-  const unitTotal = currentFlavor.price + extraPerUnit;
-  $('#modalLinePrice').textContent = fmt(unitTotal * qty);
+    const qty = Math.max(1, parseInt($("#modalQty").value||"1"));
+    const checked = [...$("#modalToppings").querySelectorAll("input:checked")].map(i=>i.value);
+    const extra = Math.max(0, checked.length-1) * TOPPING_EXTRA_PRICE;
+    $("#modalLinePrice").textContent = fmt((currentFlavor.price+extra)*qty);
 }
+
 
 /* Add to cart */
-$('#addToCartBtn').addEventListener('click', ()=>{
-  const qty = Math.max(1, parseInt($('#modalQty').value || '1', 10));
-  const checked = $$('#modalToppings input:checked').map(i=>i.value);
-  const sauceEl = $$('#modalSauces .sauce.active')[0];
-  const sauce = sauceEl ? sauceEl.dataset.s : '';
+$("#addToCartBtn").onclick = ()=>{
+    const qty = Math.max(1, parseInt($("#modalQty").value||"1"));
+    const selectedToppings = [...$("#modalToppings").querySelectorAll("input:checked")].map(i=>i.value);
+    const sauceEl = $("#modalSauces").querySelector(".sauce.active");
+    const sauce = sauceEl ? sauceEl.dataset.s : "";
 
-  const item = {
-    id: 'L'+Date.now()+Math.floor(Math.random()*999),
-    flavorId: currentFlavor.id,
-    flavorName: currentFlavor.name,
-    unitPrice: currentFlavor.price,
-    qty,
-    toppings: checked,
-    sauce
-  };
-  cart.push(item);
-  closeModal();
-  renderCart();
-});
+    const extraPerUnit = Math.max(0, selectedToppings.length-1) * TOPPING_EXTRA_PRICE;
+    const itemTotal = (currentFlavor.price + extraPerUnit) * qty;
 
-/* ====== Cart logic ====== */
+    if(editingItemId){
+        const it = cart.find(x=>x.id===editingItemId);
+        it.qty = qty;
+        it.toppings = selectedToppings;
+        it.sauce = sauce;
+        it.unitPrice = currentFlavor.price;
+    } else {
+        cart.push({
+            id:"i"+Date.now(),
+            flavorName: currentFlavor.name,
+            flavorId: currentFlavor.id,
+            qty: qty,
+            toppings: selectedToppings,
+            sauce: sauce,
+            unitPrice: currentFlavor.price
+        });
+    }
+
+    closeModal();
+    renderCart();
+};
+
+
+/* Render cart */
 function calcItemTotal(it){
-  const extrasPerUnit = Math.max(0, it.toppings.length - 1) * TOPPING_EXTRA_PRICE;
-  const unitTotal = it.unitPrice + extrasPerUnit;
-  return unitTotal * it.qty;
-}
-function calcTotals(){
-  let subtotal = 0;
-  cart.forEach(it => subtotal += calcItemTotal(it));
-  return { subtotal, total: subtotal };
+    const extra = Math.max(0, it.toppings.length-1)*TOPPING_EXTRA_PRICE;
+    return (it.unitPrice+extra)*it.qty;
 }
 
 function renderCart(){
-  const list = $('#cartList');
-  list.innerHTML = '';
-  if(cart.length === 0){
-    list.innerHTML = '<div class="small">No hay items todavía</div>';
-  } else {
+    const list = $("#cartList");
+    list.innerHTML = "";
+
+    let total = 0;
+
     cart.forEach(it=>{
-      const row = createEl('div','cart-row');
-      row.innerHTML = `
-        <div style="flex:1">
-          <div style="font-weight:800">${it.qty} x ${it.flavorName} ${it.sauce ? '• ' + it.sauce : ''}</div>
-          <div class="small">${it.toppings.length ? 'Toppings: ' + it.toppings.join(', ') : 'Sin toppings'}</div>
-          <div class="small">Unit base: ${fmt(it.unitPrice)} ${it.toppings.length>1 ? '• +' + fmt((it.toppings.length-1)*TOPPING_EXTRA_PRICE) + ' extras/unidad' : ''}</div>
-        </div>
-        <div style="text-align:right">
-          <div style="font-weight:800">${fmt(calcItemTotal(it))}</div>
-          <div style="margin-top:8px;display:flex;flex-direction:column;gap:8px;align-items:flex-end">
-            <div class="qty">
-              <button class="btn btn-ghost" onclick="changeQty('${it.id}', -1)">−</button>
-              <div style="min-width:26px;text-align:center">${it.qty}</div>
-              <button class="btn btn-ghost" onclick="changeQty('${it.id}', 1)">+</button>
+        total += calcItemTotal(it);
+
+        const row = document.createElement("div");
+        row.className="cart-row";
+        row.innerHTML = `
+            <div>
+                <b>${it.qty}× ${it.flavorName}</b><br>
+                <span class="small">${it.toppings.join(", ") || "Sin toppings"} • ${it.sauce || "Sin salsa"}</span>
             </div>
-            <div style="display:flex;gap:6px">
-              <button class="btn btn-ghost" onclick="editLine('${it.id}')">Editar</button>
-              <button class="btn btn-ghost" onclick="removeLine('${it.id}')">Eliminar</button>
+            <div style="text-align:right">
+                <b>${fmt(calcItemTotal(it))}</b><br>
+                <button class="btn btn-ghost" style="margin-top:6px;font-size:12px" onclick="editItem('${it.id}')">Editar</button>
+                <button class="btn btn-ghost" style="margin-top:6px;font-size:12px" onclick="removeItem('${it.id}')">Eliminar</button>
             </div>
-          </div>
-        </div>
-      `;
-      list.appendChild(row);
+        `;
+        list.appendChild(row);
     });
-  }
-  const totals = calcTotals();
-  $('#subtotal').textContent = fmt(totals.subtotal);
-  $('#total').textContent = fmt(totals.total);
-  $('#fixedTotal').textContent = fmt(totals.total);
+
+    $("#total").textContent = fmt(total);
+    $("#fixedTotal").textContent = fmt(total);
 }
 
-/* change qty, remove, edit */
-function changeQty(id, delta){
-  const it = cart.find(x=>x.id===id);
-  if(!it) return;
-  it.qty = Math.max(1, it.qty + delta);
-  renderCart();
-}
-function removeLine(id){
-  cart = cart.filter(x=>x.id!==id);
-  renderCart();
-}
-function editLine(id){
-  const it = cart.find(x=>x.id===id);
-  if(!it) return;
-  openModal(it.flavorId);
-  setTimeout(()=>{
-    $('#modalQty').value = it.qty;
-    // set toppings
-    $$('#modalToppings input').forEach(inp=> inp.checked = it.toppings.includes(inp.value) );
-    // set sauce
-    $$('#modalSauces .sauce').forEach(s => s.classList.toggle('active', s.dataset.s === it.sauce) );
-    // replace behavior on add
-    const handler = function(){
-      const qty = Math.max(1, parseInt($('#modalQty').value || '1', 10));
-      const checked = $$('#modalToppings input:checked').map(i=>i.value);
-      const sauceEl = $$('#modalSauces .sauce.active')[0];
-      const sauce = sauceEl ? sauceEl.dataset.s : '';
-      it.qty = qty; it.toppings = checked; it.sauce = sauce;
-      closeModal(); renderCart();
-      $('#addToCartBtn').removeEventListener('click', handler);
-    };
-    $('#addToCartBtn').addEventListener('click', handler);
+function editItem(id){
+    editingItemId = id;
+    const it = cart.find(x=>x.id===id);
+    openModal(it.flavorId, it.flavorName);
+
+    $("#modalQty").value = it.qty;
+
+    // toppings
+    $("#modalToppings").querySelectorAll("input").forEach(ch=>{
+        if(it.toppings.includes(ch.value)) ch.checked = true;
+    });
+
+    // sauce
+    $("#modalSauces").querySelectorAll(".sauce").forEach(s=>{
+        if(s.dataset.s === it.sauce) s.classList.add("active");
+    });
+
     updateModalPrice();
-  }, 120);
 }
 
-/* clear cart */
-$('#clearCartBtn').addEventListener('click', ()=>{
-  if(!confirm('Vaciar todo el carrito?')) return;
-  cart = []; renderCart();
-});
-
-/* delivery address toggle */
-$('#deliveryMode').addEventListener('change', ()=>{
-  const mode = $('#deliveryMode').value;
-  $('#addressBlock').style.display = (mode === 'delivery') ? 'block' : 'none';
-});
-
-/* close modal handlers */
-$('#closeModal').addEventListener('click', closeModal);
-$('#modal').addEventListener('click', (e)=>{ if(e.target.id === 'modal') closeModal(); });
-
-/* checkout -> WhatsApp (fixed footer and top checkout button share) */
-function buildWhatsMessage(){
-  if(cart.length === 0) return null;
-  const name = $('#custName').value.trim();
-  const phone = $('#custPhone').value.trim();
-  if(!name) { alert('Ingresá tu nombre.'); return null; }
-  if(!phone) { alert('Ingresá tu teléfono.'); return null; }
-  const mode = $('#deliveryMode').value;
-  const address = $('#custAddress').value.trim();
-  if(mode === 'delivery' && !address){ alert('Ingresá la dirección de entrega.'); return null; }
-  const payment = $('#paymentMethod').value;
-  const notes = $('#custNotes').value.trim();
-
-  let lines = [];
-  lines.push('Nuevo pedido • Ice Cream Rolls');
-  lines.push('');
-  lines.push('Cliente: ' + name);
-  lines.push('Tel: ' + phone);
-  lines.push('Retiro/Envío: ' + (mode === 'delivery' ? 'Envío a domicilio' : 'Retiro en local'));
-  if(mode === 'delivery') lines.push('Dirección: ' + address);
-  lines.push('');
-  lines.push('Detalles:');
-  let subtotal = 0;
-  cart.forEach((it, idx)=>{
-    const extraPerUnit = Math.max(0, it.toppings.length - 1) * TOPPING_EXTRA_PRICE;
-    const unitTotal = it.unitPrice + extraPerUnit;
-    lines.push(`${idx+1}) ${it.qty} x ${it.flavorName} ${it.sauce ? '• ' + it.sauce : ''}`);
-    if(it.toppings.length) lines.push('   Toppings: ' + it.toppings.join(', '));
-    lines.push(`   Unit: ${fmt(unitTotal)} => ${fmt(calcItemTotal(it))}`);
-    subtotal += calcItemTotal(it);
-  });
-  lines.push('');
-  lines.push('Subtotal: ' + fmt(subtotal));
-  lines.push('Total: ' + fmt(subtotal));
-  lines.push('');
-  lines.push('Pago: ' + ($('#paymentMethod').value === 'cash' ? 'Efectivo' : 'Transferencia'));
-  if($('#paymentMethod').value === 'transfer') lines.push('Por favor adjuntá comprobante en el chat si corresponde.');
-  if(notes) { lines.push(''); lines.push('Notas: ' + notes); }
-  lines.push('');
-  lines.push('Horario de retiro (si aplica): ');
-  return encodeURIComponent(lines.join('\n'));
+function removeItem(id){
+    cart = cart.filter(x=>x.id!==id);
+    renderCart();
 }
 
-function checkout() {
-  const msg = buildWhatsMessage();
-  if(!msg) return;
-  const url = `https://wa.me/${PHONE}?text=${msg}`;
-  window.open(url, '_blank');
+/* Delivery select */
+$("#deliveryMode").onchange = ()=>{
+    $("#addressBlock").style.display = ($("#deliveryMode").value==="delivery") ? "block":"none";
+};
+
+/* WhatsApp */
+function sendWhatsApp(){
+    if(cart.length===0){
+        alert("Tu carrito está vacío.");
+        return;
+    }
+
+    let name = $("#custName").value.trim();
+    let phone = $("#custPhone").value.trim();
+    if(!name){ alert("Ingresá tu nombre."); return; }
+    if(!phone){ alert("Ingresá tu teléfono."); return; }
+
+    let mode = $("#deliveryMode").value;
+    let address = $("#custAddress").value.trim();
+
+    if(mode==="delivery" && !address){
+        alert("Ingresá la dirección.");
+        return;
+    }
+
+    let pay = $("#paymentMethod").value;
+    let notes = $("#custNotes").value.trim();
+
+    let msg = "Nuevo pedido%0A%0A";
+
+    cart.forEach((it,i)=>{
+        msg += `${i+1}) ${it.qty}× ${it.flavorName}%0A`;
+        msg += `Toppings: ${it.toppings.join(", ") || "Sin toppings"}%0A`;
+        msg += `Salsa: ${it.sauce || "Sin salsa"}%0A`;
+        msg += `Subtotal: ${fmt(calcItemTotal(it))}%0A%0A`;
+    });
+
+    msg += `Total: ${$("#total").textContent}%0A%0A`;
+    msg += `Cliente: ${name}%0A`;
+    msg += `Tel: ${phone}%0A`;
+    msg += `Entrega: ${mode==="pickup"?"Retiro":"Envío"}%0A`;
+    if(mode==="delivery") msg += `Dirección: ${address}%0A`;
+    msg += `Pago: ${pay==="cash"?"Efectivo":"Transferencia"}%0A`;
+    if(notes) msg += `Notas: ${notes}%0A`;
+
+    window.open(`https://wa.me/${PHONE}?text=${msg}`,"_blank");
 }
 
-/* fixed footer actions */
-$('#fixedSendBtn').addEventListener('click', checkout);
+$("#fixedSendBtn").onclick = sendWhatsApp;
 
-/* init */
+
+/* INIT */
 renderProducts();
 renderCart();
+
 </script>
+
 </body>
 </html>
