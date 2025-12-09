@@ -343,7 +343,7 @@ function renderProducts(){
                 <div class="product-title">${f.name}</div>
                 <div class="product-foot" style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
                     <div class="price">${fmt(f.price)}</div>
-                    <button class="btn btn-primary" onclick="openModal('${f.id}','${f.name}')">Armar</button>
+                    <button class="btn btn-primary" onclick="startNewModal('${f.id}','${f.name}')">Armar</button>
                 </div>
             </div>
         `;
@@ -352,9 +352,15 @@ function renderProducts(){
 }
 
 
-/* Modal */
-function openModal(id,name){
-    editingItemId = null;
+// Helper: abrir modal para CREAR un nuevo ítem (limpia editingItemId)
+function startNewModal(id, name){
+  editingItemId = null;    // declaramos que es un nuevo ítem
+  openModal(id, name);
+}
+
+// Modal para personalizar (NO resetea editingItemId — así permite editar correctamente)
+function openModal(id, name){
+    // NO hacemos editingItemId = null aquí (importante)
     currentFlavor = flavors.find(f=>f.id===id);
 
     $("#modalTitle").textContent = name;
@@ -388,6 +394,7 @@ function openModal(id,name){
     $("#modal").style.display="flex";
     document.body.style.overflow="hidden";
 }
+
 
 function closeModal(){
     $("#modal").style.display="none";
