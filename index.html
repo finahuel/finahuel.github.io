@@ -170,6 +170,54 @@
         }
     }
 
+    .payment-msg {
+        display: none;
+        font-size: 13px;     /* coincide con .small */
+        color: var(--muted); /* gris suave igual al resto */
+        margin-top: 4px;
+        line-height: 1.3;
+    }
+
+    .nice-form {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .form-field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .nice-form input,
+    .nice-form select,
+    .nice-form textarea {
+        width: 100%;
+        padding: 10px;
+        border-radius: 10px;
+        border: 1px solid #e2e2e2;
+        font-size: 14px;
+        background: #fff;
+        box-shadow: inset 0 0 0 transparent;
+        transition: border .2s ease, box-shadow .2s ease;
+    }
+
+    .nice-form input:focus,
+    .nice-form select:focus,
+    .nice-form textarea:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(255,111,97,0.2);
+        outline: none;
+    }
+
+    .payment-msg {
+        font-size: 12px;
+        color: var(--accent);
+        margin-top: -2px;
+        display: none;
+    }
+
 </style>
 </head>
 
@@ -197,51 +245,77 @@
         <div style="height:10px"></div>
 
         <div id="productsArea" class="products"></div>
+
+        
+
+
     </div>
 
-
-    <!-- Carrito -->
-    <div class="card">
-        <h2>Tu pedido</h2>
-
-        <div class="cart">
-            <div id="cartList" class="cart-list"></div>
-
-            <div class="subtotal-row">
-                <div>Total</div>
-                <div id="total" style="font-weight:800">$0</div>
+    <!-- PANEL: Resumen / carrito -->
+        <div class="card" style="margin-top:12px;">
+            <h3 style="margin:0 0 8px 0">Tu pedido</h3>
+            <div id="cartList" class="cart-list">
+            <div class="small" style="color:var(--muted)">No hay items todavía</div>
             </div>
 
-            <!-- Formulario del cliente -->
-            <div style="margin-top:12px">
-                <label class="lead" style="font-size:13px">Nombre</label>
-                <input id="custName" type="text" placeholder="Tu nombre" style="width:100%;margin-top:4px">
-
-                <label class="lead" style="font-size:13px;margin-top:10px;display:block">Teléfono</label>
-                <input id="custPhone" type="text" placeholder="Ej: 3764xxxxxx" style="width:100%;margin-top:4px">
-
-                <label class="lead" style="font-size:13px;margin-top:10px;display:block">Entrega</label>
-                <select id="deliveryMode" style="width:100%;margin-top:4px">
-                    <option value="pickup">Retiro en local</option>
-                    <option value="delivery">Envío a domicilio</option>
-                </select>
-
-                <div id="addressBlock" style="display:none;margin-top:8px">
-                    <label class="lead" style="font-size:13px">Dirección</label>
-                    <input id="custAddress" type="text" placeholder="Calle, número..." style="width:100%;margin-top:4px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+                <div>
+                    <div class="small">Subtotal</div>
+                    <div id="total" style="font-weight:800">$0</div>
                 </div>
-
-                <label class="lead" style="font-size:13px;margin-top:10px;display:block">Método de pago</label>
-                <select id="paymentMethod" style="width:100%;margin-top:4px">
-                    <option value="cash">Efectivo</option>
-                    <option value="transfer">Transferencia</option>
-                </select>
-
-                <label class="lead" style="font-size:13px;margin-top:10px;display:block">Notas</label>
-                <textarea id="custNotes" rows="2" style="width:100%;margin-top:4px" placeholder="Opcional"></textarea>
+                <!-- opcional: dejar vacio porque ya tienes fixed footer -->
             </div>
         </div>
+    <!-- FIN PANEL -->
+
+    <div class="card nice-form">
+        <h3 style="margin-top:0;">Datos del cliente</h3>
+
+        <div class="form-field">
+            <label>Nombre</label>
+            <input id="custName" type="text" placeholder="Tu nombre">
+        </div>
+
+        <div class="form-field">
+            <label>Teléfono</label>
+            <input id="custPhone" type="tel" placeholder="Ej: 3764xxxxxx">
+        </div>
+
+        <div class="form-field">
+            <label>Retiro o Entrega</label>
+            <select id="deliveryMode">
+                <option value="pickup">Retiro en local</option>
+                <option value="delivery">Envío a domicilio</option>
+            </select>
+        </div>
+
+        <div id="addressBlock" class="form-field" style="display:none;">
+            <label>Dirección</label>
+            <input id="custAddress" type="text" placeholder="Calle, número...">
+        </div>
+
+        <div class="form-field">
+            <label>Método de pago</label>
+            <select id="paymentMethod">
+                <option value="cash">Efectivo</option>
+                <option value="transfer">Transferencia</option>
+            </select>
+
+            <div id="paymentNotice" class="payment-msg">
+                Para envíos solo aceptamos transferencia.
+            </div>
+        </div>
+
+        <div class="form-field">
+            <label>Notas (opcional)</label>
+            <textarea id="custNotes" rows="2" placeholder="Ej: sin azúcar / venir a tal hora"></textarea>
+        </div>
+
+        <button id="checkoutBtn2" class="btn btn-primary" style="width:100%; margin-top:10px;">
+            Enviar pedido
+        </button>
     </div>
+
 
 </div><!-- END layout -->
 
@@ -303,259 +377,311 @@
 <!-- ======================= -->
 
 <script>
-/* CONFIG */
-const PHONE = "5493764102637";
-const BASE_PRICE_DEFAULT = 2500;
-const TOPPING_EXTRA_PRICE = 300;
+    /* CONFIG */
+    const PHONE = "5493764102637";
+    const BASE_PRICE_DEFAULT = 2500;
+    const TOPPING_EXTRA_PRICE = 300;
 
-/* Productos (con misma imagen) */
-const flavors = [
-  { id:"oreo", name:"Oreo", price:2500, img:"https://i.imgur.com/7eiCAM6.jpeg" },
-  { id:"choco", name:"Chocolate", price:2500, img:"https://i.imgur.com/7eiCAM6.jpeg" },
-  { id:"fruit", name:"Frutilla", price:2500, img:"https://i.imgur.com/7eiCAM6.jpeg" },
-  { id:"chocot", name:"Chocotorta", price:2500, img:"https://i.imgur.com/7eiCAM6.jpeg" },
-  { id:"tira", name:"Tiramisu", price:2500, img:"https://i.imgur.com/7eiCAM6.jpeg" }
-];
+    /* Productos (con misma imagen) */
+    const flavors = [
+    { id:"oreo", name:"Oreo", price:2500, img:"https://i.imgur.com/7eiCAM6.jpeg" },
+    { id:"choco", name:"Chocolate", price:2500, img:"https://i.imgur.com/7eiCAM6.jpeg" },
+    { id:"fruit", name:"Frutilla", price:2500, img:"https://i.imgur.com/7eiCAM6.jpeg" },
+    { id:"chocot", name:"Chocotorta", price:2500, img:"https://i.imgur.com/7eiCAM6.jpeg" },
+    { id:"tira", name:"Tiramisu", price:2500, img:"https://i.imgur.com/7eiCAM6.jpeg" }
+    ];
 
-const toppings = ["Maní","Chips de colores","Chips de chocolate","Oreo","Rocklets","Coco rallado"];
+    const toppings = ["Maní","Chips de colores","Chips de chocolate","Oreo","Rocklets","Coco rallado"];
 
-let cart = [];
-let editingItemId = null;
-let currentFlavor = null;
-
-
-/* Helpers */
-function $(s){ return document.querySelector(s); }
-function $$(s){ return document.querySelectorAll(s); }
-function fmt(n){ return "$" + Number(n).toLocaleString("es-AR"); }
+    let cart = [];
+    let editingItemId = null;
+    let currentFlavor = null;
 
 
-/* Render productos */
-function renderProducts(){
-    const area = $("#productsArea");
-    area.innerHTML = "";
-    flavors.forEach(f=>{
-        const box = document.createElement("div");
-        box.className = "product";
-        box.innerHTML = `
-            <img src="${f.img}">
-            <div class="product-body">
-                <div class="product-title">${f.name}</div>
-                <div class="product-foot" style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
-                    <div class="price">${fmt(f.price)}</div>
-                    <button class="btn btn-primary" onclick="startNewModal('${f.id}','${f.name}')">Armar</button>
+    /* Helpers */
+    function $(s){ return document.querySelector(s); }
+    function $$(s){ return document.querySelectorAll(s); }
+    function fmt(n){ return "$" + Number(n).toLocaleString("es-AR"); }
+
+
+    /* Render productos */
+    function renderProducts(){
+        const area = $("#productsArea");
+        area.innerHTML = "";
+        flavors.forEach(f=>{
+            const box = document.createElement("div");
+            box.className = "product";
+            box.innerHTML = `
+                <img src="${f.img}">
+                <div class="product-body">
+                    <div class="product-title">${f.name}</div>
+                    <div class="product-foot" style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
+                        <div class="price">${fmt(f.price)}</div>
+                        <button class="btn btn-primary" onclick="startNewModal('${f.id}','${f.name}')">Armar</button>
+                    </div>
                 </div>
-            </div>
-        `;
-        area.appendChild(box);
-    });
-}
-
-
-// Helper: abrir modal para CREAR un nuevo ítem (limpia editingItemId)
-function startNewModal(id, name){
-  editingItemId = null;    // declaramos que es un nuevo ítem
-  openModal(id, name);
-}
-
-// Modal para personalizar (NO resetea editingItemId — así permite editar correctamente)
-function openModal(id, name){
-    // NO hacemos editingItemId = null aquí (importante)
-    currentFlavor = flavors.find(f=>f.id===id);
-
-    $("#modalTitle").textContent = name;
-    $("#modalImg").src = currentFlavor.img;
-    $("#modalBasePrice").textContent = "Base: " + fmt(currentFlavor.price);
-    $("#modalQty").value = 1;
-
-    // toppings
-    const t = $("#modalToppings");
-    t.innerHTML = "";
-    toppings.forEach(tp=>{
-        const el = document.createElement("label");
-        el.className="chip";
-        el.innerHTML = `<input type="checkbox" value="${tp}"> ${tp}`;
-        el.querySelector("input").addEventListener("change", updateModalPrice);
-        t.appendChild(el);
-    });
-
-    // sauces
-    $("#modalSauces").querySelectorAll(".sauce").forEach(s=>{
-        s.classList.remove("active");
-        s.onclick = ()=>{
-            $("#modalSauces").querySelectorAll(".sauce").forEach(x=>x.classList.remove("active"));
-            s.classList.add("active");
-            updateModalPrice();
-        }
-    });
-
-    updateModalPrice();
-
-    $("#modal").style.display="flex";
-    document.body.style.overflow="hidden";
-}
-
-
-function closeModal(){
-    $("#modal").style.display="none";
-    document.body.style.overflow="auto";
-}
-
-function updateModalPrice(){
-    const qty = Math.max(1, parseInt($("#modalQty").value||"1"));
-    const checked = [...$("#modalToppings").querySelectorAll("input:checked")].map(i=>i.value);
-    const extra = Math.max(0, checked.length-1) * TOPPING_EXTRA_PRICE;
-    $("#modalLinePrice").textContent = fmt((currentFlavor.price+extra)*qty);
-}
-
-
-/* Add to cart */
-$("#addToCartBtn").onclick = ()=>{
-    const qty = Math.max(1, parseInt($("#modalQty").value||"1"));
-    const selectedToppings = [...$("#modalToppings").querySelectorAll("input:checked")].map(i=>i.value);
-    const sauceEl = $("#modalSauces").querySelector(".sauce.active");
-    const sauce = sauceEl ? sauceEl.dataset.s : "";
-
-    const extraPerUnit = Math.max(0, selectedToppings.length-1) * TOPPING_EXTRA_PRICE;
-    const itemTotal = (currentFlavor.price + extraPerUnit) * qty;
-
-    if(editingItemId){
-        const it = cart.find(x=>x.id===editingItemId);
-        it.qty = qty;
-        it.toppings = selectedToppings;
-        it.sauce = sauce;
-        it.unitPrice = currentFlavor.price;
-    } else {
-        cart.push({
-            id:"i"+Date.now(),
-            flavorName: currentFlavor.name,
-            flavorId: currentFlavor.id,
-            qty: qty,
-            toppings: selectedToppings,
-            sauce: sauce,
-            unitPrice: currentFlavor.price
+            `;
+            area.appendChild(box);
         });
     }
 
-    closeModal();
-    renderCart();
-};
 
-
-/* Render cart */
-function calcItemTotal(it){
-    const extra = Math.max(0, it.toppings.length-1)*TOPPING_EXTRA_PRICE;
-    return (it.unitPrice+extra)*it.qty;
-}
-
-function renderCart(){
-    const list = $("#cartList");
-    list.innerHTML = "";
-
-    let total = 0;
-
-    cart.forEach(it=>{
-        total += calcItemTotal(it);
-
-        const row = document.createElement("div");
-        row.className="cart-row";
-        row.innerHTML = `
-            <div>
-                <b>${it.qty}× ${it.flavorName}</b><br>
-                <span class="small">${it.toppings.join(", ") || "Sin toppings"} • ${it.sauce || "Sin salsa"}</span>
-            </div>
-            <div style="text-align:right">
-                <b>${fmt(calcItemTotal(it))}</b><br>
-                <button class="btn btn-ghost" style="margin-top:6px;font-size:12px" onclick="editItem('${it.id}')">Editar</button>
-                <button class="btn btn-ghost" style="margin-top:6px;font-size:12px" onclick="removeItem('${it.id}')">Eliminar</button>
-            </div>
-        `;
-        list.appendChild(row);
-    });
-
-    $("#total").textContent = fmt(total);
-    $("#fixedTotal").textContent = fmt(total);
-}
-
-function editItem(id){
-    editingItemId = id;
-    const it = cart.find(x=>x.id===id);
-    openModal(it.flavorId, it.flavorName);
-
-    $("#modalQty").value = it.qty;
-
-    // toppings
-    $("#modalToppings").querySelectorAll("input").forEach(ch=>{
-        if(it.toppings.includes(ch.value)) ch.checked = true;
-    });
-
-    // sauce
-    $("#modalSauces").querySelectorAll(".sauce").forEach(s=>{
-        if(s.dataset.s === it.sauce) s.classList.add("active");
-    });
-
-    updateModalPrice();
-}
-
-function removeItem(id){
-    cart = cart.filter(x=>x.id!==id);
-    renderCart();
-}
-
-/* Delivery select */
-$("#deliveryMode").onchange = ()=>{
-    $("#addressBlock").style.display = ($("#deliveryMode").value==="delivery") ? "block":"none";
-};
-
-/* WhatsApp */
-function sendWhatsApp(){
-    if(cart.length===0){
-        alert("Tu carrito está vacío.");
-        return;
+    // Helper: abrir modal para CREAR un nuevo ítem (limpia editingItemId)
+    function startNewModal(id, name){
+        editingItemId = null;    // declaramos que es un nuevo ítem
+        openModal(id, name);
     }
 
-    let name = $("#custName").value.trim();
-    let phone = $("#custPhone").value.trim();
-    if(!name){ alert("Ingresá tu nombre."); return; }
-    if(!phone){ alert("Ingresá tu teléfono."); return; }
+    // Modal para personalizar (NO resetea editingItemId — así permite editar correctamente)
+    function openModal(id, name){
+        // NO hacemos editingItemId = null aquí (importante)
+        currentFlavor = flavors.find(f=>f.id===id);
 
-    let mode = $("#deliveryMode").value;
-    let address = $("#custAddress").value.trim();
+        $("#modalTitle").textContent = name;
+        $("#modalImg").src = currentFlavor.img;
+        $("#modalBasePrice").textContent = "Base: " + fmt(currentFlavor.price);
+        $("#modalQty").value = 1;
 
-    if(mode==="delivery" && !address){
-        alert("Ingresá la dirección.");
-        return;
+        // toppings
+        const t = $("#modalToppings");
+        t.innerHTML = "";
+        toppings.forEach(tp=>{
+            const el = document.createElement("label");
+            el.className="chip";
+            el.innerHTML = `<input type="checkbox" value="${tp}"> ${tp}`;
+            el.querySelector("input").addEventListener("change", updateModalPrice);
+            t.appendChild(el);
+        });
+
+        // sauces
+        $("#modalSauces").querySelectorAll(".sauce").forEach(s=>{
+            s.classList.remove("active");
+            s.onclick = ()=>{
+                $("#modalSauces").querySelectorAll(".sauce").forEach(x=>x.classList.remove("active"));
+                s.classList.add("active");
+                updateModalPrice();
+            }
+        });
+
+        updateModalPrice();
+
+        $("#modal").style.display="flex";
+        document.body.style.overflow="hidden";
     }
 
-    let pay = $("#paymentMethod").value;
-    let notes = $("#custNotes").value.trim();
 
-    let msg = "Nuevo pedido%0A%0A";
+    function closeModal(){
+        $("#modal").style.display="none";
+        document.body.style.overflow="auto";
+    }
 
-    cart.forEach((it,i)=>{
-        msg += `${i+1}) ${it.qty}× ${it.flavorName}%0A`;
-        msg += `Toppings: ${it.toppings.join(", ") || "Sin toppings"}%0A`;
-        msg += `Salsa: ${it.sauce || "Sin salsa"}%0A`;
-        msg += `Subtotal: ${fmt(calcItemTotal(it))}%0A%0A`;
-    });
-
-    msg += `Total: ${$("#total").textContent}%0A%0A`;
-    msg += `Cliente: ${name}%0A`;
-    msg += `Tel: ${phone}%0A`;
-    msg += `Entrega: ${mode==="pickup"?"Retiro":"Envío"}%0A`;
-    if(mode==="delivery") msg += `Dirección: ${address}%0A`;
-    msg += `Pago: ${pay==="cash"?"Efectivo":"Transferencia"}%0A`;
-    if(notes) msg += `Notas: ${notes}%0A`;
-
-    window.open(`https://wa.me/${PHONE}?text=${msg}`,"_blank");
-}
-
-$("#fixedSendBtn").onclick = sendWhatsApp;
+    function updateModalPrice(){
+        const qty = Math.max(1, parseInt($("#modalQty").value||"1"));
+        const checked = [...$("#modalToppings").querySelectorAll("input:checked")].map(i=>i.value);
+        const extra = Math.max(0, checked.length-1) * TOPPING_EXTRA_PRICE;
+        $("#modalLinePrice").textContent = fmt((currentFlavor.price+extra)*qty);
+    }
 
 
-/* INIT */
-renderProducts();
-renderCart();
+    /* Add to cart */
+    $("#addToCartBtn").onclick = ()=>{
+        const qty = Math.max(1, parseInt($("#modalQty").value||"1"));
+        const selectedToppings = [...$("#modalToppings").querySelectorAll("input:checked")].map(i=>i.value);
+        const sauceEl = $("#modalSauces").querySelector(".sauce.active");
+        const sauce = sauceEl ? sauceEl.dataset.s : "";
+
+        const extraPerUnit = Math.max(0, selectedToppings.length-1) * TOPPING_EXTRA_PRICE;
+        const itemTotal = (currentFlavor.price + extraPerUnit) * qty;
+
+        if(editingItemId){
+            const it = cart.find(x=>x.id===editingItemId);
+            it.qty = qty;
+            it.toppings = selectedToppings;
+            it.sauce = sauce;
+            it.unitPrice = currentFlavor.price;
+        } else {
+            cart.push({
+                id:"i"+Date.now(),
+                flavorName: currentFlavor.name,
+                flavorId: currentFlavor.id,
+                qty: qty,
+                toppings: selectedToppings,
+                sauce: sauce,
+                unitPrice: currentFlavor.price
+            });
+        }
+
+        closeModal();
+        renderCart();
+    };
+
+
+    /* Render cart */
+    function calcItemTotal(it){
+        const extra = Math.max(0, it.toppings.length-1)*TOPPING_EXTRA_PRICE;
+        return (it.unitPrice+extra)*it.qty;
+    }
+
+        function renderCart(){
+            const list = $("#cartList");
+
+            // Calculamos total aunque la UI no exista, para mantener lógica intacta
+            let total = 0;
+            cart.forEach(it => total += calcItemTotal(it));
+
+            // Si no hay contenedor visual del carrito, al menos actualizamos el footer fijo y salimos
+            if(!list){
+                const fixedEl = document.getElementById("fixedTotal");
+                if(fixedEl) fixedEl.textContent = fmt(total);
+                return;
+            }
+
+            // Si existe el contenedor, renderizamos las filas
+            list.innerHTML = "";
+
+            if(cart.length === 0){
+                list.innerHTML = '<div class="small" style="color:var(--muted)">No hay items todavía</div>';
+            } else {
+                cart.forEach(it=>{
+                    const row = document.createElement("div");
+                    row.className="cart-row";
+                    row.innerHTML = `
+                        <div>
+                            <b>${it.qty}× ${it.flavorName}</b><br>
+                            <span class="small">${(it.toppings && it.toppings.length) ? it.toppings.join(", ") : "Sin toppings"} • ${it.sauce || "Sin salsa"}</span>
+                        </div>
+                        <div style="text-align:right">
+                            <b>${fmt(calcItemTotal(it))}</b><br>
+                            <button class="btn btn-ghost" style="margin-top:6px;font-size:12px" onclick="editItem('${it.id}')">Editar</button>
+                            <button class="btn btn-ghost" style="margin-top:6px;font-size:12px" onclick="removeItem('${it.id}')">Eliminar</button>
+                        </div>
+                    `;
+                    list.appendChild(row);
+                });
+            }
+
+            // Actualizar total en el elemento #total si existe
+            const totalEl = document.getElementById("total");
+            if (totalEl) totalEl.textContent = fmt(total);
+
+            // Actualizar footer fijo si existe
+            const fixedEl = document.getElementById("fixedTotal");
+            if (fixedEl) fixedEl.textContent = fmt(total);
+        }
+
+
+    function editItem(id){
+        editingItemId = id;
+        const it = cart.find(x=>x.id===id);
+        openModal(it.flavorId, it.flavorName);
+
+        $("#modalQty").value = it.qty;
+
+        // toppings
+        $("#modalToppings").querySelectorAll("input").forEach(ch=>{
+            if(it.toppings.includes(ch.value)) ch.checked = true;
+        });
+
+        // sauce
+        $("#modalSauces").querySelectorAll(".sauce").forEach(s=>{
+            if(s.dataset.s === it.sauce) s.classList.add("active");
+        });
+
+        updateModalPrice();
+    }
+
+    function removeItem(id){
+        cart = cart.filter(x=>x.id!==id);
+        renderCart();
+    }
+
+    /* Delivery select: dirección + reglas de pago */
+    $("#deliveryMode").onchange = () => {
+    const mode = $("#deliveryMode").value;
+    const addr = $("#addressBlock");
+    const pay = document.getElementById("paymentMethod");
+    const notice = document.getElementById("paymentNotice");
+    const cashOpt = pay.querySelector('option[value="cash"]');
+
+    // Mostrar/ocultar dirección
+    addr.style.display = (mode === "delivery") ? "block" : "none";
+
+    if (mode === "delivery") {
+        // Forzar transferencia
+        pay.value = "transfer";
+        if (cashOpt) cashOpt.disabled = true;
+
+        // Mostrar aviso
+        notice.style.display = "block";
+    } else {
+        // Habilitar efectivo nuevamente
+        if (cashOpt) cashOpt.disabled = false;
+
+        // Ocultar aviso
+        notice.style.display = "none";
+    }
+    };
+
+
+
+    /* WhatsApp */
+    function sendWhatsApp(){
+        if(cart.length===0){
+            alert("Tu carrito está vacío.");
+            return;
+        }
+
+        let name = $("#custName").value.trim();
+        let phone = $("#custPhone").value.trim();
+        if(!name){ alert("Ingresá tu nombre."); return; }
+        if(!phone){ alert("Ingresá tu teléfono."); return; }
+
+        let mode = $("#deliveryMode").value;
+        let address = $("#custAddress").value.trim();
+
+        if(mode==="delivery" && !address){
+            alert("Ingresá la dirección.");
+            return;
+        }
+
+        let pay = $("#paymentMethod").value;
+        let notes = $("#custNotes").value.trim();
+
+        let msg = "Nuevo pedido%0A%0A";
+
+        cart.forEach((it,i)=>{
+            msg += `${i+1}) ${it.qty}× ${it.flavorName}%0A`;
+            msg += `Toppings: ${it.toppings.join(", ") || "Sin toppings"}%0A`;
+            msg += `Salsa: ${it.sauce || "Sin salsa"}%0A`;
+            msg += `Subtotal: ${fmt(calcItemTotal(it))}%0A%0A`;
+        });
+
+        // Calcular total desde el carrito (no depender del DOM)
+        const totalAmount = cart.reduce((s, it) => s + calcItemTotal(it), 0);
+        msg += `Total: ${fmt(totalAmount)}%0A%0A`;
+
+        msg += `Cliente: ${name}%0A`;
+        msg += `Tel: ${phone}%0A`;
+        msg += `Entrega: ${mode==="pickup"?"Retiro":"Envío"}%0A`;
+        if(mode==="delivery") msg += `Dirección: ${address}%0A`;
+        msg += `Pago: ${pay==="cash"?"Efectivo":"Transferencia"}%0A`;
+        if(notes) msg += `Notas: ${notes}%0A`;
+
+        window.open(`https://wa.me/${PHONE}?text=${msg}`,"_blank");
+    }
+
+    $("#fixedSendBtn").onclick = sendWhatsApp;
+
+
+    /* INIT */
+    renderProducts();
+    renderCart();
+
+    // Botón alternativo para Google Sites (llama directamente a la función de envío)
+    document.getElementById("checkoutBtn2").addEventListener("click", sendWhatsApp);
+
+
+
 
 </script>
 
