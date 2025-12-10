@@ -218,6 +218,96 @@
         display: none;
     }
 
+    /* Contenedor que agrupa carrito + formulario en la columna derecha */
+    .sidebar{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+    }
+
+    /* Opcional: mantener el carrito visible al scrollear */
+    .sidebar .card:first-child{
+    position:sticky;
+    top:18px;
+    }
+
+    /* ===========================
+   Sidebar behavior & fixes
+   =========================== */
+
+    /* Ensure sidebar is the second column and stacks its children */
+    .sidebar{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+    grid-column: 2;            /* fuerza que la sidebar vaya a la 2ª columna del grid */
+    }
+
+    
+
+    /* Optional: make product images robust (evita huecos grandes si la imagen falla) */
+    .product img{
+    display:block;
+    width:100%;
+    height:150px;
+    object-fit:cover;
+    background:#f7f7f7;
+    }
+
+    /* Sidebar: quitar scroll forzado (dejamos comportamiento natural) */
+    .sidebar{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+    grid-column: 2; /* fuerza que la sidebar vaya a la 2ª columna del grid */
+    }
+
+    /* Reservar espacio para el footer fijo sin exagerar */
+    body{
+    padding-bottom: 72px; /* espacio para el fixed-footer (ajustable) */
+    }
+
+    /* Mobile: mostrar sidebar arriba para accesibilidad */
+    @media(max-width:980px){
+    .layout{ grid-template-columns: 1fr; }
+    .sidebar{ order: -1; } /* sidebar arriba en móvil */
+    body{ padding-bottom: 120px; } /* más espacio por si footer es alto en móvil */
+    }
+
+    .fixed-footer{
+    position:fixed;
+    left:0;
+    right:0;
+    bottom:0;
+    background:#fff;
+    padding:10px 14px;
+    border-top:1px solid #eee;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    z-index:999;
+    box-shadow: 0 -6px 18px rgba(12,12,12,0.06);
+    }
+
+    /* En pantallas chicas, los botones apilan verticalmente */
+    @media(max-width:560px){
+    .fixed-footer{
+        flex-direction:column;
+        align-items:stretch;
+        gap:8px;
+        padding:12px;
+    }
+    .footer-actions{
+        display:flex;
+        gap:8px;
+        justify-content:space-between;
+    }
+    .footer-actions .fixed-button{ flex:1; }
+    }
+
+    
+
 </style>
 </head>
 
@@ -235,9 +325,11 @@
         </div>
     </div>
 </header>
+
+
 <div class="layout">
 
-    <!-- Sección de productos -->
+    <!-- COLUMNA IZQUIERDA: productos -->
     <div class="card">
         <h2>Elegí tus sabores</h2>
         <p class="lead" style="font-size:13px">Podés personalizar cada roll y agregar varios.</p>
@@ -245,76 +337,81 @@
         <div style="height:10px"></div>
 
         <div id="productsArea" class="products"></div>
-
-        
-
-
     </div>
 
-    <!-- PANEL: Resumen / carrito -->
-        <div class="card" style="margin-top:12px;">
-            <h3 style="margin:0 0 8px 0">Tu pedido</h3>
-            <div id="cartList" class="cart-list">
-            <div class="small" style="color:var(--muted)">No hay items todavía</div>
-            </div>
+    <!-- COLUMNA DERECHA: sidebar que contiene carrito + formulario -->
+    <div class="sidebar">
 
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
-                <div>
-                    <div class="small">Subtotal</div>
-                    <div id="total" style="font-weight:800">$0</div>
-                </div>
-                <!-- opcional: dejar vacio porque ya tienes fixed footer -->
-            </div>
-        </div>
-    <!-- FIN PANEL -->
+  
 
-    <div class="card nice-form">
-        <h3 style="margin-top:0;">Datos del cliente</h3>
-
-        <div class="form-field">
-            <label>Nombre</label>
-            <input id="custName" type="text" placeholder="Tu nombre">
-        </div>
-
-        <div class="form-field">
-            <label>Teléfono</label>
-            <input id="custPhone" type="tel" placeholder="Ej: 3764xxxxxx">
-        </div>
-
-        <div class="form-field">
-            <label>Retiro o Entrega</label>
-            <select id="deliveryMode">
-                <option value="pickup">Retiro en local</option>
-                <option value="delivery">Envío a domicilio</option>
-            </select>
-        </div>
-
-        <div id="addressBlock" class="form-field" style="display:none;">
-            <label>Dirección</label>
-            <input id="custAddress" type="text" placeholder="Calle, número...">
-        </div>
-
-        <div class="form-field">
-            <label>Método de pago</label>
-            <select id="paymentMethod">
-                <option value="cash">Efectivo</option>
-                <option value="transfer">Transferencia</option>
-            </select>
-
-            <div id="paymentNotice" class="payment-msg">
-                Para envíos solo aceptamos transferencia.
-            </div>
-        </div>
-
-        <div class="form-field">
-            <label>Notas (opcional)</label>
-            <textarea id="custNotes" rows="2" placeholder="Ej: sin azúcar / venir a tal hora"></textarea>
-        </div>
-
-        <button id="checkoutBtn2" class="btn btn-primary" style="width:100%; margin-top:10px;">
-            Enviar pedido
-        </button>
+  <!-- PANEL: Resumen / carrito -->
+  <div class="card" style="margin-bottom:12px;">
+    <h3 style="margin:0 0 8px 0">Tu pedido</h3>
+    <div id="cartList" class="cart-list">
+      <div class="small" style="color:var(--muted)">No hay items todavía</div>
     </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px">
+      <div>
+        <div class="small">Subtotal</div>
+        <div id="total" style="font-weight:800">$0</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FORMULARIO (debajo del carrito) -->
+  <div class="card nice-form">
+    <h3 style="margin-top:0;">Datos del cliente</h3>
+
+    <div class="form-field">
+      <label>Nombre</label>
+      <input id="custName" type="text" placeholder="Tu nombre">
+    </div>
+
+    <div class="form-field">
+      <label>Teléfono</label>
+      <input id="custPhone" type="tel" placeholder="Ej: 3764xxxxxx">
+    </div>
+
+    <div class="form-field">
+      <label>Retiro o Entrega</label>
+      <select id="deliveryMode">
+        <option value="pickup">Retiro en local</option>
+        <option value="delivery">Envío a domicilio</option>
+      </select>
+    </div>
+
+    <div id="addressBlock" class="form-field" style="display:none;">
+      <label>Dirección</label>
+      <input id="custAddress" type="text" placeholder="Calle, número...">
+    </div>
+
+    <div class="form-field">
+      <label>Método de pago</label>
+      <select id="paymentMethod">
+        <option value="cash">Efectivo</option>
+        <option value="transfer">Transferencia</option>
+      </select>
+
+      <div id="paymentNotice" class="payment-msg">
+        Para envíos solo aceptamos transferencia.
+      </div>
+    </div>
+
+    <div class="form-field">
+      <label>Notas (opcional)</label>
+      <textarea id="custNotes" rows="2" placeholder="Ej: sin azúcar / venir a tal hora"></textarea>
+    </div>
+
+    <button id="checkoutBtn2" class="btn btn-primary" style="width:100%; margin-top:10px;">
+      Enviar pedido
+    </button>
+  </div>
+
+</div>
+<!-- FIN SIDEBAR -->
+
+
 
 
 </div><!-- END layout -->
@@ -323,13 +420,20 @@
 </div><!-- END wrap -->
 
 
-<!-- Footer fijo -->
+<!-- Footer fijo mejorado -->
 <div class="fixed-footer">
-    <div class="fixed-total">
-        Total: <span id="fixedTotal">$0</span>
-    </div>
-    <button class="fixed-button" id="fixedSendBtn">Enviar pedido</button>
+  <div class="footer-left" style="display:flex;align-items:center;gap:12px;">
+    <div style="font-weight:800;font-size:16px">Total: <span id="fixedTotal">$0</span></div>
+  </div>
+
+  <div class="footer-actions" style="display:flex;gap:8px;align-items:center;">
+    <button id="footerAddBtn" class="btn btn-ghost" title="Agregar otro roll" style="padding:8px 10px;">+ Agregar</button>
+    <button id="footerFormBtn" class="btn btn-ghost" title="Completar datos" style="padding:8px 10px;">Completar</button>
+    <button id="footerClearBtn" class="btn btn-ghost" title="Vaciar carrito" style="padding:8px 10px;">Vaciar</button>
+    <button id="fixedSendBtn" class="fixed-button" style="padding:10px 14px;">Enviar pedido</button>
+  </div>
 </div>
+
 
 
 <!-- Modal -->
@@ -412,7 +516,7 @@
             const box = document.createElement("div");
             box.className = "product";
             box.innerHTML = `
-                <img src="${f.img}">
+                <img src="${f.img}" onerror="this.onerror=null;this.src='https://via.placeholder.com/400x300?text=Ice+Cream'">
                 <div class="product-body">
                     <div class="product-title">${f.name}</div>
                     <div class="product-foot" style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">
@@ -647,30 +751,69 @@
         let pay = $("#paymentMethod").value;
         let notes = $("#custNotes").value.trim();
 
-        let msg = "Nuevo pedido%0A%0A";
-
+        // Construir mensaje legible y seguro
+        let text = "Nuevo pedido\n\n";
         cart.forEach((it,i)=>{
-            msg += `${i+1}) ${it.qty}× ${it.flavorName}%0A`;
-            msg += `Toppings: ${it.toppings.join(", ") || "Sin toppings"}%0A`;
-            msg += `Salsa: ${it.sauce || "Sin salsa"}%0A`;
-            msg += `Subtotal: ${fmt(calcItemTotal(it))}%0A%0A`;
+        text += `${i+1}) ${it.qty}× ${it.flavorName}\n`;
+        text += `Toppings: ${ (it.toppings && it.toppings.length) ? it.toppings.join(", ") : "Sin toppings" }\n`;
+        text += `Salsa: ${it.sauce || "Sin salsa"}\n`;
+        text += `Subtotal: ${fmt(calcItemTotal(it))}\n\n`;
         });
 
-        // Calcular total desde el carrito (no depender del DOM)
-        const totalAmount = cart.reduce((s, it) => s + calcItemTotal(it), 0);
-        msg += `Total: ${fmt(totalAmount)}%0A%0A`;
+        const totalAmount = cart.reduce((s,it)=> s + calcItemTotal(it), 0);
+        text += `Total: ${fmt(totalAmount)}\n\n`;
+        text += `Cliente: ${name}\nTel: ${phone}\n`;
+        text += `Entrega: ${mode==="pickup" ? "Retiro" : "Envío"}\n`;
+        if(mode==="delivery") text += `Dirección: ${address}\n`;
+        text += `Pago: ${pay==="cash"?"Efectivo":"Transferencia"}\n`;
+        if(notes) text += `Notas: ${notes}\n`;
 
-        msg += `Cliente: ${name}%0A`;
-        msg += `Tel: ${phone}%0A`;
-        msg += `Entrega: ${mode==="pickup"?"Retiro":"Envío"}%0A`;
-        if(mode==="delivery") msg += `Dirección: ${address}%0A`;
-        msg += `Pago: ${pay==="cash"?"Efectivo":"Transferencia"}%0A`;
-        if(notes) msg += `Notas: ${notes}%0A`;
+        // abrir WhatsApp
+        const url = `https://wa.me/${PHONE}?text=` + encodeURIComponent(text);
+        window.open(url, "_blank");
 
-        window.open(`https://wa.me/${PHONE}?text=${msg}`,"_blank");
     }
 
     $("#fixedSendBtn").onclick = sendWhatsApp;
+
+
+    // --- Helpers para footer botones (defensivos: no rompen si ya existen) ---
+    function scrollToProducts(){
+    const el = document.querySelector('.products');
+    if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+
+    function scrollToForm(){
+    const el = document.querySelector('.nice-form');
+    if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+
+    function clearCart(){
+    if(!cart || !cart.length) return;
+    if(!confirm("¿Vaciar el carrito?")) return;
+    cart = [];
+    renderCart();
+    }
+
+    // Hook botones del footer (asegura que existan en el DOM)
+    document.addEventListener('DOMContentLoaded', () => {
+    const addBtn = document.getElementById('footerAddBtn');
+    if(addBtn) addBtn.addEventListener('click', scrollToProducts);
+
+    const formBtn = document.getElementById('footerFormBtn');
+    if(formBtn) formBtn.addEventListener('click', scrollToForm);
+
+    const clearBtn = document.getElementById('footerClearBtn');
+    if(clearBtn) clearBtn.addEventListener('click', clearCart);
+
+    // fixedSendBtn ya existía y apunta a sendWhatsApp en tu código; si no, lo seteamos:
+    const sendBtn = document.getElementById('fixedSendBtn');
+    if(sendBtn) sendBtn.addEventListener('click', sendWhatsApp);
+    });
+
+
+
+
 
 
     /* INIT */
@@ -680,6 +823,7 @@
     // Botón alternativo para Google Sites (llama directamente a la función de envío)
     document.getElementById("checkoutBtn2").addEventListener("click", sendWhatsApp);
 
+    
 
 
 
