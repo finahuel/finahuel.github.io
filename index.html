@@ -10,6 +10,14 @@
       rel="stylesheet"
     />
 
+    <!-- Leaflet CSS -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+
     <style>
       :root {
         --bg: #e7f6fa;
@@ -1065,6 +1073,176 @@
       .sidebar {
         overflow-y: auto;
       }
+
+      /* ============================
+        ESTILOS PARA EL MAPA Y AUTOCOMPLETADO
+        ============================= */
+
+      /* Estilos para el autocompletado de direcciones */
+      #addressSuggestions {
+        border: 1px solid #e2e2e2;
+        border-radius: 10px;
+        background: white;
+        max-height: 200px;
+        overflow-y: auto;
+        position: absolute;
+        width: 100%;
+        z-index: 100;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        display: none;
+      }
+
+      .suggestion-item {
+        padding: 10px;
+        cursor: pointer;
+        border-bottom: 1px solid #f0f0f0;
+      }
+
+      .suggestion-item:hover {
+        background-color: #f7f7f7;
+      }
+
+      .suggestion-item:last-child {
+        border-bottom: none;
+      }
+
+      .address-input-container {
+        position: relative;
+      }
+
+      /* Estilos para el modal del mapa */
+      #mapModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.7);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 3000;
+        padding: 20px;
+      }
+
+      .map-container {
+        background: white;
+        border-radius: 20px;
+        padding: 20px;
+        width: 100%;
+        max-width: 800px;
+        max-height: 90vh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      #map {
+        width: 100%;
+        flex: 1;
+        min-height: 400px;
+        border-radius: 12px;
+        margin: 15px 0;
+      }
+
+      .map-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        margin-top: 15px;
+      }
+
+      #selectedAddress {
+        margin: 15px 0;
+        padding: 10px;
+        background: #f7f7f7;
+        border-radius: 8px;
+      }
+
+      /* Botón para abrir el mapa */
+      .open-map-btn {
+        margin-top: 8px;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      /* ============================
+        CORRECCIÓN: MODAL MAPA EN MÓVILES
+        ============================= */
+      @media (max-width: 768px) {
+        #mapModal {
+          padding: 10px;
+          align-items: flex-end;
+        }
+
+        .map-container {
+          width: 100%;
+          max-width: 100%;
+          max-height: 85vh;
+          border-radius: 20px 20px 0 0;
+          padding: 15px;
+          margin: 0;
+        }
+
+        #map {
+          min-height: 300px;
+          margin: 10px 0;
+        }
+
+        .map-actions {
+          position: sticky;
+          bottom: 0;
+          background: white;
+          padding: 15px 0;
+          margin-top: 10px;
+          display: flex;
+          gap: 10px;
+          justify-content: space-between;
+          flex-wrap: wrap;
+        }
+
+        #confirmAddress, #closeMap {
+          flex: 1;
+          min-width: 120px;
+          padding: 12px;
+          font-size: 16px;
+          white-space: nowrap;
+        }
+
+        #selectedAddress {
+          margin: 10px 0;
+          padding: 8px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .map-container {
+          max-height: 80vh;
+          padding: 12px;
+        }
+
+        #map {
+          min-height: 250px;
+        }
+
+        .map-actions {
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        #confirmAddress, #closeMap {
+          width: 100%;
+          min-width: unset;
+          padding: 10px;
+          font-size: 15px;
+        }
+
+        #selectedAddress {
+          font-size: 14px;
+        }
+      }
     </style>
   </head>
 
@@ -1151,7 +1329,7 @@
             </div>
 
             <!-- FORMULARIO (debajo del carrito) -->
-            <div class="card nice-form">
+            <div id="customerForm" class="card nice-form">
               <h3 style="margin-top: 0">Datos del cliente</h3>
 
               <div class="form-field">
@@ -1173,12 +1351,42 @@
               </div>
 
               <div id="addressBlock" class="form-field" style="display: none">
-                <label>Dirección</label>
-                <input
-                  id="custAddress"
-                  type="text"
-                  placeholder="Calle, número..."
-                />
+                <label>Dirección de entrega</label>
+                <div class="address-input-container">
+                  <input
+                    id="custAddress"
+                    type="text"
+                    placeholder="Comienza a escribir tu dirección..."
+                    autocomplete="off"
+                  />
+                  <div id="addressSuggestions"></div>
+                </div>
+                <button 
+                  type="button" 
+                  id="openMapBtn" 
+                  class="btn btn-ghost open-map-btn"
+                >
+                  📍 Seleccionar en el mapa
+                </button>
+                
+                <!-- Campos adicionales para más detalles -->
+                <div class="form-field" style="margin-top: 12px;">
+                  <label>Departamento/Piso (opcional)</label>
+                  <input
+                    id="custApt"
+                    type="text"
+                    placeholder="Ej: Piso 2, Depto B"
+                  />
+                </div>
+                
+                <div class="form-field">
+                  <label>Referencia (opcional)</label>
+                  <input
+                    id="custRef"
+                    type="text"
+                    placeholder="Ej: Portón negro, timbre 'Pérez'"
+                  />
+                </div>
               </div>
 
               <div class="form-field">
@@ -1268,7 +1476,7 @@
       </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Modal para personalizar productos -->
     <div id="modal">
       <div class="sheet">
         <div style="display: flex; gap: 14px; align-items: center">
@@ -1329,9 +1537,32 @@
       </div>
     </div>
 
+    <!-- Modal para el mapa -->
+    <div id="mapModal">
+      <div class="map-container">
+        <h3 style="margin: 0 0 15px 0">Seleccioná tu ubicación en el mapa</h3>
+        <div id="map"></div>
+        <div id="selectedAddress">
+          <div style="font-weight: 600; margin-bottom: 5px;">Dirección seleccionada:</div>
+          <div id="addressText" style="color: #666;">Hacé clic en el mapa para seleccionar una ubicación</div>
+        </div>
+        <div class="map-actions">
+          <button id="confirmAddress" class="btn btn-primary">Usar esta dirección</button>
+          <button id="closeMap" class="btn btn-ghost">Cancelar</button>
+        </div>
+      </div>
+    </div>
+
     <!-- ======================= -->
     <!--        JAVASCRIPT       -->
     <!-- ======================= -->
+
+    <!-- Leaflet JS -->
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
 
     <script>
       /* CONFIG */
@@ -1361,6 +1592,12 @@
       let editingItemId = null;
       let currentFlavor = null;
       let isSubmitting = false; // Variable para evitar doble envío
+
+      // Variables para el mapa
+      let map = null;
+      let marker = null;
+      let selectedLocation = null;
+      let selectedAddress = "";
 
       /* Helpers */
       function $(s) {
@@ -1664,7 +1901,179 @@
         }
       };
 
-      /* WhatsApp - CORREGIDO para evitar doble alerta */
+      /* ============================================
+        FUNCIONALIDAD DE DIRECCIÓN CON OPENSTREETMAP
+        ============================================ */
+
+      // Autocompletado de direcciones usando Nominatim
+      let addressTimeout = null;
+      $("#custAddress").addEventListener("input", function(e) {
+        const query = e.target.value.trim();
+        
+        // Limpiar timeout anterior
+        if (addressTimeout) {
+          clearTimeout(addressTimeout);
+        }
+        
+        // Ocultar sugerencias si el campo está vacío
+        if (query.length < 3) {
+          $("#addressSuggestions").style.display = "none";
+          return;
+        }
+        
+        // Esperar un poco para no hacer demasiadas peticiones
+        addressTimeout = setTimeout(() => {
+          searchAddresses(query);
+        }, 300);
+      });
+
+      // Cerrar sugerencias al hacer clic fuera
+      document.addEventListener("click", function(e) {
+        if (!e.target.closest(".address-input-container")) {
+          $("#addressSuggestions").style.display = "none";
+        }
+      });
+
+      function searchAddresses(query) {
+        // Usar Nominatim para buscar direcciones
+        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query + ', Posadas, Misiones, Argentina')}&limit=5&addressdetails=1`;
+        
+        fetch(url)
+          .then(response => response.json())
+          .then(data => {
+            displayAddressSuggestions(data);
+          })
+          .catch(error => {
+            console.error("Error buscando direcciones:", error);
+          });
+      }
+
+      function displayAddressSuggestions(addresses) {
+        const container = $("#addressSuggestions");
+        container.innerHTML = "";
+        
+        if (addresses.length === 0) {
+          container.style.display = "none";
+          return;
+        }
+        
+        addresses.forEach(addr => {
+          const div = document.createElement("div");
+          div.className = "suggestion-item";
+          div.textContent = addr.display_name;
+          div.addEventListener("click", function() {
+            $("#custAddress").value = addr.display_name;
+            container.style.display = "none";
+            
+            // También podemos guardar las coordenadas por si queremos usarlas después
+            selectedLocation = {
+              lat: parseFloat(addr.lat),
+              lng: parseFloat(addr.lon)
+            };
+            selectedAddress = addr.display_name;
+          });
+          container.appendChild(div);
+        });
+        
+        container.style.display = "block";
+      }
+
+      // Inicializar mapa
+      function initMap() {
+        // Coordenadas de Posadas, Misiones
+        const posadasCoords = [-27.3671, -55.8961];
+        
+        // Crear mapa
+        map = L.map('map').setView(posadasCoords, 13);
+        
+        // Agregar capa de OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+        
+        // Agregar marcador
+        marker = L.marker(posadasCoords, {draggable: true}).addTo(map);
+        selectedLocation = {lat: posadasCoords[0], lng: posadasCoords[1]};
+        
+        // Obtener dirección inicial
+        updateAddressFromMarker();
+        
+        // Evento al arrastrar el marcador
+        marker.on('dragend', function(e) {
+          selectedLocation = {
+            lat: e.target.getLatLng().lat,
+            lng: e.target.getLatLng().lng
+          };
+          updateAddressFromMarker();
+        });
+        
+        // Evento al hacer clic en el mapa
+        map.on('click', function(e) {
+          selectedLocation = {
+            lat: e.latlng.lat,
+            lng: e.latlng.lng
+          };
+          marker.setLatLng(e.latlng);
+          updateAddressFromMarker();
+        });
+      }
+
+      function updateAddressFromMarker() {
+        if (!selectedLocation) return;
+        
+        const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${selectedLocation.lat}&lon=${selectedLocation.lng}&zoom=18&addressdetails=1`;
+        
+        fetch(url)
+          .then(response => response.json())
+          .then(data => {
+            if (data.display_name) {
+              selectedAddress = data.display_name;
+              $("#addressText").textContent = selectedAddress;
+            }
+          })
+          .catch(error => {
+            console.error("Error obteniendo dirección:", error);
+            $("#addressText").textContent = "Error obteniendo la dirección. Por favor, intentá nuevamente.";
+          });
+      }
+
+      // Abrir modal del mapa
+      $("#openMapBtn").addEventListener("click", function() {
+        $("#mapModal").style.display = "flex";
+        document.body.style.overflow = "hidden";
+        
+        // Inicializar mapa si no está listo
+        if (!map) {
+          initMap();
+        }
+      });
+
+      // Cerrar modal del mapa
+      $("#closeMap").addEventListener("click", function() {
+        $("#mapModal").style.display = "none";
+        document.body.style.overflow = "auto";
+      });
+
+      // Confirmar dirección seleccionada en el mapa
+      $("#confirmAddress").addEventListener("click", function() {
+        if (selectedAddress) {
+          $("#custAddress").value = selectedAddress;
+          $("#mapModal").style.display = "none";
+          document.body.style.overflow = "auto";
+        } else {
+          alert("Por favor, seleccioná una ubicación en el mapa.");
+        }
+      });
+
+      // Cerrar modal al hacer clic fuera
+      $("#mapModal").addEventListener("click", function(e) {
+        if (e.target.id === "mapModal") {
+          $("#mapModal").style.display = "none";
+          document.body.style.overflow = "auto";
+        }
+      });
+
+      /* WhatsApp - CORREGIDO para evitar doble alerta y desplazar al formulario */
       function sendWhatsApp() {
         // Prevenir doble envío
         if (isSubmitting) return;
@@ -1676,6 +2085,7 @@
 
         if (cart.length === 0) {
           alert("Tu carrito está vacío.");
+          scrollToProducts(); // Desplazar a productos
           isSubmitting = false;
           return;
         }
@@ -1684,11 +2094,13 @@
         let phone = $("#custPhone").value.trim();
         if (!name) {
           alert("Ingresá tu nombre.");
+          scrollToForm(); // Desplazar al formulario
           isSubmitting = false;
           return;
         }
         if (!phone) {
           alert("Ingresá tu teléfono.");
+          scrollToForm(); // Desplazar al formulario
           isSubmitting = false;
           return;
         }
@@ -1698,12 +2110,15 @@
 
         if (mode === "delivery" && !address) {
           alert("Ingresá la dirección.");
+          scrollToForm(); // Desplazar al formulario
           isSubmitting = false;
           return;
         }
 
         let pay = $("#paymentMethod").value;
         let notes = $("#custNotes").value.trim();
+        let apt = $("#custApt").value.trim();
+        let ref = $("#custRef").value.trim();
 
         // Construir mensaje legible y seguro
         let text = "Nuevo pedido\n\n";
@@ -1722,7 +2137,11 @@
         text += `Total: ${fmt(totalAmount)}\n\n`;
         text += `Cliente: ${name}\nTel: ${phone}\n`;
         text += `Entrega: ${mode === "pickup" ? "Retiro" : "Envío"}\n`;
-        if (mode === "delivery") text += `Dirección: ${address}\n`;
+        if (mode === "delivery") {
+          text += `Dirección: ${address}\n`;
+          if (apt) text += `Departamento/Piso: ${apt}\n`;
+          if (ref) text += `Referencia: ${ref}\n`;
+        }
         text += `Pago: ${pay === "cash" ? "Efectivo" : "Transferencia"}\n`;
         if (notes) text += `Notas: ${notes}\n`;
 
@@ -1744,8 +2163,18 @@
       }
 
       function scrollToForm() {
-        const el = document.querySelector(".nice-form");
-        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+        const el = document.getElementById("customerForm");
+        if (el) {
+          el.scrollIntoView({ 
+            behavior: "smooth", 
+            block: "start" 
+          });
+          // Opcional: agregar un pequeño highlight visual
+          el.style.boxShadow = "0 0 0 3px rgba(244, 109, 160, 0.3)";
+          setTimeout(() => {
+            el.style.boxShadow = "";
+          }, 1500);
+        }
       }
 
       function clearCart() {
