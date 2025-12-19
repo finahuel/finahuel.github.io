@@ -49,6 +49,7 @@
         font-family: Inter, system-ui, "Helvetica Neue", Arial;
         background: linear-gradient(180deg, var(--bg) 0%, #ffffff 120%);
         -webkit-font-smoothing: antialiased;
+        padding-top: 64px;
       }
 
       img {
@@ -135,6 +136,12 @@
         background: #fffefc;
         display: flex;
         flex-direction: column;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+      .product:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
       }
       .product img {
         display: block;
@@ -277,6 +284,11 @@
         align-items: center;
         z-index: 200;
         box-shadow: 0 -6px 18px rgba(12, 12, 12, 0.06);
+        transform: translateY(100%);
+        transition: transform 0.3s ease;
+      }
+      .fixed-footer.visible {
+        transform: translateY(0);
       }
       .fixed-total {
         font-weight: 800;
@@ -292,17 +304,6 @@
         cursor: pointer;
       }
 
-      /* Actions row: responsive adjustments */
-      @media (max-width: 560px) {
-        .actions-row {
-          flex-wrap: wrap;
-          width: 100%;
-        }
-        .actions-row button {
-          width: 100%;
-        }
-      }
-
       /* PAYMENT & FORM styling small */
       .payment-msg {
         font-size: 12px;
@@ -316,6 +317,9 @@
         display: flex;
         flex-direction: column;
         gap: 14px;
+        background: #fdfdfd;
+        border-radius: 16px;
+        padding: 20px;
       }
       .form-field {
         display: flex;
@@ -342,189 +346,9 @@
         outline: none;
       }
 
-      /* ===========================
-        Responsive tweaks
-        =========================== */
-
-      /* For mobile and small tablets force single column and ensure children can shrink */
-      @media (max-width: 980px) {
-        .layout {
-          grid-template-columns: minmax(0, 1fr) !important;
-          gap: 12px;
-          padding: 12px;
-        }
-        .layout > * {
-          width: 100%;
-          min-width: 0 !important;
-        }
-        .products {
-          grid-template-columns: repeat(
-            auto-fit,
-            minmax(120px, 1fr)
-          ) !important;
-          gap: 10px;
-        }
-        .product img {
-          height: 110px !important;
-        }
-        header .brand {
-          flex-wrap: wrap;
-        }
-        body {
-          padding-bottom: 120px;
-        } /* más espacio para footer en móvil */
-      }
-
-      /* very small phones */
-      @media (max-width: 420px) {
-        .product img {
-          height: 100px !important;
-        }
-        .wrap {
-          padding: 10px;
-        }
-        .card {
-          padding: 12px;
-          border-radius: 12px;
-        }
-      }
-
-      /* final safety: prevent global overflow horizontal */
-      html,
-      body,
-      .wrap,
-      .layout,
-      .products,
-      .card {
-        min-width: 0;
-      }
-
       /* ============================
-   BOTONES DE PRODUCTO - CORREGIDO
-============================= */
-      /* Contenedor principal del pie del producto */
-      .product-foot {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 10px;
-        width: 100%;
-      }
-
-      /* Precio alineado a la izquierda */
-      .product-foot .price {
-        flex: 0 0 auto;
-        white-space: nowrap;
-        font-weight: 800;
-        color: var(--accent);
-      }
-
-      /* Botón "Armar" alineado a la derecha */
-      .product .btn-primary {
-        background: linear-gradient(90deg, var(--accent), var(--accent-2));
-        border: none;
-        font-weight: 700;
-        padding: 8px 16px;
-        border-radius: 10px;
-        color: white;
-        cursor: pointer;
-        white-space: nowrap;
-        min-width: 70px;
-        margin: 0; /* Asegurar que no tenga márgenes */
-      }
-
-      /* En móviles */
-      @media (max-width: 520px) {
-        .product-foot {
-          flex-direction: column;
-          align-items: stretch;
-          gap: 8px;
-        }
-
-        .product-foot .price {
-          text-align: center;
-          margin-bottom: 4px;
-        }
-
-        .product .btn-primary {
-          width: 100%;
-          text-align: center;
-        }
-      }
-
-      /* ============================
-   HERO SECTION CORREGIDO
-============================= */
-      .hero--full {
-        width: 100vw;
-        height: 100vh; /* Ocupa toda la pantalla */
-        min-height: 600px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(135deg, #fff0f6 0%, #e7f6fa 100%);
-        position: relative;
-        overflow: hidden;
-      }
-
-      .hero-inner {
-        width: 100%;
-        max-width: 1200px;
-        padding: 0 20px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        gap: 30px;
-      }
-
-      .hero-media {
-        width: 100%;
-        max-width: 800px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-
-      .hero-media img {
-        width: 100%;
-        max-width: 600px;
-        height: auto;
-        border-radius: 20px;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-        object-fit: cover;
-      }
-
-      .hero-cta {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        margin-top: 20px;
-      }
-
-      .hero-btn {
-        background: linear-gradient(90deg, var(--accent), var(--accent-2));
-        color: white;
-        padding: 16px 32px;
-        border-radius: 14px;
-        border: none;
-        font-weight: 700;
-        font-size: 18px;
-        cursor: pointer;
-        box-shadow: 0 8px 24px rgba(244, 109, 160, 0.3);
-        transition: all 0.3s ease;
-        min-width: 200px;
-      }
-
-      .hero-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 12px 28px rgba(244, 109, 160, 0.4);
-      }
-
-      /* ============================
-   NAVBAR FIJO (ACTUALIZADO)
-============================= */
+        NAVBAR FIJO (ACTUALIZADO)
+        ============================ */
       .navbar {
         position: fixed;
         top: 0;
@@ -581,320 +405,101 @@
 
       .nav-actions {
         display: flex;
-        gap: 10px;
+        gap: 12px;
       }
 
-      .nav-btn {
-        padding: 8px 16px;
-        border-radius: 10px;
+      .social-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
         border: 1px solid #e2e2e2;
         background: #fff;
-        font-weight: 600;
-        font-size: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         cursor: pointer;
         transition: all 0.2s;
+        font-size: 20px;
+        text-decoration: none;
+        color: #333;
       }
 
-      .nav-btn:hover {
-        background: #f5f5f5;
-        transform: translateY(-1px);
+      .social-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       }
 
-      /* Compensar navbar fijo */
-      body {
-        padding-top: 64px;
+      .social-btn.instagram:hover {
+        background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D);
+        color: white;
+        border-color: transparent;
       }
 
-      /* ============================
-        SCROLL SNAPPING CORREGIDO - MÓVILES
-        ============================= */
-
-      /* EN MÓVILES (max-width: 980px) */
-      @media (max-width: 980px) {
-        /* Eliminar scroll snapping problemático */
-        .snap-container {
-          height: auto;
-          overflow-y: auto;
-          overflow-x: hidden;
-          scroll-behavior: smooth;
-          -webkit-overflow-scrolling: touch;
-        }
-
-        .snap-section {
-          height: 100vh;
-          min-height: 100vh;
-        }
-
-        .hero--full {
-          height: 100vh;
-          min-height: 100vh;
-        }
-
-        /* Ajustar para navbar fijo */
-        .hero--full {
-          scroll-margin-top: 64px;
-        }
-
-        /* Mejorar el scroll general */
-        body {
-          overflow-y: auto;
-          height: auto;
-        }
-      }
-
-      /* EN PC (min-width: 981px) - SIN SCROLL SNAPPING */
-      @media (min-width: 981px) {
-        .snap-container {
-          height: auto;
-          overflow-y: visible;
-          position: relative;
-        }
-
-        .snap-section {
-          height: auto;
-        }
-
-        .hero--full {
-          height: 100vh;
-          min-height: 100vh;
-        }
-
-        /* Scrollbar visible en PC */
-        body {
-          scrollbar-width: thin;
-          scrollbar-color: var(--accent) #f0f0f0;
-        }
-
-        body::-webkit-scrollbar {
-          display: block;
-          width: 10px;
-        }
-
-        body::-webkit-scrollbar-track {
-          background: #f0f0f0;
-          border-radius: 5px;
-          margin: 5px 0;
-        }
-
-        body::-webkit-scrollbar-thumb {
-          background: linear-gradient(180deg, var(--accent), var(--accent-2));
-          border-radius: 5px;
-          border: 2px solid #f0f0f0;
-        }
-
-        body::-webkit-scrollbar-thumb:hover {
-          background: linear-gradient(180deg, var(--accent-2), var(--accent));
-        }
+      .social-btn.whatsapp:hover {
+        background: #25D366;
+        color: white;
+        border-color: transparent;
       }
 
       /* ============================
-        FOOTER FIJO CONDICIONAL
-        ============================= */
-      .fixed-footer {
-        position: fixed;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: #fff;
-        padding: 12px;
-        border-top: 1px solid #eee;
+        BOTONES DE PRODUCTO - CORREGIDO
+        ============================ */
+      .product-foot {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        z-index: 200;
-        box-shadow: 0 -6px 18px rgba(12, 12, 12, 0.06);
-        transform: translateY(100%); /* Oculto por defecto */
-        transition: transform 0.3s ease;
+        margin-top: 10px;
+        width: 100%;
       }
 
-      .fixed-footer.visible {
-        transform: translateY(0); /* Mostrar */
-      }
-
-      .fixed-total {
+      .product-foot .price {
+        flex: 0 0 auto;
+        white-space: nowrap;
         font-weight: 800;
-        font-size: 18px;
+        color: var(--accent);
       }
 
-      .fixed-button {
-        background: linear-gradient(90deg, var(--accent), var(--accent-2));
-        color: #fff;
-        padding: 12px 16px;
-        border-radius: 12px;
-        border: 0;
-        font-weight: 800;
-        cursor: pointer;
-      }
-
-      /* Ajustar espacio en body cuando footer está visible */
-      body.footer-visible {
-        padding-bottom: 70px;
-      }
-
-      /* ============================
-        RESPONSIVE MEJORADO
-        ============================= */
-      @media (max-width: 768px) {
-        .hero--full {
-          min-height: 500px;
-          height: 100vh;
-          height: -webkit-fill-available; /* Para navegadores móviles */
-        }
-
-        .hero-inner {
-          padding: 0 15px;
-          gap: 20px;
-        }
-
-        .hero-media img {
-          max-width: 90%;
-          border-radius: 15px;
-          max-height: 50vh;
-        }
-
-        .hero-btn {
-          padding: 14px 28px;
-          font-size: 16px;
-          min-width: 180px;
-        }
-
-        .nav-btn {
-          padding: 6px 12px;
-          font-size: 13px;
-        }
-
-        /* Mejorar scroll en móviles */
-        .snap-container {
-          overflow-y: auto;
-          height: auto;
-        }
-        
-        /* Permitir scroll normal en body */
-        body, html {
-          overflow-y: auto;
-          height: auto;
-        }
-      }
-
-      @media (max-width: 480px) {
-        .hero--full {
-          min-height: 400px;
-        }
-
-        .hero-btn {
-          padding: 12px 24px;
-          font-size: 15px;
-          min-width: 160px;
-        }
-
-        .hero-media img {
-          max-width: 95%;
-          max-height: 40vh;
-        }
-
-        .fixed-footer {
-          padding: 10px;
-          flex-wrap: wrap;
-          gap: 8px;
-        }
-
-        .fixed-footer .footer-left {
-          width: 100%;
-          justify-content: center;
-          margin-bottom: 5px;
-        }
-
-        .fixed-footer .footer-actions {
-          width: 100%;
-          justify-content: space-between;
-        }
-
-        /* Ajustar botones del footer en móviles */
-        .fixed-footer .btn-ghost {
-          padding: 6px 8px;
-          font-size: 12px;
-        }
-
-        .fixed-button {
-          padding: 8px 12px;
-          font-size: 14px;
-        }
-      }
-
-      /* Para tablets en orientación horizontal */
-      @media (max-width: 1024px) and (orientation: landscape) {
-        .hero--full {
-          min-height: 400px;
-        }
-
-        .hero-media img {
-          max-width: 60%;
-          max-height: 60vh;
-        }
-      }
-
-      /* ============================
-        MEJORAS ESTÉTICAS
-        ============================= */
-
-      /* Mejorar contenedor principal */
-      .layout {
-        margin-top: 20px;
-        padding: 0 8px;
-      }
-
-      /* Mejorar tarjetas de productos */
-      .product {
-        border: 1px solid rgba(0, 0, 0, 0.05);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-      }
-
-      .product:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
-      }
-
-      /* Asegurar que los botones "Armar" se vean bien */
       .product .btn-primary {
         background: linear-gradient(90deg, var(--accent), var(--accent-2));
         border: none;
         font-weight: 700;
-        letter-spacing: 0.3px;
+        padding: 8px 16px;
+        border-radius: 10px;
+        color: white;
+        cursor: pointer;
+        white-space: nowrap;
         min-width: 70px;
+        margin: 0;
       }
 
-      /* Mejorar el formulario */
-      .nice-form {
-        background: #fdfdfd;
-        border-radius: 16px;
-        padding: 20px;
+      /* ============================
+        RESPONSIVE
+        ============================ */
+      @media (max-width: 980px) {
+        .layout {
+          grid-template-columns: minmax(0, 1fr) !important;
+          gap: 12px;
+          padding: 12px;
+        }
+        .layout > * {
+          width: 100%;
+          min-width: 0 !important;
+        }
+        .products {
+          grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)) !important;
+          gap: 10px;
+        }
+        .product img {
+          height: 110px !important;
+        }
+        header .brand {
+          flex-wrap: wrap;
+        }
+        body {
+          padding-bottom: 120px;
+        }
       }
 
-      .nice-form h3 {
-        color: #333;
-        margin-bottom: 16px;
-        font-size: 18px;
-      }
-
-      /* Mejorar el carrito */
-      .cart-row {
-        padding: 14px 0;
-        border-bottom: 1px solid #f0f0f0;
-      }
-
-      .cart-row:last-child {
-        border-bottom: none;
-      }
-
-      /* Mejorar los botones de editar/eliminar */
-      .cart-row .btn-ghost {
-        font-size: 12px;
-        padding: 5px 10px;
-        border: 1px solid #e0e0e0;
-        border-radius: 8px;
-      }
-
-      /* Asegurar que el grid de productos se vea bien en todos los dispositivos */
       @media (max-width: 768px) {
         .products {
           grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -902,7 +507,23 @@
         }
       }
 
-      @media (max-width: 480px) {
+      @media (max-width: 520px) {
+        .product-foot {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 8px;
+        }
+
+        .product-foot .price {
+          text-align: center;
+          margin-bottom: 4px;
+        }
+
+        .product .btn-primary {
+          width: 100%;
+          text-align: center;
+        }
+        
         .products {
           grid-template-columns: repeat(2, 1fr);
           gap: 10px;
@@ -913,43 +534,38 @@
         }
       }
 
-      /* Efecto de pulso para el botón del hero */
-      @keyframes pulse {
-        0% {
-          box-shadow: 0 0 0 0 rgba(244, 109, 160, 0.7);
+      @media (max-width: 420px) {
+        .product img {
+          height: 100px !important;
         }
-        70% {
-          box-shadow: 0 0 0 10px rgba(244, 109, 160, 0);
+        .wrap {
+          padding: 10px;
         }
-        100% {
-          box-shadow: 0 0 0 0 rgba(244, 109, 160, 0);
+        .card {
+          padding: 12px;
+          border-radius: 12px;
         }
       }
 
-      .hero-btn {
-        animation: pulse 2s infinite;
-      }
-
-      .hero-btn:hover {
-        animation: none; /* Detener animación al hover */
+      /* Ajuste para footer visible */
+      body.footer-visible {
+        padding-bottom: 70px;
       }
 
       /* ============================
-   MODAL MEJORADO - NO TAPADO POR FOOTER
-============================= */
-
+        MODAL MEJORADO
+        ============================ */
       #modal {
-        z-index: 2000; /* Mayor que footer (200) y navbar (1000) */
+        z-index: 2000;
         background-color: rgba(0, 0, 0, 0.7);
         backdrop-filter: blur(5px);
       }
 
-      /* Modal responsivo para móviles */
       @media (max-width: 768px) {
         #modal {
           padding: 20px 10px;
-          align-items: center; /* Centrado vertical */
-          justify-content: center; /* Centrado horizontal */
+          align-items: center;
+          justify-content: center;
         }
 
         #modal .sheet {
@@ -958,15 +574,8 @@
           max-height: 85vh;
           border-radius: 16px;
           margin: 0 auto;
-          position: relative;
           overflow-y: auto;
           -webkit-overflow-scrolling: touch;
-          box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Si el footer está visible, dejar espacio */
-        body.footer-visible #modal {
-          padding-bottom: 100px; /* Espacio extra para el footer */
         }
 
         #modal img {
@@ -974,7 +583,6 @@
           height: 80px;
         }
 
-        /* Asegurar que los toppings sean desplazables en móviles */
         .topping-grid {
           max-height: 150px;
           overflow-y: auto;
@@ -986,7 +594,6 @@
           font-size: 14px;
         }
 
-        /* Botones fijos en la parte inferior del modal */
         .actions-row {
           position: sticky;
           bottom: 0;
@@ -996,89 +603,85 @@
           margin-top: 20px;
           z-index: 10;
         }
-
-        #addToCartBtn,
-        .actions-row .btn-ghost {
-          padding: 12px;
-          font-size: 16px;
-        }
-      }
-
-      /* Móviles muy pequeños */
-      @media (max-width: 480px) {
-        #modal .sheet {
-          width: 98%;
-          max-height: 90vh;
-          padding: 15px;
-        }
-
-        #modal img {
-          width: 70px;
-          height: 60px;
-        }
-
-        .chip {
-          padding: 6px 10px;
-          font-size: 13px;
-        }
-
-        .sauce {
-          padding: 8px 10px;
-          font-size: 14px;
-        }
-
-        #modalQty {
-          width: 100px;
-          padding: 8px;
-        }
       }
 
       /* ============================
-        MEJORAS FINALES DE LAYOUT
-        ============================= */
-
-      /* Asegurar que el layout se comporte bien */
-      .layout {
-        min-height: auto;
-        align-items: stretch;
-      }
-
-      /* Asegurar que las columnas tengan el mismo alto */
-      .layout > .card:first-child {
+        SELECTOR DE CANTIDAD MEJORADO
+        ============================ */
+      .quantity-selector {
         display: flex;
-        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        margin-top: 8px;
       }
 
-      /* La sección de productos debe crecer */
-      #productsArea {
+      .qty-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        border: 1px solid #e2e2e2;
+        background: white;
+        font-size: 20px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+      }
+
+      .qty-btn:hover {
+        background: #f5f5f5;
+        border-color: var(--accent);
+      }
+
+      #modalQty {
+        width: 80px;
+        text-align: center;
+        padding: 8px;
+        border-radius: 10px;
+        border: 1px solid #e2e2e2;
+        font-size: 16px;
+        font-weight: 700;
+        background: #fff;
+        -moz-appearance: textfield;
+      }
+
+      #modalQty::-webkit-outer-spin-button,
+      #modalQty::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      /* ============================
+        OPCIÓN DE CUCHARITA
+        ============================ */
+      .cucharita-option {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 8px;
+        padding: 12px;
+        border-radius: 10px;
+        border: 1px solid #e2e2e2;
+        background: #fafafa;
+      }
+
+      .cucharita-option input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        accent-color: var(--accent);
+        cursor: pointer;
+      }
+
+      .cucharita-option label {
+        font-size: 15px;
+        cursor: pointer;
         flex: 1;
-      }
-
-      /* Ajustes para pantallas grandes */
-      @media (min-width: 981px) {
-        .layout {
-          grid-template-columns: 1fr 380px;
-          align-items: start;
-        }
-
-        .sidebar {
-          position: sticky;
-          top: 84px; /* Navbar height + padding */
-          max-height: calc(100vh - 100px);
-          overflow-y: auto;
-        }
-      }
-
-      /* Permitir scroll en el sidebar */
-      .sidebar {
-        overflow-y: auto;
       }
 
       /* ============================
         ESTILOS PARA EL MAPA Y AUTOCOMPLETADO
-        ============================= */
-
-      /* Estilos para el autocompletado de direcciones */
+        ============================ */
       #addressSuggestions {
         border: 1px solid #e2e2e2;
         border-radius: 10px;
@@ -1100,10 +703,6 @@
 
       .suggestion-item:hover {
         background-color: #f7f7f7;
-      }
-
-      .suggestion-item:last-child {
-        border-bottom: none;
       }
 
       .address-input-container {
@@ -1169,263 +768,235 @@
       }
 
       /* ============================
-        CORRECCIÓN: MODAL MAPA EN MÓVILES
-        ============================= */
-      @media (max-width: 768px) {
-        #mapModal {
-          padding: 10px;
-          align-items: flex-end;
+        MEJORAS DE LAYOUT
+        ============================ */
+      .layout {
+        min-height: auto;
+        align-items: stretch;
+        margin-top: 20px;
+        padding: 0 8px;
+      }
+
+      .layout > .card:first-child {
+        display: flex;
+        flex-direction: column;
+      }
+
+      #productsArea {
+        flex: 1;
+      }
+
+      @media (min-width: 981px) {
+        .layout {
+          grid-template-columns: 1fr 380px;
+          align-items: start;
         }
 
-        .map-container {
-          width: 100%;
-          max-width: 100%;
-          max-height: 85vh;
-          border-radius: 20px 20px 0 0;
-          padding: 15px;
-          margin: 0;
-        }
-
-        #map {
-          min-height: 300px;
-          margin: 10px 0;
-        }
-
-        .map-actions {
+        .sidebar {
           position: sticky;
-          bottom: 0;
-          background: white;
-          padding: 15px 0;
-          margin-top: 10px;
-          display: flex;
-          gap: 10px;
-          justify-content: space-between;
-          flex-wrap: wrap;
-        }
-
-        #confirmAddress, #closeMap {
-          flex: 1;
-          min-width: 120px;
-          padding: 12px;
-          font-size: 16px;
-          white-space: nowrap;
-        }
-
-        #selectedAddress {
-          margin: 10px 0;
-          padding: 8px;
+          top: 84px;
+          max-height: calc(100vh - 100px);
+          overflow-y: auto;
         }
       }
 
-      @media (max-width: 480px) {
-        .map-container {
-          max-height: 80vh;
-          padding: 12px;
-        }
+      .sidebar {
+        overflow-y: auto;
+      }
 
-        #map {
-          min-height: 250px;
-        }
+      /* Cart buttons */
+      .cart-row .btn-ghost {
+        font-size: 12px;
+        padding: 5px 10px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+      }
 
-        .map-actions {
-          flex-direction: column;
-          gap: 8px;
-        }
-
-        #confirmAddress, #closeMap {
-          width: 100%;
-          min-width: unset;
-          padding: 10px;
-          font-size: 15px;
-        }
-
-        #selectedAddress {
-          font-size: 14px;
-        }
+      /* final safety: prevent global overflow horizontal */
+      html,
+      body,
+      .wrap,
+      .layout,
+      .products,
+      .card {
+        min-width: 0;
       }
     </style>
   </head>
 
   <body>
-    <div class="snap-container">
-      <!-- ===================================== -->
-      <!-- HERO PRINCIPAL                        -->
-      <!-- ===================================== -->
-      <section class="hero hero--full snap-section">
-        <div class="hero-inner">
-          <div class="hero-media">
-            <img src="img/home.png" alt="Helado Tailandés" />
+    <!-- ===================================== -->
+    <!-- NAVBAR CON BOTONES DE REDES SOCIALES  -->
+    <!-- ===================================== -->
+    <header class="navbar">
+      <div class="nav-inner">
+        <div class="nav-brand">
+          <img src="img/logo.jpeg" alt="Thai Cream" />
+          <div class="nav-text">
+            <strong>Thai Cream</strong>
+            <span>Posadas</span>
+          </div>
+        </div>
+
+        <nav class="nav-actions">
+          <a 
+            href="https://instagram.com/tu-instagram" 
+            target="_blank" 
+            class="social-btn instagram"
+            aria-label="Instagram"
+            title="Instagram"
+          >
+            📷
+          </a>
+          <a 
+            href="https://wa.me/5493764102637" 
+            target="_blank" 
+            class="social-btn whatsapp"
+            aria-label="WhatsApp"
+            title="WhatsApp"
+          >
+            💬
+          </a>
+        </nav>
+      </div>
+    </header>
+
+    <div class="wrap">
+      <div class="layout">
+        <!-- COLUMNA IZQUIERDA: productos -->
+        <div class="card">
+          <h2>Elegí tus sabores</h2>
+          <p class="lead" style="font-size: 13px">
+            Podés personalizar cada roll y agregar varios.
+          </p>
+
+          <div style="height: 10px"></div>
+
+          <div id="productsArea" class="products"></div>
+        </div>
+
+        <!-- COLUMNA DERECHA: sidebar que contiene carrito + formulario -->
+        <div class="sidebar">
+          <!-- PANEL: Resumen / carrito -->
+          <div class="card" style="margin-bottom: 12px">
+            <h3 style="margin: 0 0 8px 0">Tu pedido</h3>
+            <div id="cartList" class="cart-list">
+              <div class="small" style="color: var(--muted)">
+                No hay items todavía
+              </div>
+            </div>
+
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-top: 12px;
+              "
+            >
+              <div>
+                <div class="small">Subtotal</div>
+                <div id="total" style="font-weight: 800">$0</div>
+              </div>
+            </div>
           </div>
 
-          <div class="hero-cta">
+          <!-- FORMULARIO (debajo del carrito) -->
+          <div id="customerForm" class="card nice-form">
+            <h3 style="margin-top: 0">Datos del cliente</h3>
+
+            <div class="form-field">
+              <label>Nombre</label>
+              <input id="custName" type="text" placeholder="Tu nombre" />
+            </div>
+
+            <div class="form-field">
+              <label>Teléfono</label>
+              <input id="custPhone" type="tel" placeholder="Ej: 3764xxxxxx" />
+            </div>
+
+            <div class="form-field">
+              <label>Retiro o Entrega</label>
+              <select id="deliveryMode">
+                <option value="pickup">Retiro</option>
+                <option value="delivery">Envío a domicilio</option>
+              </select>
+            </div>
+
+            <div id="addressBlock" class="form-field" style="display: none">
+              <label>Dirección de entrega</label>
+              <div class="address-input-container">
+                <input
+                  id="custAddress"
+                  type="text"
+                  placeholder="Comienza a escribir tu dirección..."
+                  autocomplete="off"
+                />
+                <div id="addressSuggestions"></div>
+              </div>
+              <button 
+                type="button" 
+                id="openMapBtn" 
+                class="btn btn-ghost open-map-btn"
+              >
+                📍 Seleccionar en el mapa
+              </button>
+              
+              <!-- Campos adicionales para más detalles -->
+              <div class="form-field" style="margin-top: 12px;">
+                <label>Departamento/Piso (opcional)</label>
+                <input
+                  id="custApt"
+                  type="text"
+                  placeholder="Ej: Piso 2, Depto B"
+                />
+              </div>
+              
+              <div class="form-field">
+                <label>Referencia (opcional)</label>
+                <input
+                  id="custRef"
+                  type="text"
+                  placeholder="Ej: Portón negro, timbre 'Pérez'"
+                />
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label>Método de pago</label>
+              <select id="paymentMethod">
+                <option value="cash">Efectivo</option>
+                <option value="transfer">Transferencia</option>
+              </select>
+
+              <div id="paymentNotice" class="payment-msg">
+                Para envíos solo aceptamos transferencia previa.
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label>Notas (opcional)</label>
+              <textarea
+                id="custNotes"
+                rows="2"
+                placeholder="Ej: sin azúcar / venir a tal hora"
+              ></textarea>
+            </div>
+
             <button
-              class="hero-btn"
-              onclick="scrollToProducts()"
-              aria-label="Hacer pedido"
+              id="checkoutBtn2"
+              class="btn btn-primary"
+              style="width: 100%; margin-top: 10px"
             >
-              Hacer pedido
+              Enviar pedido
             </button>
           </div>
         </div>
-      </section>
-
-      <div class="wrap">
-        <header class="navbar">
-          <div class="nav-inner">
-            <div class="nav-brand">
-              <img src="img/logo.jpeg" alt="Thai Cream" />
-              <div class="nav-text">
-                <strong>Thai Cream</strong>
-                <span>Posadas</span>
-              </div>
-            </div>
-
-            <nav class="nav-actions">
-              <button class="nav-btn" onclick="scrollToProducts()">Menú</button>
-              <button class="nav-btn" onclick="scrollToCart()">Pedido</button>
-            </nav>
-          </div>
-        </header>
-
-        <div id="productsStart"></div>
-
-        <section class="layout">
-          <!-- COLUMNA IZQUIERDA: productos -->
-          <div class="card">
-            <h2>Elegí tus sabores</h2>
-            <p class="lead" style="font-size: 13px">
-              Podés personalizar cada roll y agregar varios.
-            </p>
-
-            <div style="height: 10px"></div>
-
-            <div id="productsArea" class="products"></div>
-          </div>
-
-          <!-- COLUMNA DERECHA: sidebar que contiene carrito + formulario -->
-          <div class="sidebar">
-            <!-- PANEL: Resumen / carrito -->
-            <div class="card" style="margin-bottom: 12px">
-              <h3 style="margin: 0 0 8px 0">Tu pedido</h3>
-              <div id="cartList" class="cart-list">
-                <div class="small" style="color: var(--muted)">
-                  No hay items todavía
-                </div>
-              </div>
-
-              <div
-                style="
-                  display: flex;
-                  justify-content: space-between;
-                  align-items: center;
-                  margin-top: 12px;
-                "
-              >
-                <div>
-                  <div class="small">Subtotal</div>
-                  <div id="total" style="font-weight: 800">$0</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- FORMULARIO (debajo del carrito) -->
-            <div id="customerForm" class="card nice-form">
-              <h3 style="margin-top: 0">Datos del cliente</h3>
-
-              <div class="form-field">
-                <label>Nombre</label>
-                <input id="custName" type="text" placeholder="Tu nombre" />
-              </div>
-
-              <div class="form-field">
-                <label>Teléfono</label>
-                <input id="custPhone" type="tel" placeholder="Ej: 3764xxxxxx" />
-              </div>
-
-              <div class="form-field">
-                <label>Retiro o Entrega</label>
-                <select id="deliveryMode">
-                  <option value="pickup">Retiro en local</option>
-                  <option value="delivery">Envío a domicilio</option>
-                </select>
-              </div>
-
-              <div id="addressBlock" class="form-field" style="display: none">
-                <label>Dirección de entrega</label>
-                <div class="address-input-container">
-                  <input
-                    id="custAddress"
-                    type="text"
-                    placeholder="Comienza a escribir tu dirección..."
-                    autocomplete="off"
-                  />
-                  <div id="addressSuggestions"></div>
-                </div>
-                <button 
-                  type="button" 
-                  id="openMapBtn" 
-                  class="btn btn-ghost open-map-btn"
-                >
-                  📍 Seleccionar en el mapa
-                </button>
-                
-                <!-- Campos adicionales para más detalles -->
-                <div class="form-field" style="margin-top: 12px;">
-                  <label>Departamento/Piso (opcional)</label>
-                  <input
-                    id="custApt"
-                    type="text"
-                    placeholder="Ej: Piso 2, Depto B"
-                  />
-                </div>
-                
-                <div class="form-field">
-                  <label>Referencia (opcional)</label>
-                  <input
-                    id="custRef"
-                    type="text"
-                    placeholder="Ej: Portón negro, timbre 'Pérez'"
-                  />
-                </div>
-              </div>
-
-              <div class="form-field">
-                <label>Método de pago</label>
-                <select id="paymentMethod">
-                  <option value="cash">Efectivo</option>
-                  <option value="transfer">Transferencia</option>
-                </select>
-
-                <div id="paymentNotice" class="payment-msg">
-                  Para envíos solo aceptamos transferencia.
-                </div>
-              </div>
-
-              <div class="form-field">
-                <label>Notas (opcional)</label>
-                <textarea
-                  id="custNotes"
-                  rows="2"
-                  placeholder="Ej: sin azúcar / venir a tal hora"
-                ></textarea>
-              </div>
-
-              <button
-                id="checkoutBtn2"
-                class="btn btn-primary"
-                style="width: 100%; margin-top: 10px"
-              >
-                Enviar pedido
-              </button>
-            </div>
-          </div>
-          <!-- FIN SIDEBAR -->
-        </section>
-        <!-- END layout -->
+        <!-- FIN SIDEBAR -->
       </div>
-      <!-- END wrap -->
+      <!-- END layout -->
     </div>
-    <!-- END snap-container -->
+    <!-- END wrap -->
 
     <!-- Footer fijo mejorado -->
     <div class="fixed-footer" id="fixedFooter">
@@ -1486,7 +1057,6 @@
               id="modalTitle"
               style="margin: 0; font-size: 18px; font-weight: 700"
             ></h2>
-            <div id="modalBasePrice" class="lead" style="font-size: 13px"></div>
           </div>
         </div>
 
@@ -1501,18 +1071,27 @@
           <div class="sauce" data-s="Chocolate">Chocolate</div>
           <div class="sauce" data-s="Dulce de leche">Dulce de leche</div>
           <div class="sauce" data-s="Frutilla">Frutilla</div>
+          <div class="sauce" data-s="Caramelo">Caramelo</div>
         </div>
 
         <h3 style="margin-top: 18px">Cantidad</h3>
-        <input
-          id="modalQty"
-          type="number"
-          min="1"
-          value="1"
-          style="width: 120px"
-        />
+        <div class="quantity-selector">
+          <button id="decreaseQty" type="button" class="qty-btn">-</button>
+          <input
+            id="modalQty"
+            type="number"
+            min="1"
+            value="1"
+          />
+          <button id="increaseQty" type="button" class="qty-btn">+</button>
+        </div>
 
-        <!-- FIX aplicado: actions-row -->
+        <h3 style="margin-top: 18px">Cucharita</h3>
+        <div class="cucharita-option">
+          <input type="checkbox" id="cucharitaCheckbox">
+          <label for="cucharitaCheckbox">Sí, incluir cucharita</label>
+        </div>
+
         <div
           class="actions-row"
           style="
@@ -1530,7 +1109,7 @@
             $0
           </div>
           <button id="addToCartBtn" class="btn btn-primary">
-            Agregar al carrito
+            Agregar 
           </button>
           <button class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
         </div>
@@ -1573,25 +1152,30 @@
       /* Productos (con misma imagen) */
       const flavors = [
         { id: "oreo", name: "Oreo", price: 2500, img: "img/oreo.jpeg" },
-        { id: "choco", name: "Chocolate", price: 2500, img: "img/oreo.jpeg" },
+        { id: "dura", name: "Durazno", price: 2500, img: "img/oreo.jpeg" },
         { id: "fruit", name: "Frutilla", price: 2500, img: "img/oreo.jpeg" },
         { id: "chocot", name: "Chocotorta", price: 2500, img: "img/oreo.jpeg" },
-        { id: "tira", name: "Tiramisu", price: 2500, img: "img/oreo.jpeg" },
+        { id: "pepi", name: "Pepitos", price: 2500, img: "img/oreo.jpeg" },
+        { id: "mara", name: "Maracuya", price: 2500, img: "img/oreo.jpeg" },
+        { id: "bana", name: "Banana", price: 2500, img: "img/oreo.jpeg" },
       ];
 
       const toppings = [
         "Maní",
-        "Chips de colores",
+        "Gomitas",
         "Chips de chocolate",
         "Oreo",
         "Rocklets",
         "Coco rallado",
+        "Merenguitos",
+        "Pepitos",
+        "Chocolinas",
       ];
 
       let cart = [];
       let editingItemId = null;
       let currentFlavor = null;
-      let isSubmitting = false; // Variable para evitar doble envío
+      let isSubmitting = false;
 
       // Variables para el mapa
       let map = null;
@@ -1626,35 +1210,6 @@
         }
       }
 
-      /* Configuración SIMPLIFICADA del sistema de scroll */
-      function initScrollSystem() {
-        const isMobile = window.innerWidth <= 980;
-        const snapContainer = document.querySelector(".snap-container");
-
-        if (!snapContainer) return;
-
-        if (isMobile) {
-          // En móvil: sin scroll snapping problemático
-          snapContainer.style.scrollSnapType = "none";
-          snapContainer.style.overflowY = "auto";
-          snapContainer.style.height = "auto";
-          document.body.style.overflow = "auto";
-          document.body.style.height = "auto";
-          
-          // Asegurar que el hero no interfiera con el scroll
-          const hero = document.querySelector('.hero--full');
-          if (hero) {
-            hero.style.position = 'relative';
-          }
-        } else {
-          // En PC: scroll normal, sin snapping
-          snapContainer.style.scrollSnapType = "none";
-          snapContainer.style.overflowY = "visible";
-          snapContainer.style.height = "auto";
-          document.body.style.overflow = "auto";
-        }
-      }
-
       /* Render productos */
       function renderProducts() {
         const area = $("#productsArea");
@@ -1680,21 +1235,38 @@
         });
       }
 
-      // Helper: abrir modal para CREAR un nuevo ítem (limpia editingItemId)
+      // Helper: abrir modal para CREAR un nuevo ítem
       function startNewModal(id, name) {
-        editingItemId = null; // declaramos que es un nuevo ítem
+        editingItemId = null;
         openModal(id, name);
       }
 
-      // Modal para personalizar (NO resetea editingItemId — así permite editar correctamente)
+      // Modal para personalizar
       function openModal(id, name) {
-        // NO hacemos editingItemId = null aquí (importante)
         currentFlavor = flavors.find((f) => f.id === id);
 
         $("#modalTitle").textContent = name;
         $("#modalImg").src = currentFlavor.img;
-        $("#modalBasePrice").textContent = "Base: " + fmt(currentFlavor.price);
         $("#modalQty").value = 1;
+
+        // Configurar botones de cantidad
+        const decreaseBtn = $("#decreaseQty");
+        const increaseBtn = $("#increaseQty");
+        const qtyInput = $("#modalQty");
+
+        decreaseBtn.onclick = () => {
+          let current = parseInt(qtyInput.value);
+          if (current > 1) {
+            qtyInput.value = current - 1;
+            updateModalPrice();
+          }
+        };
+
+        increaseBtn.onclick = () => {
+          let current = parseInt(qtyInput.value);
+          qtyInput.value = current + 1;
+          updateModalPrice();
+        };
 
         // toppings
         const t = $("#modalToppings");
@@ -1723,6 +1295,9 @@
               updateModalPrice();
             };
           });
+
+        // Resetear cucharita
+        $("#cucharitaCheckbox").checked = false;
 
         updateModalPrice();
 
@@ -1754,6 +1329,7 @@
         ].map((i) => i.value);
         const sauceEl = $("#modalSauces").querySelector(".sauce.active");
         const sauce = sauceEl ? sauceEl.dataset.s : "";
+        const cucharita = $("#cucharitaCheckbox").checked;
 
         const extraPerUnit =
           Math.max(0, selectedToppings.length - 1) * TOPPING_EXTRA_PRICE;
@@ -1764,6 +1340,7 @@
           it.qty = qty;
           it.toppings = selectedToppings;
           it.sauce = sauce;
+          it.cucharita = cucharita;
           it.unitPrice = currentFlavor.price;
         } else {
           cart.push({
@@ -1773,6 +1350,7 @@
             qty: qty,
             toppings: selectedToppings,
             sauce: sauce,
+            cucharita: cucharita,
             unitPrice: currentFlavor.price,
           });
         }
@@ -1794,11 +1372,10 @@
         let total = 0;
         cart.forEach((it) => (total += calcItemTotal(it)));
 
-        // Si no hay contenedor visual del carrito, al menos actualizamos el footer fijo
         if (!list) {
           const fixedEl = document.getElementById("fixedTotal");
           if (fixedEl) fixedEl.textContent = fmt(total);
-          updateFooter(); // Añadido
+          updateFooter();
           return;
         }
 
@@ -1819,7 +1396,12 @@
                         it.toppings && it.toppings.length
                           ? it.toppings.join(", ")
                           : "Sin toppings"
-                      } • ${it.sauce || "Sin salsa"}</span>
+                      } • ${it.sauce || "Sin salsa"}</span><br>
+                      <span class="small" style="color: ${
+                        it.cucharita ? "var(--accent)" : "#777"
+                      }; font-weight: ${it.cucharita ? "600" : "400"}">
+                        ${it.cucharita ? "✓ Con cucharita" : "✗ Sin cucharita"}
+                      </span>
                   </div>
                   <div style="text-align:right">
                       <b>${fmt(calcItemTotal(it))}</b><br>
@@ -1842,7 +1424,7 @@
         const fixedEl = document.getElementById("fixedTotal");
         if (fixedEl) fixedEl.textContent = fmt(total);
 
-        updateFooter(); // Añadido
+        updateFooter();
       }
 
       function editItem(id) {
@@ -1851,6 +1433,7 @@
         openModal(it.flavorId, it.flavorName);
 
         $("#modalQty").value = it.qty;
+        $("#cucharitaCheckbox").checked = it.cucharita || false;
 
         // toppings
         $("#modalToppings")
@@ -1910,24 +1493,20 @@
       $("#custAddress").addEventListener("input", function(e) {
         const query = e.target.value.trim();
         
-        // Limpiar timeout anterior
         if (addressTimeout) {
           clearTimeout(addressTimeout);
         }
         
-        // Ocultar sugerencias si el campo está vacío
         if (query.length < 3) {
           $("#addressSuggestions").style.display = "none";
           return;
         }
         
-        // Esperar un poco para no hacer demasiadas peticiones
         addressTimeout = setTimeout(() => {
           searchAddresses(query);
         }, 300);
       });
 
-      // Cerrar sugerencias al hacer clic fuera
       document.addEventListener("click", function(e) {
         if (!e.target.closest(".address-input-container")) {
           $("#addressSuggestions").style.display = "none";
@@ -1935,7 +1514,6 @@
       });
 
       function searchAddresses(query) {
-        // Usar Nominatim para buscar direcciones
         const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query + ', Posadas, Misiones, Argentina')}&limit=5&addressdetails=1`;
         
         fetch(url)
@@ -1965,7 +1543,6 @@
             $("#custAddress").value = addr.display_name;
             container.style.display = "none";
             
-            // También podemos guardar las coordenadas por si queremos usarlas después
             selectedLocation = {
               lat: parseFloat(addr.lat),
               lng: parseFloat(addr.lon)
@@ -1980,25 +1557,19 @@
 
       // Inicializar mapa
       function initMap() {
-        // Coordenadas de Posadas, Misiones
         const posadasCoords = [-27.3671, -55.8961];
         
-        // Crear mapa
         map = L.map('map').setView(posadasCoords, 13);
         
-        // Agregar capa de OpenStreetMap
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
         
-        // Agregar marcador
         marker = L.marker(posadasCoords, {draggable: true}).addTo(map);
         selectedLocation = {lat: posadasCoords[0], lng: posadasCoords[1]};
         
-        // Obtener dirección inicial
         updateAddressFromMarker();
         
-        // Evento al arrastrar el marcador
         marker.on('dragend', function(e) {
           selectedLocation = {
             lat: e.target.getLatLng().lat,
@@ -2007,7 +1578,6 @@
           updateAddressFromMarker();
         });
         
-        // Evento al hacer clic en el mapa
         map.on('click', function(e) {
           selectedLocation = {
             lat: e.latlng.lat,
@@ -2042,7 +1612,6 @@
         $("#mapModal").style.display = "flex";
         document.body.style.overflow = "hidden";
         
-        // Inicializar mapa si no está listo
         if (!map) {
           initMap();
         }
@@ -2065,7 +1634,6 @@
         }
       });
 
-      // Cerrar modal al hacer clic fuera
       $("#mapModal").addEventListener("click", function(e) {
         if (e.target.id === "mapModal") {
           $("#mapModal").style.display = "none";
@@ -2073,9 +1641,8 @@
         }
       });
 
-      /* WhatsApp - CORREGIDO para evitar doble alerta y desplazar al formulario */
+      /* WhatsApp */
       function sendWhatsApp() {
-        // Prevenir doble envío
         if (isSubmitting) return;
         isSubmitting = true;
         
@@ -2085,7 +1652,7 @@
 
         if (cart.length === 0) {
           alert("Tu carrito está vacío.");
-          scrollToProducts(); // Desplazar a productos
+          scrollToProducts();
           isSubmitting = false;
           return;
         }
@@ -2094,13 +1661,13 @@
         let phone = $("#custPhone").value.trim();
         if (!name) {
           alert("Ingresá tu nombre.");
-          scrollToForm(); // Desplazar al formulario
+          scrollToForm();
           isSubmitting = false;
           return;
         }
         if (!phone) {
           alert("Ingresá tu teléfono.");
-          scrollToForm(); // Desplazar al formulario
+          scrollToForm();
           isSubmitting = false;
           return;
         }
@@ -2110,7 +1677,7 @@
 
         if (mode === "delivery" && !address) {
           alert("Ingresá la dirección.");
-          scrollToForm(); // Desplazar al formulario
+          scrollToForm();
           isSubmitting = false;
           return;
         }
@@ -2120,7 +1687,7 @@
         let apt = $("#custApt").value.trim();
         let ref = $("#custRef").value.trim();
 
-        // Construir mensaje legible y seguro
+        // Construir mensaje
         let text = "Nuevo pedido\n\n";
         cart.forEach((it, i) => {
           text += `${i + 1}) ${it.qty}× ${it.flavorName}\n`;
@@ -2130,6 +1697,7 @@
               : "Sin toppings"
           }\n`;
           text += `Salsa: ${it.sauce || "Sin salsa"}\n`;
+          text += `Cucharita: ${it.cucharita ? "Sí" : "No"}\n`;
           text += `Subtotal: ${fmt(calcItemTotal(it))}\n\n`;
         });
 
@@ -2151,7 +1719,7 @@
         isSubmitting = false;
       }
 
-      /* Función para ir a productos - MEJORADA */
+      /* Funciones de scroll */
       function scrollToProducts() {
         const productsSection = document.querySelector(".layout");
         if (productsSection) {
@@ -2169,7 +1737,6 @@
             behavior: "smooth", 
             block: "start" 
           });
-          // Opcional: agregar un pequeño highlight visual
           el.style.boxShadow = "0 0 0 3px rgba(244, 109, 160, 0.3)";
           setTimeout(() => {
             el.style.boxShadow = "";
@@ -2184,22 +1751,8 @@
         renderCart();
       }
 
-      function scrollToCart() {
-        const formSection = document.querySelector(".nice-form");
-        if (formSection) {
-          formSection.scrollIntoView({
-            behavior: "smooth",
-            block: "start",
-          });
-        }
-      }
-
       /* INIT */
       document.addEventListener("DOMContentLoaded", function () {
-        // Inicializar sistema de scroll
-        initScrollSystem();
-        window.addEventListener("resize", initScrollSystem);
-
         // Hook botones del footer
         const addBtn = document.getElementById("footerAddBtn");
         if (addBtn) addBtn.addEventListener("click", scrollToProducts);
@@ -2213,14 +1766,14 @@
         // Solo un event listener para el botón fijo
         const fixedSendBtn = document.getElementById("fixedSendBtn");
         if (fixedSendBtn) {
-          fixedSendBtn.removeEventListener("click", sendWhatsApp); // Limpiar primero
+          fixedSendBtn.removeEventListener("click", sendWhatsApp);
           fixedSendBtn.addEventListener("click", sendWhatsApp);
         }
 
         // Solo un event listener para el botón del formulario
         const checkoutBtn2 = document.getElementById("checkoutBtn2");
         if (checkoutBtn2) {
-          checkoutBtn2.removeEventListener("click", sendWhatsApp); // Limpiar primero
+          checkoutBtn2.removeEventListener("click", sendWhatsApp);
           checkoutBtn2.addEventListener("click", sendWhatsApp);
         }
 
@@ -2228,16 +1781,6 @@
         renderProducts();
         renderCart();
         updateFooter();
-        
-        // Asegurar que el scroll funcione correctamente en móviles
-        if (window.innerWidth <= 980) {
-          setTimeout(() => {
-            document.body.style.height = 'auto';
-            document.body.style.overflowY = 'auto';
-            document.documentElement.style.height = 'auto';
-            document.documentElement.style.overflowY = 'auto';
-          }, 100);
-        }
       });
     </script>
   </body>
