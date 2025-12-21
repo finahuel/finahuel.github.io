@@ -2219,7 +2219,7 @@
 
         
         
-        const sheetUrl = "https://script.google.com/macros/s/AKfycbz8I38xcat6oVPOyFsvQsothkoL45z2p9_Mp_3ZlBkEwGQd9tnD03zKRyTMHwlHCBJf5g/exec"; // tu web app url
+        const sheetUrl = "https://script.google.com/macros/s/AKfycbzho7m3paDLEKVj3UnXqlZebGwbhQW2CBksmuSfIYFk5xdx7o_gMZZA-g5c97VEvjt0eA/exec"; // tu web app url
         const orderObj = {
         orderId,
         name,
@@ -2235,18 +2235,27 @@
         status: "new",
         };
 
+        // Enviar como application/x-www-form-urlencoded (sin preflight)
+        const form = new URLSearchParams();
+        form.append('payload', JSON.stringify(orderObj));
+
         fetch(sheetUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(orderObj),
+        method: 'POST',
+        body: form
         })
-        .then(res => res.json())
+        .then(response => {
+        // Apps Script devuelve JSON, intentamos leerlo
+        return response.text().then(txt => {
+            try { return JSON.parse(txt); } catch(_){ return txt; }
+        });
+        })
         .then(data => {
-        console.log("Sheets OK:", data);
+        console.log('Sheets response:', data);
         })
         .catch(err => {
-        console.error("Error Sheets:", err);
+        console.error('Error Sheets:', err);
         });
+
 
 
 
