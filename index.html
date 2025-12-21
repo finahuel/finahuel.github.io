@@ -2219,7 +2219,7 @@
 
         
         
-        const sheetUrl = "https://script.google.com/macros/s/AKfycbwo7KAl1P4Zrvx6Ge8-xbGmp-nImkf-tCHoPb8EC_HRYAzQbMVdB1hA0mbUps1BqaZ63g/exec"; // tu web app url
+        const sheetUrl = "https://script.google.com/macros/s/AKfycbz8I38xcat6oVPOyFsvQsothkoL45z2p9_Mp_3ZlBkEwGQd9tnD03zKRyTMHwlHCBJf5g/exec"; // tu web app url
         const orderObj = {
         orderId,
         name,
@@ -2239,8 +2239,15 @@
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(orderObj),
-        // mode: 'no-cors' // si necesitas enviar sin respuesta (menos ideal)
+        })
+        .then(res => res.json())
+        .then(data => {
+        console.log("Sheets OK:", data);
+        })
+        .catch(err => {
+        console.error("Error Sheets:", err);
         });
+
 
 
         // abrir WhatsApp
@@ -2335,10 +2342,11 @@
         const y = now.getFullYear();
         const m = String(now.getMonth() + 1).padStart(2, "0");
         const d = String(now.getDate()).padStart(2, "0");
-        const t = String(now.getTime()).slice(-5);
-        const rnd = Math.floor(1000 + Math.random() * 9000);
-        return `${y}${m}${d}-${t}-${rnd}`;
-        }
+        const h = String(now.getHours()).padStart(2, "0");
+        const min = String(now.getMinutes()).padStart(2, "0");
+        return `${y}${m}${d}-${h}${min}`;
+}
+
 
     </script>
   </body>
