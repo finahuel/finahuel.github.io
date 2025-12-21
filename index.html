@@ -2182,33 +2182,10 @@
         //Gemerar numero de orden   
         const orderId = generateOrderId();
         document.getElementById("orderId").value = orderId; // guardarlo en hidden
-        
-        const sheetUrl = "https://script.google.com/macros/s/AKfycbwo7KAl1P4Zrvx6Ge8-xbGmp-nImkf-tCHoPb8EC_HRYAzQbMVdB1hA0mbUps1BqaZ63g/exec"; // tu web app url
-        const orderObj = {
-        orderId,
-        name,
-        phone,
-        mode,
-        address,
-        lat,
-        lng,
-        items: cart, // o estructura que uses
-        total: total,
-        payment: pay,
-        notes: notes,
-        status: "new",
-        };
-
-        fetch(sheetUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(orderObj),
-        // mode: 'no-cors' // si necesitas enviar sin respuesta (menos ideal)
-        });
 
         // Construir mensaje
-        let text = " Thai Cream - NUEVO PEDIDO \n\n";
-        text = `Pedido: ${orderId}\n...`;
+        let text = " Thai Cream - NUEVO PEDIDO \n";
+        text += `🆔 Pedido: ${orderId}\n\n`;
         text += "Productos:*\n";
         cart.forEach((it, i) => {
           text += `${i + 1}) ${it.qty}× ${it.flavorName}\n`;
@@ -2231,15 +2208,44 @@
           mode === "pickup" ? "Retiro" : "Envío a domicilio"
         }\n`;
         if (mode === "delivery") {
-            text += `• Dirección: ${address}\n`;
+            text += `\uD83D\uDCCD Dirección: ${address}\n`;
             if (mapsLink) text += `• Mapa: ${mapsLink}\n`;
             if (ref) text += `• Referencia: ${ref}\n`;
         }
         text += `• Pago: ${pay === "cash" ? "Efectivo" : "Transferencia"}\n`;
         if (notes) text += `• Notas: ${notes}\n`;
 
+        text = text.normalize("NFC");
+
+        
+        
+        const sheetUrl = "https://script.google.com/macros/s/AKfycbwo7KAl1P4Zrvx6Ge8-xbGmp-nImkf-tCHoPb8EC_HRYAzQbMVdB1hA0mbUps1BqaZ63g/exec"; // tu web app url
+        const orderObj = {
+        orderId,
+        name,
+        phone,
+        mode,
+        address,
+        lat,
+        lng,
+        items: cart, // o estructura que uses
+        total: totalAmount,
+        payment: pay,
+        notes: notes,
+        status: "new",
+        };
+
+        fetch(sheetUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(orderObj),
+        // mode: 'no-cors' // si necesitas enviar sin respuesta (menos ideal)
+        });
+
+
         // abrir WhatsApp
-        const url = `https://wa.me/${PHONE}?text=` + encodeURIComponent(text);
+        const url = `https://wa.me/${PHONE}?text=${encodeURIComponent(text)}`;
+
         window.open(url, "_blank");
         isSubmitting = false;
       }
