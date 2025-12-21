@@ -1243,6 +1243,17 @@
       ::-webkit-scrollbar-thumb:hover {
         background: #aaa;
       }
+
+      /* Controlamos el espaciado del botón + referencia */
+      .open-map-row {
+        display: flex;
+        flex-direction: column;
+        gap: 10px; /* ajusta a 6px / 10px si querés más o menos espacio */
+        margin-top: 8px;
+      }
+      .open-map-row .open-map-btn {
+        margin-top: 0px; /* evitamos doble margen */
+      }
     </style>
   </head>
 
@@ -1364,33 +1375,36 @@
                   placeholder="Comienza a escribir tu dirección..."
                   autocomplete="off"
                 />
+                <input type="hidden" id="custLat" />
+                <input type="hidden" id="custLng" />
+                <input type="hidden" id="orderId" />
                 <div id="addressSuggestions"></div>
               </div>
-              <button
-                type="button"
-                id="openMapBtn"
-                class="btn btn-ghost open-map-btn"
+              <div
+                class="open-map-row"
+                style="
+                  display: flex;
+                  flex-direction: column;
+                  gap: 8px;
+                  margin-top: 8px;
+                "
               >
-                📍 Seleccionar en el mapa
-              </button>
+                <button
+                  type="button"
+                  id="openMapBtn"
+                  class="btn btn-ghost open-map-btn"
+                >
+                  📍 Seleccionar en el mapa
+                </button>
 
-              <!-- Campos adicionales para más detalles -->
-              <div class="form-field">
-                <label>Referencia (opcional)</label>
-                <input
-                  id="custRef"
-                  type="text"
-                  placeholder="Ej:Departamento 2B, Portón negro, timbre 'Pérez'"
-                />
-              </div>
-            </div>
-
-            <!-- CAMPO: Hora de retiro/entrega -->
-            <div class="form-field" id="timeBlock">
-              <label id="timeLabel">Hora de retiro</label>
-              <input id="custTime" type="text" placeholder="Ej: 14:30" />
-              <div id="timeNote" class="time-note">
-                Indicá la hora en que querés retirar tu pedido
+                <div class="form-field" style="margin: 0">
+                  <label>Referencia (opcional)</label>
+                  <input
+                    id="custRef"
+                    type="text"
+                    placeholder="Ej:Departamento 2B, Portón negro, timbre 'Pérez'"
+                  />
+                </div>
               </div>
             </div>
 
@@ -1886,36 +1900,13 @@
       $("#deliveryMode").onchange = () => {
         const mode = $("#deliveryMode").value;
         const addr = $("#addressBlock");
-        const timeLabel = $("#timeLabel");
-        const timeNote = $("#timeNote");
+
         const pay = document.getElementById("paymentMethod");
         const notice = document.getElementById("paymentNotice");
         const cashOpt = pay.querySelector('option[value="cash"]');
 
         // Mostrar/ocultar dirección
         addr.style.display = mode === "delivery" ? "block" : "none";
-
-        // Actualizar etiqueta y nota de hora
-        if (mode === "delivery") {
-          timeLabel.textContent = "Hora de entrega";
-          timeNote.textContent =
-            "Indicá la hora en que querés recibir tu pedido";
-          // Forzar transferencia
-          pay.value = "transfer";
-          if (cashOpt) cashOpt.disabled = true;
-
-          // Mostrar aviso
-          notice.style.display = "block";
-        } else {
-          timeLabel.textContent = "Hora de retiro";
-          timeNote.textContent =
-            "Indicá la hora en que querés retirar tu pedido";
-          // Habilitar efectivo nuevamente
-          if (cashOpt) cashOpt.disabled = false;
-
-          // Ocultar aviso
-          notice.style.display = "none";
-        }
       };
 
       /* ============================================
@@ -1983,8 +1974,18 @@
               lat: parseFloat(addr.lat),
               lng: parseFloat(addr.lon),
             };
-            selectedAddress = addr.display_name;
+            // usar shorthand
+            const short =
+              formatShortAddress(addr.address || {}) || addr.display_name;
+            selectedAddress = short;
+
+            // guardar hidden fields
+            const latEl = document.getElementById("custLat");
+            const lngEl = document.getElementById("custLng");
+            if (latEl) latEl.value = selectedLocation.lat;
+            if (lngEl) lngEl.value = selectedLocation.lng;
           });
+
           container.appendChild(div);
         });
 
@@ -2025,6 +2026,35 @@
         });
       }
 
+      function formatShortAddress(addressObj) {
+        if (!addressObj) return "";
+        // intenta armar "Calle 9 de Julio 123, Barrio XYZ, Posadas, 3300"
+        const number = addressObj.house_number || "";
+        const road =
+          addressObj.road || addressObj.pedestrian || addressObj.cycleway || "";
+        const neighbourhood =
+          addressObj.suburb ||
+          addressObj.neighbourhood ||
+          addressObj.village ||
+          "";
+        const city =
+          addressObj.city ||
+          addressObj.town ||
+          addressObj.village ||
+          addressObj.county ||
+          "";
+        const state = addressObj.state || "";
+        const postcode = addressObj.postcode || "";
+        const parts = [];
+        if (road) parts.push((number ? number + " " : "") + road);
+        if (neighbourhood) parts.push(neighbourhood);
+        if (city) parts.push(city);
+        if (state) parts.push(state);
+        if (postcode) parts.push(postcode);
+        const short = parts.filter(Boolean).join(", ");
+        return short || "";
+      }
+
       function updateAddressFromMarker() {
         if (!selectedLocation) return;
 
@@ -2033,15 +2063,32 @@
         fetch(url)
           .then((response) => response.json())
           .then((data) => {
-            if (data.display_name) {
-              selectedAddress = data.display_name;
-              $("#addressText").textContent = selectedAddress;
+            if (data) {
+              const full = data.display_name || "";
+              const addrObj = data.address || {};
+              const short = formatShortAddress(addrObj) || full;
+
+              // variables globales (útiles)
+              selectedAddressFull = full;
+              selectedAddress = short; // lo usamos en el form y whatsapp
+
+              // mostrar en el modal (preview)
+              const t = $("#addressText");
+              if (t) t.textContent = short || full;
+
+              // guardar coords en hidden inputs si existen
+              const latEl = document.getElementById("custLat");
+              const lngEl = document.getElementById("custLng");
+              if (latEl) latEl.value = selectedLocation.lat;
+              if (lngEl) lngEl.value = selectedLocation.lng;
             }
           })
           .catch((error) => {
             console.error("Error obteniendo dirección:", error);
-            $("#addressText").textContent =
-              "Error obteniendo la dirección. Por favor, intentá nuevamente.";
+            const t = $("#addressText");
+            if (t)
+              t.textContent =
+                "Error obteniendo la dirección. Por favor, intentá nuevamente.";
           });
       }
 
@@ -2065,6 +2112,7 @@
       $("#confirmAddress").addEventListener("click", function () {
         if (selectedAddress) {
           $("#custAddress").value = selectedAddress;
+          // hidden fields ya se rellenaron en updateAddressFromMarker o en el click de sugerencia
           $("#mapModal").style.display = "none";
           document.body.style.overflow = "auto";
         } else {
@@ -2095,8 +2143,10 @@
           return;
         }
 
-        let name = $("#custName").value.trim();
-        let phone = $("#custPhone").value.trim();
+        const nameEl = document.getElementById("custName");
+        const phoneEl = document.getElementById("custPhone");
+        let name = nameEl ? nameEl.value.trim() : "";
+        let phone = phoneEl ? phoneEl.value.trim() : "";
         if (!name) {
           alert("Ingresá tu nombre.");
           scrollToForm();
@@ -2111,20 +2161,7 @@
         }
 
         let mode = $("#deliveryMode").value;
-        let address = $("#custAddress").value.trim();
-        let time = $("#custTime").value.trim();
-
-        // Validar hora
-        if (!time) {
-          alert(
-            "Ingresá la hora de " +
-              (mode === "pickup" ? "retiro" : "entrega") +
-              "."
-          );
-          scrollToForm();
-          isSubmitting = false;
-          return;
-        }
+        let address = val("custAddress");
 
         if (mode === "delivery" && !address) {
           alert("Ingresá la dirección.");
@@ -2133,14 +2170,46 @@
           return;
         }
 
-        let pay = $("#paymentMethod").value;
-        let notes = $("#custNotes").value.trim();
-        let apt = $("#custApt").value.trim();
-        let ref = $("#custRef").value.trim();
+        const lat = val("custLat");
+        const lng = val("custLng");
+        const mapsLink = (lat && lng) ? `https://www.google.com/maps/search/?api=1&query=${lat},${lng}` : "";
+
+
+        let pay = val("paymentMethod"); // paymentMethod existe pero usar val es seguro y consistente
+        let notes = val("custNotes"); // opcional, ahora seguro
+        let ref = val("custRef"); // opcional, ahora seguro
+
+        //Gemerar numero de orden   
+        const orderId = generateOrderId();
+        document.getElementById("orderId").value = orderId; // guardarlo en hidden
+        
+        const sheetUrl = "https://script.google.com/macros/s/AKfycbwo7KAl1P4Zrvx6Ge8-xbGmp-nImkf-tCHoPb8EC_HRYAzQbMVdB1hA0mbUps1BqaZ63g/exec"; // tu web app url
+        const orderObj = {
+        orderId,
+        name,
+        phone,
+        mode,
+        address,
+        lat,
+        lng,
+        items: cart, // o estructura que uses
+        total: total,
+        payment: pay,
+        notes: notes,
+        status: "new",
+        };
+
+        fetch(sheetUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(orderObj),
+        // mode: 'no-cors' // si necesitas enviar sin respuesta (menos ideal)
+        });
 
         // Construir mensaje
-        let text = "🍦 *NUEVO PEDIDO - HELADO TAILANDÉS* 🍦\n\n";
-        text += "*Productos:*\n";
+        let text = " Thai Cream - NUEVO PEDIDO \n\n";
+        text = `Pedido: ${orderId}\n...`;
+        text += "Productos:*\n";
         cart.forEach((it, i) => {
           text += `${i + 1}) ${it.qty}× ${it.flavorName}\n`;
           text += `   Toppings: ${
@@ -2161,13 +2230,10 @@
         text += `• Entrega: ${
           mode === "pickup" ? "Retiro" : "Envío a domicilio"
         }\n`;
-        text += `• Hora de ${
-          mode === "pickup" ? "retiro" : "entrega"
-        }: ${time}\n`;
         if (mode === "delivery") {
-          text += `• Dirección: ${address}\n`;
-          if (apt) text += `• Departamento/Piso: ${apt}\n`;
-          if (ref) text += `• Referencia: ${ref}\n`;
+            text += `• Dirección: ${address}\n`;
+            if (mapsLink) text += `• Mapa: ${mapsLink}\n`;
+            if (ref) text += `• Referencia: ${ref}\n`;
         }
         text += `• Pago: ${pay === "cash" ? "Efectivo" : "Transferencia"}\n`;
         if (notes) text += `• Notas: ${notes}\n`;
@@ -2252,11 +2318,22 @@
         $("#deliveryMode").onchange();
       });
 
-      document
-        .getElementById("fixedSendBtn")
-        .addEventListener("click", function () {
-          alert("CLICK OK");
-        });
+      // HELPER seguro para leer inputs (evita crashes si el elemento no existe)
+      function val(id) {
+        const el = document.getElementById(id);
+        return el ? el.value.trim() : "";
+      }
+
+        function generateOrderId() {
+        const now = new Date();
+        const y = now.getFullYear();
+        const m = String(now.getMonth() + 1).padStart(2, "0");
+        const d = String(now.getDate()).padStart(2, "0");
+        const t = String(now.getTime()).slice(-5);
+        const rnd = Math.floor(1000 + Math.random() * 9000);
+        return `${y}${m}${d}-${t}-${rnd}`;
+        }
+
     </script>
   </body>
 </html>
