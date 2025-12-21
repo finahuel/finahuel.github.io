@@ -21,10 +21,10 @@
     <style>
       :root {
         --bg: #fffef7;
-        --primary: #892D1E;
-        --secondary: #EDEC99;
-        --light: #F9F9E0;
-        --dark: #5A1D14;
+        --primary: #892d1e;
+        --secondary: #edec99;
+        --light: #f9f9e0;
+        --dark: #5a1d14;
         --card: #ffffff;
         --muted: #777777;
         --shadow: 0 6px 20px rgba(137, 45, 30, 0.1);
@@ -53,6 +53,7 @@
         -webkit-font-smoothing: antialiased;
         padding-top: 70px;
         color: #333;
+        padding-bottom: 80px;
       }
 
       img {
@@ -159,7 +160,7 @@
       }
 
       .social-btn::before {
-        content: '';
+        content: "";
         position: absolute;
         top: 0;
         left: 0;
@@ -173,7 +174,7 @@
 
       .social-btn:hover {
         transform: translateY(-3px) scale(1.05);
-        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         border-color: transparent;
       }
 
@@ -195,21 +196,29 @@
 
       .social-btn.instagram:hover::before {
         opacity: 1;
-        background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D);
+        background: linear-gradient(
+          45deg,
+          #405de6,
+          #5851db,
+          #833ab4,
+          #c13584,
+          #e1306c,
+          #fd1d1d
+        );
       }
 
       .social-btn.whatsapp:hover::before {
         opacity: 1;
-        background: #25D366;
+        background: #25d366;
       }
 
       /* SVG icon styles */
       .instagram-icon {
-        fill: #E1306C;
+        fill: #e1306c;
       }
 
       .whatsapp-icon {
-        fill: #25D366;
+        fill: #25d366;
       }
 
       .social-btn:hover .instagram-icon {
@@ -233,13 +242,13 @@
 
       @media (min-width: 981px) {
         .layout {
-          min-height: calc(100vh - 120px);
+          min-height: calc(100vh - 100px);
         }
-        
+
         .sidebar {
           position: sticky;
-          top: 90px;
-          max-height: calc(100vh - 110px);
+          top: 10px;
+          max-height: calc(100vh - 100px);
           overflow-y: auto;
         }
       }
@@ -332,7 +341,7 @@
         background: #fff;
         border-radius: 20px;
         padding: 25px;
-        margin-bottom: 20px;
+        margin-bottom: 30px;
         box-shadow: var(--shadow);
       }
 
@@ -852,7 +861,7 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0,0,0,0.7);
+        background: rgba(0, 0, 0, 0.7);
         display: none;
         align-items: center;
         justify-content: center;
@@ -918,7 +927,7 @@
         position: absolute;
         width: 100%;
         z-index: 100;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         display: none;
         margin-top: 4px;
       }
@@ -948,19 +957,19 @@
           grid-template-columns: 1fr;
           gap: 20px;
         }
-        
+
         .sidebar {
           position: static;
           max-height: none;
         }
-        
+
         .products-container,
         .sidebar-card {
           padding: 20px;
         }
-        
+
         body {
-          padding-bottom: 100px;
+          padding-bottom: 50px;
         }
       }
 
@@ -969,54 +978,54 @@
           height: 65px;
           padding: 0 15px;
         }
-        
+
         .nav-brand img {
           width: 55px;
           height: 55px;
         }
-        
+
         .nav-text strong {
           font-size: 18px;
         }
-        
+
         .social-btn {
           width: 42px;
           height: 42px;
         }
-        
+
         .products {
           grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
           gap: 15px;
         }
-        
+
         .product img {
           height: 120px;
         }
-        
+
         .modal-header {
           flex-direction: column;
           text-align: center;
         }
-        
+
         .modal-header img {
           width: 100%;
           height: 120px;
         }
-        
+
         .topping-grid {
           grid-template-columns: repeat(2, 1fr);
           max-height: 200px;
         }
-        
+
         .modal-actions {
           flex-direction: column;
           gap: 15px;
         }
-        
+
         .modal-actions .btn {
           width: 100%;
         }
-        
+
         /* FOOTER MEJORADO PARA MÓVIL - UNA SOLA LÍNEA */
         .fixed-footer {
           padding: 10px 12px;
@@ -1024,14 +1033,14 @@
           justify-content: space-between;
           gap: 8px;
         }
-        
+
         .footer-left {
           order: 1;
           flex: 1;
           min-width: 0;
           overflow: hidden;
         }
-        
+
         .footer-actions {
           order: 2;
           flex: 1;
@@ -1039,24 +1048,24 @@
           min-width: 0;
           margin-bottom: 0;
         }
-        
+
         .cart-total-btn {
           padding: 8px 12px;
           font-size: 14px;
           max-width: 140px;
           overflow: hidden;
         }
-        
+
         .cart-total-btn .total-amount {
           font-size: 16px;
         }
-        
+
         .fixed-footer .btn-ghost {
           padding: 8px 10px;
           font-size: 13px;
           min-width: 80px;
         }
-        
+
         .fixed-button {
           padding: 8px 14px;
           font-size: 13px;
@@ -1068,28 +1077,28 @@
         .fixed-footer {
           gap: 6px;
         }
-        
+
         .cart-total-btn {
           padding: 8px 10px;
           font-size: 13px;
           max-width: 120px;
         }
-        
+
         .cart-total-btn .cart-icon {
           width: 16px;
           height: 16px;
         }
-        
+
         .cart-total-btn .total-amount {
           font-size: 15px;
         }
-        
+
         .fixed-footer .btn-ghost {
           padding: 7px 8px;
           font-size: 12px;
           min-width: 70px;
         }
-        
+
         .fixed-button {
           padding: 7px 10px;
           font-size: 12px;
@@ -1102,55 +1111,55 @@
           grid-template-columns: repeat(2, 1fr);
           gap: 12px;
         }
-        
+
         .product-body {
           padding: 12px;
         }
-        
+
         .product-title {
           font-size: 15px;
         }
-        
+
         .price {
           font-size: 16px;
         }
-        
+
         .product .btn-primary {
           padding: 8px 12px;
           font-size: 13px;
         }
-        
+
         .sauce-list {
           grid-template-columns: repeat(2, 1fr);
         }
-        
+
         .nav-brand img {
           width: 50px;
           height: 50px;
         }
-        
+
         .nav-text strong {
           font-size: 16px;
         }
-        
+
         /* Ajustes adicionales para pantallas muy pequeñas */
         .fixed-footer {
           padding: 8px 10px;
         }
-        
+
         .cart-total-btn {
           padding: 6px 8px;
           font-size: 12px;
           max-width: 110px;
         }
-        
+
         .cart-total-btn .total-amount {
           font-size: 14px;
         }
-        
+
         .fixed-footer .btn-ghost,
         .fixed-button {
-          padding: 6px 8px;
+          padding: 6px 6px;
           font-size: 12px;
         }
       }
@@ -1159,23 +1168,23 @@
         .products {
           grid-template-columns: 1fr;
         }
-        
+
         .nav-text span {
           font-size: 12px;
         }
-        
+
         .social-btn {
           width: 38px;
           height: 38px;
         }
-        
+
         /* Último ajuste para pantallas muy pequeñas */
         .cart-total-btn {
           padding: 6px 8px;
           font-size: 11px;
           max-width: 100px;
         }
-        
+
         .cart-total-btn .total-amount {
           font-size: 13px;
         }
@@ -1252,26 +1261,42 @@
         </div>
 
         <nav class="nav-actions">
-          <a 
-            href="https://instagram.com/thaicream.posadas" 
-            target="_blank" 
+          <a
+            href="https://instagram.com/thaicream.posadas"
+            target="_blank"
             class="social-btn instagram"
             aria-label="Instagram"
             title="Instagram"
           >
-            <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" class="instagram-icon"/>
+            <svg
+              class="icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+                class="instagram-icon"
+              />
             </svg>
           </a>
-          <a 
-            href="https://wa.me/5493764800072" 
-            target="_blank" 
+          <a
+            href="https://wa.me/5493764800072"
+            target="_blank"
             class="social-btn whatsapp"
             aria-label="WhatsApp"
             title="WhatsApp"
           >
-            <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.149-.67.149-.198.297-.767.967-.94 1.165-.173.198-.347.223-.644.075-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.074-.149-.669-1.612-.916-2.206-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.76.982.998-3.675-.236-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.9 6.994c-.004 5.45-4.438 9.88-9.888 9.88m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.333.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.333 11.893-11.893 0-3.18-1.24-6.162-3.495-8.411" class="whatsapp-icon"/>
+            <svg
+              class="icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.149-.67.149-.198.297-.767.967-.94 1.165-.173.198-.347.223-.644.075-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.074-.149-.669-1.612-.916-2.206-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.76.982.998-3.675-.236-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.9 6.994c-.004 5.45-4.438 9.88-9.888 9.88m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.333.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.333 11.893-11.893 0-3.18-1.24-6.162-3.495-8.411"
+                class="whatsapp-icon"
+              />
             </svg>
           </a>
         </nav>
@@ -1283,9 +1308,7 @@
         <!-- COLUMNA IZQUIERDA: productos -->
         <div class="products-container">
           <h2>Elegí tus sabores</h2>
-          <p class="lead">
-            Podés personalizar cada roll y agregar varios.
-          </p>
+          <p class="lead">Podés personalizar cada roll y agregar varios.</p>
 
           <div id="productsArea" class="products"></div>
         </div>
@@ -1296,7 +1319,10 @@
           <div class="sidebar-card" id="cartSummary">
             <h3>Tu pedido</h3>
             <div id="cartList" class="cart-list">
-              <div class="small text-center" style="padding: 20px 0; color: var(--muted)">
+              <div
+                class="small text-center"
+                style="padding: 20px 0; color: var(--muted)"
+              >
                 No hay items todavía
               </div>
             </div>
@@ -1340,14 +1366,14 @@
                 />
                 <div id="addressSuggestions"></div>
               </div>
-              <button 
-                type="button" 
-                id="openMapBtn" 
+              <button
+                type="button"
+                id="openMapBtn"
                 class="btn btn-ghost open-map-btn"
               >
                 📍 Seleccionar en el mapa
               </button>
-              
+
               <!-- Campos adicionales para más detalles -->
               <div class="form-field">
                 <label>Referencia (opcional)</label>
@@ -1409,29 +1435,40 @@
       <div class="footer-left">
         <!-- Botón de carrito estético que lleva al resumen del carrito -->
         <button id="footerCartBtn" class="cart-total-btn" title="Ver tu pedido">
-          <svg class="cart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path d="M9 22C9.55228 22 10 21.5523 10 21C10 20.4477 9.55228 20 9 20C8.44772 20 8 20.4477 8 21C8 21.5523 8.44772 22 9 22Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M20 22C20.5523 22 21 21.5523 21 21C21 20.4477 20.5523 20 20 20C19.4477 20 19 20.4477 19 21C19 21.5523 19.4477 22 20 22Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M1 1H5L7.68 14.39C7.77144 14.8504 8.02191 15.264 8.38755 15.5583C8.75318 15.8526 9.2107 16.009 9.68 16H19.4C19.8693 16.009 20.3268 15.8526 20.6925 15.5583C21.0581 15.264 21.3086 14.8504 21.4 14.39L23 6H6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <svg
+            class="cart-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+          >
+            <path
+              d="M9 22C9.55228 22 10 21.5523 10 21C10 20.4477 9.55228 20 9 20C8.44772 20 8 20.4477 8 21C8 21.5523 8.44772 22 9 22Z"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M20 22C20.5523 22 21 21.5523 21 21C21 20.4477 20.5523 20 20 20C19.4477 20 19 20.4477 19 21C19 21.5523 19.4477 22 20 22Z"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M1 1H5L7.68 14.39C7.77144 14.8504 8.02191 15.264 8.38755 15.5583C8.75318 15.8526 9.2107 16.009 9.68 16H19.4C19.8693 16.009 20.3268 15.8526 20.6925 15.5583C21.0581 15.264 21.3086 14.8504 21.4 14.39L23 6H6"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </svg>
           <span id="fixedTotal" class="total-amount">$0</span>
         </button>
       </div>
 
       <div class="footer-actions">
-        <button
-          id="footerAddBtn"
-          class="btn btn-ghost"
-          title="Ver productos"
-        >
+        <button id="footerAddBtn" class="btn btn-ghost" title="Ver productos">
           Productos
         </button>
-        <button
-          id="fixedSendBtn"
-          class="fixed-button"
-        >
-          Enviar pedido
-        </button>
+        <button id="fixedSendBtn" class="fixed-button">Enviar pedido</button>
       </div>
     </div>
 
@@ -1446,9 +1483,7 @@
         <div class="modal-section">
           <h3>Toppings</h3>
           <div id="modalToppings" class="topping-grid"></div>
-          <div class="small mt-10">
-            El primer topping es gratis
-          </div>
+          <div class="small mt-10">El primer topping es gratis</div>
         </div>
 
         <div class="modal-section">
@@ -1465,12 +1500,7 @@
           <h3>Cantidad</h3>
           <div class="quantity-selector">
             <button id="decreaseQty" type="button" class="qty-btn">-</button>
-            <input
-              id="modalQty"
-              type="number"
-              min="1"
-              value="1"
-            />
+            <input id="modalQty" type="number" min="1" value="1" />
             <button id="increaseQty" type="button" class="qty-btn">+</button>
           </div>
         </div>
@@ -1478,17 +1508,17 @@
         <div class="modal-section">
           <h3>Cucharita</h3>
           <div class="cucharita-option">
-            <input type="checkbox" id="cucharitaCheckbox">
+            <input type="checkbox" id="cucharitaCheckbox" />
             <label for="cucharitaCheckbox">Sí, incluir cucharita</label>
           </div>
         </div>
 
         <div class="modal-actions">
-          <div id="modalLinePrice" class="modal-price">
-            $0
-          </div>
-          <div style="display: flex; gap: 12px;">
-            <button class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
+          <div id="modalLinePrice" class="modal-price">$0</div>
+          <div style="display: flex; gap: 12px">
+            <button class="btn btn-ghost" onclick="closeModal()">
+              Cancelar
+            </button>
             <button id="addToCartBtn" class="btn btn-primary">
               Agregar al carrito
             </button>
@@ -1503,11 +1533,17 @@
         <h3 style="margin: 0 0 15px 0">Seleccioná tu ubicación en el mapa</h3>
         <div id="map"></div>
         <div id="selectedAddress">
-          <div style="font-weight: 600; margin-bottom: 5px;">Dirección seleccionada:</div>
-          <div id="addressText" style="color: #666;">Hacé clic en el mapa para seleccionar una ubicación</div>
+          <div style="font-weight: 600; margin-bottom: 5px">
+            Dirección seleccionada:
+          </div>
+          <div id="addressText" style="color: #666">
+            Hacé clic en el mapa para seleccionar una ubicación
+          </div>
         </div>
         <div class="map-actions">
-          <button id="confirmAddress" class="btn btn-primary">Usar esta dirección</button>
+          <button id="confirmAddress" class="btn btn-primary">
+            Usar esta dirección
+          </button>
           <button id="closeMap" class="btn btn-ghost">Cancelar</button>
         </div>
       </div>
@@ -1599,12 +1635,16 @@
           const box = document.createElement("div");
           box.className = "product";
           box.innerHTML = `
-            <img src="${f.img}" onerror="this.onerror=null;this.src='https://via.placeholder.com/400x300?text=Helado+Tailandés'">
+            <img src="${
+              f.img
+            }" onerror="this.onerror=null;this.src='https://via.placeholder.com/400x300?text=Helado+Tailandés'">
             <div class="product-body">
                 <div class="product-title">${f.name}</div>
                 <div class="price">${fmt(f.price)}</div>
                 <div class="product-foot">
-                    <button class="btn btn-primary" onclick="startNewModal('${f.id}','${f.name}')">Armar</button>
+                    <button class="btn btn-primary" onclick="startNewModal('${
+                      f.id
+                    }','${f.name}')">Armar</button>
                 </div>
             </div>
         `;
@@ -1652,7 +1692,7 @@
           const el = document.createElement("div");
           el.className = "chip";
           el.innerHTML = tp;
-          el.addEventListener("click", function() {
+          el.addEventListener("click", function () {
             this.classList.toggle("active");
             updateModalPrice();
           });
@@ -1680,7 +1720,7 @@
         if (editingItemId) {
           const it = cart.find((x) => x.id === editingItemId);
           if (it && it.toppings) {
-            $$("#modalToppings .chip").forEach(chip => {
+            $$("#modalToppings .chip").forEach((chip) => {
               if (it.toppings.includes(chip.textContent)) {
                 chip.classList.add("active");
               }
@@ -1781,17 +1821,27 @@
             row.innerHTML = `
                   <div>
                       <b>${it.qty}× ${it.flavorName}</b>
-                      <div class="small">${it.toppings && it.toppings.length ? it.toppings.join(", ") : "Sin toppings"}</div>
+                      <div class="small">${
+                        it.toppings && it.toppings.length
+                          ? it.toppings.join(", ")
+                          : "Sin toppings"
+                      }</div>
                       <div class="small">Salsa: ${it.sauce || "Sin salsa"}</div>
-                      <div class="small" style="color: ${it.cucharita ? "var(--primary)" : "#777"}; font-weight: ${it.cucharita ? "600" : "400"}">
+                      <div class="small" style="color: ${
+                        it.cucharita ? "var(--primary)" : "#777"
+                      }; font-weight: ${it.cucharita ? "600" : "400"}">
                         ${it.cucharita ? "✓ Con cucharita" : "✗ Sin cucharita"}
                       </div>
                   </div>
                   <div>
                       <div class="price">${fmt(calcItemTotal(it))}</div>
                       <div style="margin-top: 8px; display: flex; gap: 8px;">
-                        <button class="btn btn-ghost" style="padding: 6px 10px; font-size: 12px" onclick="editItem('${it.id}')">Editar</button>
-                        <button class="btn btn-ghost" style="padding: 6px 10px; font-size: 12px" onclick="removeItem('${it.id}')">Eliminar</button>
+                        <button class="btn btn-ghost" style="padding: 6px 10px; font-size: 12px" onclick="editItem('${
+                          it.id
+                        }')">Editar</button>
+                        <button class="btn btn-ghost" style="padding: 6px 10px; font-size: 12px" onclick="removeItem('${
+                          it.id
+                        }')">Eliminar</button>
                       </div>
                   </div>
               `;
@@ -1848,7 +1898,8 @@
         // Actualizar etiqueta y nota de hora
         if (mode === "delivery") {
           timeLabel.textContent = "Hora de entrega";
-          timeNote.textContent = "Indicá la hora en que querés recibir tu pedido";
+          timeNote.textContent =
+            "Indicá la hora en que querés recibir tu pedido";
           // Forzar transferencia
           pay.value = "transfer";
           if (cashOpt) cashOpt.disabled = true;
@@ -1857,7 +1908,8 @@
           notice.style.display = "block";
         } else {
           timeLabel.textContent = "Hora de retiro";
-          timeNote.textContent = "Indicá la hora en que querés retirar tu pedido";
+          timeNote.textContent =
+            "Indicá la hora en que querés retirar tu pedido";
           // Habilitar efectivo nuevamente
           if (cashOpt) cashOpt.disabled = false;
 
@@ -1872,38 +1924,40 @@
 
       // Autocompletado de direcciones usando Nominatim
       let addressTimeout = null;
-      $("#custAddress").addEventListener("input", function(e) {
+      $("#custAddress").addEventListener("input", function (e) {
         const query = e.target.value.trim();
-        
+
         if (addressTimeout) {
           clearTimeout(addressTimeout);
         }
-        
+
         if (query.length < 3) {
           $("#addressSuggestions").style.display = "none";
           return;
         }
-        
+
         addressTimeout = setTimeout(() => {
           searchAddresses(query);
         }, 300);
       });
 
-      document.addEventListener("click", function(e) {
+      document.addEventListener("click", function (e) {
         if (!e.target.closest(".address-input-container")) {
           $("#addressSuggestions").style.display = "none";
         }
       });
 
       function searchAddresses(query) {
-        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query + ', Posadas, Misiones, Argentina')}&limit=5&addressdetails=1`;
-        
+        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+          query + ", Posadas, Misiones, Argentina"
+        )}&limit=5&addressdetails=1`;
+
         fetch(url)
-          .then(response => response.json())
-          .then(data => {
+          .then((response) => response.json())
+          .then((data) => {
             displayAddressSuggestions(data);
           })
-          .catch(error => {
+          .catch((error) => {
             console.error("Error buscando direcciones:", error);
           });
       }
@@ -1911,59 +1965,60 @@
       function displayAddressSuggestions(addresses) {
         const container = $("#addressSuggestions");
         container.innerHTML = "";
-        
+
         if (addresses.length === 0) {
           container.style.display = "none";
           return;
         }
-        
-        addresses.forEach(addr => {
+
+        addresses.forEach((addr) => {
           const div = document.createElement("div");
           div.className = "suggestion-item";
           div.textContent = addr.display_name;
-          div.addEventListener("click", function() {
+          div.addEventListener("click", function () {
             $("#custAddress").value = addr.display_name;
             container.style.display = "none";
-            
+
             selectedLocation = {
               lat: parseFloat(addr.lat),
-              lng: parseFloat(addr.lon)
+              lng: parseFloat(addr.lon),
             };
             selectedAddress = addr.display_name;
           });
           container.appendChild(div);
         });
-        
+
         container.style.display = "block";
       }
 
       // Inicializar mapa
       function initMap() {
         const posadasCoords = [-27.3671, -55.8961];
-        
-        map = L.map('map').setView(posadasCoords, 13);
-        
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+
+        map = L.map("map").setView(posadasCoords, 13);
+
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          attribution:
+            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         }).addTo(map);
-        
-        marker = L.marker(posadasCoords, {draggable: true}).addTo(map);
-        selectedLocation = {lat: posadasCoords[0], lng: posadasCoords[1]};
-        
+
+        marker = L.marker(posadasCoords, { draggable: true }).addTo(map);
+        selectedLocation = { lat: posadasCoords[0], lng: posadasCoords[1] };
+
         updateAddressFromMarker();
-        
-        marker.on('dragend', function(e) {
+
+        marker.on("dragend", function (e) {
           selectedLocation = {
             lat: e.target.getLatLng().lat,
-            lng: e.target.getLatLng().lng
+            lng: e.target.getLatLng().lng,
           };
           updateAddressFromMarker();
         });
-        
-        map.on('click', function(e) {
+
+        map.on("click", function (e) {
           selectedLocation = {
             lat: e.latlng.lat,
-            lng: e.latlng.lng
+            lng: e.latlng.lng,
           };
           marker.setLatLng(e.latlng);
           updateAddressFromMarker();
@@ -1972,41 +2027,42 @@
 
       function updateAddressFromMarker() {
         if (!selectedLocation) return;
-        
+
         const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${selectedLocation.lat}&lon=${selectedLocation.lng}&zoom=18&addressdetails=1`;
-        
+
         fetch(url)
-          .then(response => response.json())
-          .then(data => {
+          .then((response) => response.json())
+          .then((data) => {
             if (data.display_name) {
               selectedAddress = data.display_name;
               $("#addressText").textContent = selectedAddress;
             }
           })
-          .catch(error => {
+          .catch((error) => {
             console.error("Error obteniendo dirección:", error);
-            $("#addressText").textContent = "Error obteniendo la dirección. Por favor, intentá nuevamente.";
+            $("#addressText").textContent =
+              "Error obteniendo la dirección. Por favor, intentá nuevamente.";
           });
       }
 
       // Abrir modal del mapa
-      $("#openMapBtn").addEventListener("click", function() {
+      $("#openMapBtn").addEventListener("click", function () {
         $("#mapModal").style.display = "flex";
         document.body.style.overflow = "hidden";
-        
+
         if (!map) {
           initMap();
         }
       });
 
       // Cerrar modal del mapa
-      $("#closeMap").addEventListener("click", function() {
+      $("#closeMap").addEventListener("click", function () {
         $("#mapModal").style.display = "none";
         document.body.style.overflow = "auto";
       });
 
       // Confirmar dirección seleccionada en el mapa
-      $("#confirmAddress").addEventListener("click", function() {
+      $("#confirmAddress").addEventListener("click", function () {
         if (selectedAddress) {
           $("#custAddress").value = selectedAddress;
           $("#mapModal").style.display = "none";
@@ -2016,7 +2072,7 @@
         }
       });
 
-      $("#mapModal").addEventListener("click", function(e) {
+      $("#mapModal").addEventListener("click", function (e) {
         if (e.target.id === "mapModal") {
           $("#mapModal").style.display = "none";
           document.body.style.overflow = "auto";
@@ -2027,7 +2083,7 @@
       function sendWhatsApp() {
         if (isSubmitting) return;
         isSubmitting = true;
-        
+
         setTimeout(() => {
           isSubmitting = false;
         }, 1000);
@@ -2060,7 +2116,11 @@
 
         // Validar hora
         if (!time) {
-          alert("Ingresá la hora de " + (mode === "pickup" ? "retiro" : "entrega") + ".");
+          alert(
+            "Ingresá la hora de " +
+              (mode === "pickup" ? "retiro" : "entrega") +
+              "."
+          );
           scrollToForm();
           isSubmitting = false;
           return;
@@ -2083,7 +2143,11 @@
         text += "*Productos:*\n";
         cart.forEach((it, i) => {
           text += `${i + 1}) ${it.qty}× ${it.flavorName}\n`;
-          text += `   Toppings: ${it.toppings && it.toppings.length ? it.toppings.join(", ") : "Sin toppings"}\n`;
+          text += `   Toppings: ${
+            it.toppings && it.toppings.length
+              ? it.toppings.join(", ")
+              : "Sin toppings"
+          }\n`;
           text += `   Salsa: ${it.sauce || "Sin salsa"}\n`;
           text += `   Cucharita: ${it.cucharita ? "Sí" : "No"}\n`;
           text += `   Subtotal: ${fmt(calcItemTotal(it))}\n\n`;
@@ -2094,8 +2158,12 @@
         text += "*Datos del cliente:*\n";
         text += `• Nombre: ${name}\n`;
         text += `• Teléfono: ${phone}\n`;
-        text += `• Entrega: ${mode === "pickup" ? "Retiro" : "Envío a domicilio"}\n`;
-        text += `• Hora de ${mode === "pickup" ? "retiro" : "entrega"}: ${time}\n`;
+        text += `• Entrega: ${
+          mode === "pickup" ? "Retiro" : "Envío a domicilio"
+        }\n`;
+        text += `• Hora de ${
+          mode === "pickup" ? "retiro" : "entrega"
+        }: ${time}\n`;
         if (mode === "delivery") {
           text += `• Dirección: ${address}\n`;
           if (apt) text += `• Departamento/Piso: ${apt}\n`;
@@ -2124,9 +2192,9 @@
       function scrollToCart() {
         const el = document.getElementById("cartSummary");
         if (el) {
-          el.scrollIntoView({ 
-            behavior: "smooth", 
-            block: "start" 
+          el.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
           });
           el.style.boxShadow = "0 0 0 3px rgba(137, 45, 30, 0.3)";
           setTimeout(() => {
@@ -2138,9 +2206,9 @@
       function scrollToForm() {
         const el = document.getElementById("customerForm");
         if (el) {
-          el.scrollIntoView({ 
-            behavior: "smooth", 
-            block: "start" 
+          el.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
           });
           el.style.boxShadow = "0 0 0 3px rgba(137, 45, 30, 0.3)";
           setTimeout(() => {
@@ -2179,10 +2247,16 @@
         renderProducts();
         renderCart();
         updateFooter();
-        
+
         // Inicializar el selector de modo de entrega para configurar correctamente el campo de hora
         $("#deliveryMode").onchange();
       });
+
+      document
+        .getElementById("fixedSendBtn")
+        .addEventListener("click", function () {
+          alert("CLICK OK");
+        });
     </script>
   </body>
 </html>
