@@ -1254,6 +1254,396 @@
       .open-map-row .open-map-btn {
         margin-top: 0px; /* evitamos doble margen */
       }
+      /* ============================
+  MODAL DEL MAPA - ESTILO MEJORADO
+  ============================ */
+#mapModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+  padding: 20px;
+  backdrop-filter: blur(8px);
+}
+
+.map-container {
+  background: var(--card);
+  border-radius: 24px;
+  width: 100%;
+  max-width: 800px;
+  height: 90vh;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(137, 45, 30, 0.25);
+  border: 1px solid rgba(137, 45, 30, 0.1);
+  animation: mapModalSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes mapModalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.map-header {
+  padding: 24px 30px 20px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, #fff 0%, #fffef7 100%);
+}
+
+.map-header h3 {
+  margin: 0;
+  font-size: 22px;
+  color: var(--primary);
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+
+.map-close-btn {
+  background: rgba(137, 45, 30, 0.08);
+  border: none;
+  font-size: 26px;
+  color: var(--primary);
+  cursor: pointer;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 300;
+  line-height: 1;
+}
+
+.map-close-btn:hover {
+  background: var(--primary);
+  color: white;
+  transform: rotate(90deg);
+  box-shadow: 0 6px 20px rgba(137, 45, 30, 0.2);
+}
+
+.map-content-wrapper {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 25px 30px 0;
+  background: var(--light);
+}
+
+#map {
+  width: 100%;
+  flex: 1;
+  min-height: 350px;
+  border: 2px solid rgba(137, 45, 30, 0.15);
+  border-radius: 18px;
+  box-shadow: var(--shadow-light);
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* Estilos para el mapa de Leaflet */
+.leaflet-container {
+  font-family: Inter, system-ui, "Helvetica Neue", Arial;
+  border-radius: 16px !important;
+}
+
+.leaflet-control-zoom {
+  border: none !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+  border-radius: 12px !important;
+  overflow: hidden;
+}
+
+.leaflet-control-zoom a {
+  border-radius: 0 !important;
+  background: white !important;
+  color: var(--primary) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.leaflet-control-zoom a:hover {
+  background: var(--light) !important;
+}
+
+.address-display {
+  margin: 25px 0 0;
+  padding: 22px;
+  background: linear-gradient(135deg, #fff 0%, #f9f9e0 100%);
+  border-radius: 18px;
+  border: 1px solid rgba(137, 45, 30, 0.15);
+  flex-shrink: 0;
+  box-shadow: 0 4px 15px rgba(137, 45, 30, 0.05);
+}
+
+.address-label {
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: var(--primary);
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.address-label::before {
+  content: "📍";
+  font-size: 18px;
+}
+
+.address-text {
+  color: var(--dark);
+  font-size: 15px;
+  line-height: 1.5;
+  min-height: 22px;
+  font-weight: 500;
+  padding: 12px 15px;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.map-footer {
+  padding: 25px 30px;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  background: linear-gradient(135deg, #fff 0%, #fffef7 100%);
+  flex-shrink: 0;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.03);
+}
+
+.map-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+}
+
+.map-actions .btn {
+  min-width: 180px;
+  font-size: 16px;
+  padding: 14px 24px;
+  border-radius: 14px;
+  font-weight: 700;
+}
+
+.map-actions .btn-primary {
+  background: linear-gradient(135deg, var(--primary), var(--dark));
+  box-shadow: 0 6px 20px rgba(137, 45, 30, 0.2);
+}
+
+.map-actions .btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(137, 45, 30, 0.3);
+}
+
+.map-actions .btn-ghost {
+  border: 2px solid rgba(137, 45, 30, 0.2);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.map-actions .btn-ghost:hover {
+  border-color: var(--primary);
+  background: rgba(137, 45, 30, 0.05);
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+  #mapModal {
+    padding: 15px;
+  }
+  
+  .map-container {
+    height: 95vh;
+    max-height: 95vh;
+    border-radius: 22px;
+  }
+  
+  .map-header {
+    padding: 20px 24px 18px;
+  }
+  
+  .map-header h3 {
+    font-size: 20px;
+  }
+  
+  .map-close-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 24px;
+  }
+  
+  .map-content-wrapper {
+    padding: 20px 24px 0;
+  }
+  
+  #map {
+    min-height: 300px;
+    border-radius: 16px;
+  }
+  
+  .address-display {
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 16px;
+  }
+  
+  .address-label {
+    font-size: 15px;
+  }
+  
+  .address-text {
+    font-size: 14px;
+    padding: 10px 14px;
+  }
+  
+  .map-footer {
+    padding: 20px 24px;
+  }
+  
+  .map-actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .map-actions .btn {
+    width: 100%;
+    min-width: unset;
+    padding: 14px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .map-container {
+    height: 100vh;
+    max-height: 100vh;
+    border-radius: 0;
+    border: none;
+  }
+  
+  #mapModal {
+    padding: 0;
+  }
+  
+  .map-header {
+    padding: 18px 20px 16px;
+    border-radius: 0;
+  }
+  
+  .map-header h3 {
+    font-size: 18px;
+  }
+  
+  .map-content-wrapper {
+    padding: 16px 20px 0;
+  }
+  
+  #map {
+    min-height: 280px;
+    border-radius: 14px;
+  }
+  
+  .address-display {
+    padding: 18px;
+    border-radius: 14px;
+  }
+  
+  .map-footer {
+    padding: 18px 20px;
+    border-radius: 0;
+  }
+  
+  .address-label {
+    font-size: 14px;
+  }
+  
+  .address-text {
+    font-size: 13px;
+  }
+}
+
+/* Mejora la barra de scroll para el contenido del mapa */
+.map-content-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+
+.map-content-wrapper::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.map-content-wrapper::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, var(--primary), var(--dark));
+  border-radius: 4px;
+}
+
+.map-content-wrapper::-webkit-scrollbar-thumb:hover {
+  background: var(--dark);
+}
+
+/* Indicador visual para mostrar que hay más contenido */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.scroll-indicator {
+  position: absolute;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, var(--primary), var(--dark));
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 10px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 6px 20px rgba(137, 45, 30, 0.3);
+  z-index: 1000;
+  display: none;
+  cursor: pointer;
+  animation: pulse 2s infinite;
+}
+
+.scroll-indicator:hover {
+  animation: none;
+  transform: translateX(-50%) scale(1.05);
+}
+
+/* Estilo para el botón de abrir mapa en el formulario */
+.open-map-btn {
+  background: rgba(137, 45, 30, 0.08) !important;
+  border: 2px dashed rgba(137, 45, 30, 0.3) !important;
+  color: var(--primary) !important;
+  font-weight: 600 !important;
+  transition: all 0.3s ease !important;
+}
+
+.open-map-btn:hover {
+  background: rgba(137, 45, 30, 0.15) !important;
+  border: 2px solid var(--primary) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(137, 45, 30, 0.15) !important;
+}
     </style>
   </head>
 
@@ -1390,12 +1780,14 @@
                 "
               >
                 <button
-                  type="button"
-                  id="openMapBtn"
-                  class="btn btn-ghost open-map-btn"
-                >
-                  📍 Seleccionar en el mapa
-                </button>
+  type="button"
+  id="openMapBtn"
+  class="btn btn-ghost open-map-btn"
+  style="background: rgba(137, 45, 30, 0.08); border: 2px dashed rgba(137, 45, 30, 0.3); color: var(--primary); font-weight: 600;"
+>
+  <span style="font-size: 18px; margin-right: 8px;">📍</span>
+  Seleccionar en el mapa
+</button>
 
                 <div class="form-field" style="margin: 0">
                   <label>Referencia (opcional)</label>
@@ -1541,27 +1933,37 @@
       </div>
     </div>
 
-    <!-- Modal para el mapa -->
-    <div id="mapModal">
-      <div class="map-container">
-        <h3 style="margin: 0 0 15px 0">Seleccioná tu ubicación en el mapa</h3>
-        <div id="map"></div>
-        <div id="selectedAddress">
-          <div style="font-weight: 600; margin-bottom: 5px">
-            Dirección seleccionada:
-          </div>
-          <div id="addressText" style="color: #666">
-            Hacé clic en el mapa para seleccionar una ubicación
-          </div>
-        </div>
-        <div class="map-actions">
-          <button id="confirmAddress" class="btn btn-primary">
-            Usar esta dirección
-          </button>
-          <button id="closeMap" class="btn btn-ghost">Cancelar</button>
+<!-- Modal para el mapa - VERSIÓN RESPONSIVE -->
+<div id="mapModal">
+  <div class="map-container">
+    <div class="map-header">
+      <h3>Seleccioná tu ubicación en el mapa</h3>
+      <button id="closeMap" class="map-close-btn" aria-label="Cerrar">×</button>
+    </div>
+    
+    <div class="map-content-wrapper">
+      <div id="map"></div>
+      
+      <div id="selectedAddress" class="address-display">
+        <div class="address-label">Dirección seleccionada:</div>
+        <div id="addressText" class="address-text">
+          Hacé clic en el mapa para seleccionar una ubicación
         </div>
       </div>
     </div>
+    
+    <div class="map-footer">
+      <div class="map-actions">
+        <button id="confirmAddress" class="btn btn-primary">
+          Usar esta dirección
+        </button>
+        <button class="btn btn-ghost" id="closeMapBottom">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
     <!-- ======================= -->
     <!--        JAVASCRIPT       -->
@@ -2109,16 +2511,16 @@
       });
 
       // Confirmar dirección seleccionada en el mapa
-      $("#confirmAddress").addEventListener("click", function () {
-        if (selectedAddress) {
-          $("#custAddress").value = selectedAddress;
-          // hidden fields ya se rellenaron en updateAddressFromMarker o en el click de sugerencia
-          $("#mapModal").style.display = "none";
-          document.body.style.overflow = "auto";
-        } else {
-          alert("Por favor, seleccioná una ubicación en el mapa.");
-        }
-      });
+      // Confirmar dirección seleccionada en el mapa
+$("#confirmAddress").addEventListener("click", function () {
+  if (selectedAddress) {
+    $("#custAddress").value = selectedAddress;
+    $("#mapModal").style.display = "none";
+    document.body.style.overflow = "auto";
+  } else {
+    alert("Por favor, seleccioná una ubicación en el mapa.");
+  }
+});
 
       $("#mapModal").addEventListener("click", function (e) {
         if (e.target.id === "mapModal") {
@@ -2355,7 +2757,109 @@
         const min = String(now.getMinutes()).padStart(2, "0");
         return `${y}${m}${d}-${h}${min}`;
 }
+    // Función para verificar si se necesita scroll
+function checkMapScroll() {
+  const mapContent = document.querySelector('.map-content-wrapper');
+  const mapContainer = document.querySelector('.map-container');
+  const mapFooter = document.querySelector('.map-footer');
+  
+  if (!mapContent || !mapContainer) return;
+  
+  const contentHeight = mapContent.scrollHeight;
+  const containerHeight = mapContainer.clientHeight;
+  const headerHeight = document.querySelector('.map-header').clientHeight;
+  const footerHeight = mapFooter.clientHeight;
+  
+  const availableHeight = containerHeight - headerHeight - footerHeight;
+  
+  // Si el contenido es más alto que el espacio disponible, hacer scrollable
+  if (contentHeight > availableHeight) {
+    mapContent.style.overflowY = 'auto';
+    mapContent.style.maxHeight = availableHeight + 'px';
+  } else {
+    mapContent.style.overflowY = 'visible';
+    mapContent.style.maxHeight = 'none';
+  }
+}
 
+// Función para inicializar el mapa con ajustes responsive
+function initMap() {
+  const posadasCoords = [-27.3671, -55.8961];
+
+  map = L.map("map").setView(posadasCoords, 13);
+
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  }).addTo(map);
+
+  marker = L.marker(posadasCoords, { draggable: true }).addTo(map);
+  selectedLocation = { lat: posadasCoords[0], lng: posadasCoords[1] };
+
+  updateAddressFromMarker();
+
+  marker.on("dragend", function (e) {
+    selectedLocation = {
+      lat: e.target.getLatLng().lat,
+      lng: e.target.getLatLng().lng,
+    };
+    updateAddressFromMarker();
+  });
+
+  map.on("click", function (e) {
+    selectedLocation = {
+      lat: e.latlng.lat,
+      lng: e.latlng.lng,
+    };
+    marker.setLatLng(e.latlng);
+    updateAddressFromMarker();
+  });
+
+  // Ajustar el mapa después de que se cargue
+  setTimeout(() => {
+    map.invalidateSize();
+    checkMapScroll();
+  }, 300);
+}
+
+// Modificar el evento de abrir el mapa
+$("#openMapBtn").addEventListener("click", function () {
+  $("#mapModal").style.display = "flex";
+  document.body.style.overflow = "hidden";
+
+  // Pequeño delay para que el DOM se renderice
+  setTimeout(() => {
+    if (!map) {
+      initMap();
+    } else {
+      map.invalidateSize();
+    }
+    
+    // Verificar scroll después de que todo esté cargado
+    setTimeout(checkMapScroll, 100);
+  }, 50);
+});
+
+// Agregar eventos para cerrar el mapa
+$("#closeMap").addEventListener("click", function () {
+  $("#mapModal").style.display = "none";
+  document.body.style.overflow = "auto";
+});
+
+$("#closeMapBottom").addEventListener("click", function () {
+  $("#mapModal").style.display = "none";
+  document.body.style.overflow = "auto";
+});
+
+// Cerrar al hacer clic fuera del contenido
+$("#mapModal").addEventListener("click", function (e) {
+  if (e.target.id === "mapModal") {
+    $("#mapModal").style.display = "none";
+    document.body.style.overflow = "auto";
+  }
+});
+
+// Recalcular scroll al cambiar tamaño de ventana
+window.addEventListener('resize', checkMapScroll);
 
     </script>
   </body>
