@@ -248,8 +248,14 @@
         .sidebar {
           position: sticky;
           top: 10px;
-          max-height: calc(100vh - 100px);
-          overflow-y: auto;
+          max-height: none; /* ← quitamos límite */
+          overflow-y: visible; /* ← sin scroll interno */
+        }
+
+        /* si el carrito tiene lista interna */
+        .cart-list {
+          max-height: none;
+          overflow: visible;
         }
       }
 
@@ -1257,393 +1263,417 @@
       /* ============================
   MODAL DEL MAPA - ESTILO MEJORADO
   ============================ */
-#mapModal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.7);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 3000;
-  padding: 20px;
-  backdrop-filter: blur(8px);
-}
+      #mapModal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 3000;
+        padding: 20px;
+        backdrop-filter: blur(8px);
+      }
 
-.map-container {
-  background: var(--card);
-  border-radius: 24px;
-  width: 100%;
-  max-width: 800px;
-  height: 90vh;
-  max-height: 90vh;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  box-shadow: 0 25px 60px rgba(137, 45, 30, 0.25);
-  border: 1px solid rgba(137, 45, 30, 0.1);
-  animation: mapModalSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
+      .map-container {
+        background: var(--card);
+        border-radius: 24px;
+        width: 100%;
+        max-width: 800px;
+        height: 90vh;
+        max-height: 90vh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        box-shadow: 0 25px 60px rgba(137, 45, 30, 0.25);
+        border: 1px solid rgba(137, 45, 30, 0.1);
+        animation: mapModalSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      }
 
-@keyframes mapModalSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(40px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
+      @keyframes mapModalSlideIn {
+        from {
+          opacity: 0;
+          transform: translateY(40px) scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
 
-.map-header {
-  padding: 24px 30px 20px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-shrink: 0;
-  background: linear-gradient(135deg, #fff 0%, #fffef7 100%);
-}
+      .map-header {
+        padding: 24px 30px 20px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-shrink: 0;
+        background: linear-gradient(135deg, #fff 0%, #fffef7 100%);
+      }
 
-.map-header h3 {
-  margin: 0;
-  font-size: 22px;
-  color: var(--primary);
-  font-weight: 800;
-  letter-spacing: -0.3px;
-}
+      .map-header h3 {
+        margin: 0;
+        font-size: 22px;
+        color: var(--primary);
+        font-weight: 800;
+        letter-spacing: -0.3px;
+      }
 
-.map-close-btn {
-  background: rgba(137, 45, 30, 0.08);
-  border: none;
-  font-size: 26px;
-  color: var(--primary);
-  cursor: pointer;
-  width: 44px;
-  height: 44px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 14px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  font-weight: 300;
-  line-height: 1;
-}
+      .map-close-btn {
+        background: rgba(137, 45, 30, 0.08);
+        border: none;
+        font-size: 26px;
+        color: var(--primary);
+        cursor: pointer;
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 14px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-weight: 300;
+        line-height: 1;
+      }
 
-.map-close-btn:hover {
-  background: var(--primary);
-  color: white;
-  transform: rotate(90deg);
-  box-shadow: 0 6px 20px rgba(137, 45, 30, 0.2);
-}
+      .map-close-btn:hover {
+        background: var(--primary);
+        color: white;
+        transform: rotate(90deg);
+        box-shadow: 0 6px 20px rgba(137, 45, 30, 0.2);
+      }
 
-.map-content-wrapper {
-  flex: 1;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  padding: 25px 30px 0;
-  background: var(--light);
-}
+      .map-content-wrapper {
+        flex: 1;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        padding: 25px 30px 0;
+        background: var(--light);
+      }
 
-#map {
-  width: 100%;
-  flex: 1;
-  min-height: 350px;
-  border: 2px solid rgba(137, 45, 30, 0.15);
-  border-radius: 18px;
-  box-shadow: var(--shadow-light);
-  overflow: hidden;
-  z-index: 1;
-}
+      #map {
+        width: 100%;
+        flex: 1;
+        min-height: 350px;
+        border: 2px solid rgba(137, 45, 30, 0.15);
+        border-radius: 18px;
+        box-shadow: var(--shadow-light);
+        overflow: hidden;
+        z-index: 1;
+      }
 
-/* Estilos para el mapa de Leaflet */
-.leaflet-container {
-  font-family: Inter, system-ui, "Helvetica Neue", Arial;
-  border-radius: 16px !important;
-}
+      /* Estilos para el mapa de Leaflet */
+      .leaflet-container {
+        font-family: Inter, system-ui, "Helvetica Neue", Arial;
+        border-radius: 16px !important;
+      }
 
-.leaflet-control-zoom {
-  border: none !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
-  border-radius: 12px !important;
-  overflow: hidden;
-}
+      .leaflet-control-zoom {
+        border: none !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+        border-radius: 12px !important;
+        overflow: hidden;
+      }
 
-.leaflet-control-zoom a {
-  border-radius: 0 !important;
-  background: white !important;
-  color: var(--primary) !important;
-  border: 1px solid rgba(0, 0, 0, 0.1) !important;
-}
+      .leaflet-control-zoom a {
+        border-radius: 0 !important;
+        background: white !important;
+        color: var(--primary) !important;
+        border: 1px solid rgba(0, 0, 0, 0.1) !important;
+      }
 
-.leaflet-control-zoom a:hover {
-  background: var(--light) !important;
-}
+      .leaflet-control-zoom a:hover {
+        background: var(--light) !important;
+      }
 
-.address-display {
-  margin: 25px 0 0;
-  padding: 22px;
-  background: linear-gradient(135deg, #fff 0%, #f9f9e0 100%);
-  border-radius: 18px;
-  border: 1px solid rgba(137, 45, 30, 0.15);
-  flex-shrink: 0;
-  box-shadow: 0 4px 15px rgba(137, 45, 30, 0.05);
-}
+      .address-display {
+        margin: 25px 0 0;
+        padding: 22px;
+        background: linear-gradient(135deg, #fff 0%, #f9f9e0 100%);
+        border-radius: 18px;
+        border: 1px solid rgba(137, 45, 30, 0.15);
+        flex-shrink: 0;
+        box-shadow: 0 4px 15px rgba(137, 45, 30, 0.05);
+      }
 
-.address-label {
-  font-weight: 700;
-  margin-bottom: 10px;
-  color: var(--primary);
-  font-size: 16px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
+      .address-label {
+        font-weight: 700;
+        margin-bottom: 10px;
+        color: var(--primary);
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
 
-.address-label::before {
-  content: "📍";
-  font-size: 18px;
-}
+      .address-label::before {
+        content: "📍";
+        font-size: 18px;
+      }
 
-.address-text {
-  color: var(--dark);
-  font-size: 15px;
-  line-height: 1.5;
-  min-height: 22px;
-  font-weight: 500;
-  padding: 12px 15px;
-  background: white;
-  border-radius: 12px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-}
+      .address-text {
+        color: var(--dark);
+        font-size: 15px;
+        line-height: 1.5;
+        min-height: 22px;
+        font-weight: 500;
+        padding: 12px 15px;
+        background: white;
+        border-radius: 12px;
+        border: 1px solid rgba(0, 0, 0, 0.08);
+      }
 
-.map-footer {
-  padding: 25px 30px;
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
-  background: linear-gradient(135deg, #fff 0%, #fffef7 100%);
-  flex-shrink: 0;
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.03);
-}
+      .map-footer {
+        padding: 25px 30px;
+        border-top: 1px solid rgba(0, 0, 0, 0.08);
+        background: linear-gradient(135deg, #fff 0%, #fffef7 100%);
+        flex-shrink: 0;
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.03);
+      }
 
-.map-actions {
-  display: flex;
-  gap: 16px;
-  justify-content: flex-end;
-}
+      .map-actions {
+        display: flex;
+        gap: 16px;
+        justify-content: flex-end;
+      }
 
-.map-actions .btn {
-  min-width: 180px;
-  font-size: 16px;
-  padding: 14px 24px;
-  border-radius: 14px;
-  font-weight: 700;
-}
+      .map-actions .btn {
+        min-width: 180px;
+        font-size: 16px;
+        padding: 14px 24px;
+        border-radius: 14px;
+        font-weight: 700;
+      }
 
-.map-actions .btn-primary {
-  background: linear-gradient(135deg, var(--primary), var(--dark));
-  box-shadow: 0 6px 20px rgba(137, 45, 30, 0.2);
-}
+      .map-actions .btn-primary {
+        background: linear-gradient(135deg, var(--primary), var(--dark));
+        box-shadow: 0 6px 20px rgba(137, 45, 30, 0.2);
+      }
 
-.map-actions .btn-primary:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 25px rgba(137, 45, 30, 0.3);
-}
+      .map-actions .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(137, 45, 30, 0.3);
+      }
 
-.map-actions .btn-ghost {
-  border: 2px solid rgba(137, 45, 30, 0.2);
-  color: var(--primary);
-  font-weight: 600;
-}
+      .map-actions .btn-ghost {
+        border: 2px solid rgba(137, 45, 30, 0.2);
+        color: var(--primary);
+        font-weight: 600;
+      }
 
-.map-actions .btn-ghost:hover {
-  border-color: var(--primary);
-  background: rgba(137, 45, 30, 0.05);
-}
+      .map-actions .btn-ghost:hover {
+        border-color: var(--primary);
+        background: rgba(137, 45, 30, 0.05);
+      }
 
-/* Responsive para móviles */
-@media (max-width: 768px) {
-  #mapModal {
-    padding: 15px;
-  }
-  
-  .map-container {
-    height: 95vh;
-    max-height: 95vh;
-    border-radius: 22px;
-  }
-  
-  .map-header {
-    padding: 20px 24px 18px;
-  }
-  
-  .map-header h3 {
-    font-size: 20px;
-  }
-  
-  .map-close-btn {
-    width: 40px;
-    height: 40px;
-    font-size: 24px;
-  }
-  
-  .map-content-wrapper {
-    padding: 20px 24px 0;
-  }
-  
-  #map {
-    min-height: 300px;
-    border-radius: 16px;
-  }
-  
-  .address-display {
-    padding: 20px;
-    margin-top: 20px;
-    border-radius: 16px;
-  }
-  
-  .address-label {
-    font-size: 15px;
-  }
-  
-  .address-text {
-    font-size: 14px;
-    padding: 10px 14px;
-  }
-  
-  .map-footer {
-    padding: 20px 24px;
-  }
-  
-  .map-actions {
-    flex-direction: column;
-    gap: 12px;
-  }
-  
-  .map-actions .btn {
-    width: 100%;
-    min-width: unset;
-    padding: 14px 20px;
-  }
-}
+      /* Responsive para móviles */
+      @media (max-width: 768px) {
+        #mapModal {
+          padding: 15px;
+        }
 
-@media (max-width: 480px) {
-  .map-container {
-    height: 100vh;
-    max-height: 100vh;
-    border-radius: 0;
-    border: none;
-  }
-  
-  #mapModal {
-    padding: 0;
-  }
-  
-  .map-header {
-    padding: 18px 20px 16px;
-    border-radius: 0;
-  }
-  
-  .map-header h3 {
-    font-size: 18px;
-  }
-  
-  .map-content-wrapper {
-    padding: 16px 20px 0;
-  }
-  
-  #map {
-    min-height: 280px;
-    border-radius: 14px;
-  }
-  
-  .address-display {
-    padding: 18px;
-    border-radius: 14px;
-  }
-  
-  .map-footer {
-    padding: 18px 20px;
-    border-radius: 0;
-  }
-  
-  .address-label {
-    font-size: 14px;
-  }
-  
-  .address-text {
-    font-size: 13px;
-  }
-}
+        .map-container {
+          height: 95vh;
+          max-height: 95vh;
+          border-radius: 22px;
+        }
 
-/* Mejora la barra de scroll para el contenido del mapa */
-.map-content-wrapper::-webkit-scrollbar {
-  width: 8px;
-}
+        .map-header {
+          padding: 20px 24px 18px;
+        }
 
-.map-content-wrapper::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 4px;
-}
+        .map-header h3 {
+          font-size: 20px;
+        }
 
-.map-content-wrapper::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, var(--primary), var(--dark));
-  border-radius: 4px;
-}
+        .map-close-btn {
+          width: 40px;
+          height: 40px;
+          font-size: 24px;
+        }
 
-.map-content-wrapper::-webkit-scrollbar-thumb:hover {
-  background: var(--dark);
-}
+        .map-content-wrapper {
+          padding: 20px 24px 0;
+        }
 
-/* Indicador visual para mostrar que hay más contenido */
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
-}
+        #map {
+          min-height: 300px;
+          border-radius: 16px;
+        }
 
-.scroll-indicator {
-  position: absolute;
-  bottom: 80px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: linear-gradient(135deg, var(--primary), var(--dark));
-  color: white;
-  border: none;
-  border-radius: 50px;
-  padding: 10px 20px;
-  font-size: 13px;
-  font-weight: 600;
-  box-shadow: 0 6px 20px rgba(137, 45, 30, 0.3);
-  z-index: 1000;
-  display: none;
-  cursor: pointer;
-  animation: pulse 2s infinite;
-}
+        .address-display {
+          padding: 20px;
+          margin-top: 20px;
+          border-radius: 16px;
+        }
 
-.scroll-indicator:hover {
-  animation: none;
-  transform: translateX(-50%) scale(1.05);
-}
+        .address-label {
+          font-size: 15px;
+        }
 
-/* Estilo para el botón de abrir mapa en el formulario */
-.open-map-btn {
-  background: rgba(137, 45, 30, 0.08) !important;
-  border: 2px dashed rgba(137, 45, 30, 0.3) !important;
-  color: var(--primary) !important;
-  font-weight: 600 !important;
-  transition: all 0.3s ease !important;
-}
+        .address-text {
+          font-size: 14px;
+          padding: 10px 14px;
+        }
 
-.open-map-btn:hover {
-  background: rgba(137, 45, 30, 0.15) !important;
-  border: 2px solid var(--primary) !important;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(137, 45, 30, 0.15) !important;
-}
+        .map-footer {
+          padding: 20px 24px;
+        }
+
+        .map-actions {
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        .map-actions .btn {
+          width: 100%;
+          min-width: unset;
+          padding: 14px 20px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .map-container {
+          height: 100vh;
+          max-height: 100vh;
+          border-radius: 0;
+          border: none;
+        }
+
+        #mapModal {
+          padding: 0;
+        }
+
+        .map-header {
+          padding: 18px 20px 16px;
+          border-radius: 0;
+        }
+
+        .map-header h3 {
+          font-size: 18px;
+        }
+
+        .map-content-wrapper {
+          padding: 16px 20px 0;
+        }
+
+        #map {
+          min-height: 280px;
+          border-radius: 14px;
+        }
+
+        .address-display {
+          padding: 18px;
+          border-radius: 14px;
+        }
+
+        .map-footer {
+          padding: 18px 20px;
+          border-radius: 0;
+        }
+
+        .address-label {
+          font-size: 14px;
+        }
+
+        .address-text {
+          font-size: 13px;
+        }
+      }
+
+      /* Mejora la barra de scroll para el contenido del mapa */
+      .map-content-wrapper::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      .map-content-wrapper::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+      }
+
+      .map-content-wrapper::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, var(--primary), var(--dark));
+        border-radius: 4px;
+      }
+
+      .map-content-wrapper::-webkit-scrollbar-thumb:hover {
+        background: var(--dark);
+      }
+
+      /* Indicador visual para mostrar que hay más contenido */
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.6;
+        }
+      }
+
+      .scroll-indicator {
+        position: absolute;
+        bottom: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(135deg, var(--primary), var(--dark));
+        color: white;
+        border: none;
+        border-radius: 50px;
+        padding: 10px 20px;
+        font-size: 13px;
+        font-weight: 600;
+        box-shadow: 0 6px 20px rgba(137, 45, 30, 0.3);
+        z-index: 1000;
+        display: none;
+        cursor: pointer;
+        animation: pulse 2s infinite;
+      }
+
+      .scroll-indicator:hover {
+        animation: none;
+        transform: translateX(-50%) scale(1.05);
+      }
+
+      /* Estilo para el botón de abrir mapa en el formulario */
+      .open-map-btn {
+        background: rgba(137, 45, 30, 0.08) !important;
+        border: 2px dashed rgba(137, 45, 30, 0.3) !important;
+        color: var(--primary) !important;
+        font-weight: 600 !important;
+        transition: all 0.3s ease !important;
+      }
+
+      .open-map-btn:hover {
+        background: rgba(137, 45, 30, 0.15) !important;
+        border: 2px solid var(--primary) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(137, 45, 30, 0.15) !important;
+      }
+
+      .loading-spinner {
+        border: 2px solid #f3f3f3;
+        border-top: 2px solid #892d1e;
+        border-radius: 50%;
+        width: 14px;
+        height: 14px;
+        animation: spin 1s linear infinite;
+        display: inline-block;
+        margin-right: 5px;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
     </style>
   </head>
 
@@ -1780,14 +1810,19 @@
                 "
               >
                 <button
-  type="button"
-  id="openMapBtn"
-  class="btn btn-ghost open-map-btn"
-  style="background: rgba(137, 45, 30, 0.08); border: 2px dashed rgba(137, 45, 30, 0.3); color: var(--primary); font-weight: 600;"
->
-  <span style="font-size: 18px; margin-right: 8px;">📍</span>
-  Seleccionar en el mapa
-</button>
+                  type="button"
+                  id="openMapBtn"
+                  class="btn btn-ghost open-map-btn"
+                  style="
+                    background: rgba(137, 45, 30, 0.08);
+                    border: 2px dashed rgba(137, 45, 30, 0.3);
+                    color: var(--primary);
+                    font-weight: 600;
+                  "
+                >
+                  <span style="font-size: 18px; margin-right: 8px">📍</span>
+                  Seleccionar en el mapa
+                </button>
 
                 <div class="form-field" style="margin: 0">
                   <label>Referencia (opcional)</label>
@@ -1810,6 +1845,35 @@
               <div id="paymentNotice" class="payment-msg">
                 Para envíos solo aceptamos transferencia previa.
               </div>
+            </div>
+
+            <!-- Campo cupón -->
+            <div class="sidebar-card">
+              <h3>Cupón de Descuento</h3>
+              <div
+                class="nice-form"
+                style="display: flex; flex-direction: row; gap: 10px"
+              >
+                <input
+                  type="text"
+                  id="couponInput"
+                  placeholder="Ingresá tu código"
+                  style="flex: 1; margin: 0"
+                />
+                <button
+                  type="button"
+                  id="applyCouponBtn"
+                  class="btn btn-primary"
+                  onclick="handleApplyCoupon()"
+                  style="padding: 10px 15px"
+                >
+                  Aplicar
+                </button>
+              </div>
+              <div
+                id="couponMessage"
+                style="margin-top: 10px; font-size: 14px; font-weight: 600"
+              ></div>
             </div>
 
             <div class="form-field">
@@ -1933,37 +1997,37 @@
       </div>
     </div>
 
-<!-- Modal para el mapa - VERSIÓN RESPONSIVE -->
-<div id="mapModal">
-  <div class="map-container">
-    <div class="map-header">
-      <h3>Seleccioná tu ubicación en el mapa</h3>
-      <button id="closeMap" class="map-close-btn" aria-label="Cerrar">×</button>
-    </div>
-    
-    <div class="map-content-wrapper">
-      <div id="map"></div>
-      
-      <div id="selectedAddress" class="address-display">
-        <div class="address-label">Dirección seleccionada:</div>
-        <div id="addressText" class="address-text">
-          Hacé clic en el mapa para seleccionar una ubicación
+    <!-- Modal para el mapa - VERSIÓN RESPONSIVE -->
+    <div id="mapModal">
+      <div class="map-container">
+        <div class="map-header">
+          <h3>Seleccioná tu ubicación en el mapa</h3>
+          <button id="closeMap" class="map-close-btn" aria-label="Cerrar">
+            ×
+          </button>
+        </div>
+
+        <div class="map-content-wrapper">
+          <div id="map"></div>
+
+          <div id="selectedAddress" class="address-display">
+            <div class="address-label">Dirección seleccionada:</div>
+            <div id="addressText" class="address-text">
+              Hacé clic en el mapa para seleccionar una ubicación
+            </div>
+          </div>
+        </div>
+
+        <div class="map-footer">
+          <div class="map-actions">
+            <button id="confirmAddress" class="btn btn-primary">
+              Usar esta dirección
+            </button>
+            <button class="btn btn-ghost" id="closeMapBottom">Cancelar</button>
+          </div>
         </div>
       </div>
     </div>
-    
-    <div class="map-footer">
-      <div class="map-actions">
-        <button id="confirmAddress" class="btn btn-primary">
-          Usar esta dirección
-        </button>
-        <button class="btn btn-ghost" id="closeMapBottom">
-          Cancelar
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
 
     <!-- ======================= -->
     <!--        JAVASCRIPT       -->
@@ -2212,65 +2276,59 @@
 
       function renderCart() {
         const list = $("#cartList");
+        let totalPedido = 0;
 
-        // Calculamos total
-        let total = 0;
-        cart.forEach((it) => (total += calcItemTotal(it)));
-
-        if (!list) {
-          const fixedEl = document.getElementById("fixedTotal");
-          if (fixedEl) fixedEl.textContent = fmt(total);
-          updateFooter();
-          return;
-        }
-
-        // Renderizar filas del carrito
+        // Limpiamos la lista
         list.innerHTML = "";
 
-        if (cart.length === 0) {
-          list.innerHTML =
-            '<div class="small text-center" style="padding: 20px 0; color: var(--muted)">No hay items todavía</div>';
-        } else {
-          cart.forEach((it) => {
-            const row = document.createElement("div");
-            row.className = "cart-row";
-            row.innerHTML = `
-                  <div>
-                      <b>${it.qty}× ${it.flavorName}</b>
-                      <div class="small">${
-                        it.toppings && it.toppings.length
-                          ? it.toppings.join(", ")
-                          : "Sin toppings"
-                      }</div>
-                      <div class="small">Salsa: ${it.sauce || "Sin salsa"}</div>
-                      <div class="small" style="color: ${
-                        it.cucharita ? "var(--primary)" : "#777"
-                      }; font-weight: ${it.cucharita ? "600" : "400"}">
-                        ${it.cucharita ? "✓ Con cucharita" : "✗ Sin cucharita"}
-                      </div>
-                  </div>
-                  <div>
-                      <div class="price">${fmt(calcItemTotal(it))}</div>
-                      <div style="margin-top: 8px; display: flex; gap: 8px;">
-                        <button class="btn btn-ghost" style="padding: 6px 10px; font-size: 12px" onclick="editItem('${
-                          it.id
-                        }')">Editar</button>
-                        <button class="btn btn-ghost" style="padding: 6px 10px; font-size: 12px" onclick="removeItem('${
-                          it.id
-                        }')">Eliminar</button>
-                      </div>
-                  </div>
-              `;
-            list.appendChild(row);
-          });
+        cart.forEach((it) => {
+          const itemSubtotal = calcItemTotal(it);
+          totalPedido += itemSubtotal;
+
+          const row = document.createElement("div");
+          row.className = "cart-row";
+          row.innerHTML = `
+      <div>
+        <b>${it.qty}× ${it.flavorName}</b>
+        <div class="small">
+          Toppings: ${it.toppings.join(", ") || "Ninguno"}<br>
+          Salsa: ${it.sauce || "Sin salsa"}
+        </div>
+      </div>
+      <div>
+        <div class="price">${fmt(itemSubtotal)}</div>
+        <button class="btn-remove" onclick="removeItem('${
+          it.id
+        }')">Eliminar</button>
+      </div>
+    `;
+          list.appendChild(row);
+        });
+
+        // --- LÓGICA DE VISUALIZACIÓN DE DESCUENTO ---
+        const totalFinal = Math.max(0, totalPedido - appliedDiscount);
+
+        // Actualizamos los textos en pantalla
+        // Si hay descuento, lo mostramos debajo del total
+        if (appliedDiscount > 0) {
+          const discountRow = document.createElement("div");
+          discountRow.className = "cart-total";
+          discountRow.style.color = "green";
+          discountRow.style.borderTop = "none";
+          discountRow.style.marginTop = "0";
+          discountRow.innerHTML = `
+      <span class="label">Descuento (${appliedCouponCode}):</span>
+      <span class="amount">-${fmt(appliedDiscount)}</span>
+    `;
+          list.appendChild(discountRow);
         }
 
-        // Actualizar totales
-        const totalEl = document.getElementById("total");
-        if (totalEl) totalEl.textContent = fmt(total);
+        // El total principal de la tarjeta
+        document.getElementById("total").innerText = fmt(totalFinal);
 
-        const fixedEl = document.getElementById("fixedTotal");
-        if (fixedEl) fixedEl.textContent = fmt(total);
+        // El total del botón flotante (si existe)
+        const fixedTotal = document.getElementById("fixedTotal");
+        if (fixedTotal) fixedTotal.innerText = fmt(totalFinal);
 
         updateFooter();
       }
@@ -2512,15 +2570,15 @@
 
       // Confirmar dirección seleccionada en el mapa
       // Confirmar dirección seleccionada en el mapa
-$("#confirmAddress").addEventListener("click", function () {
-  if (selectedAddress) {
-    $("#custAddress").value = selectedAddress;
-    $("#mapModal").style.display = "none";
-    document.body.style.overflow = "auto";
-  } else {
-    alert("Por favor, seleccioná una ubicación en el mapa.");
-  }
-});
+      $("#confirmAddress").addEventListener("click", function () {
+        if (selectedAddress) {
+          $("#custAddress").value = selectedAddress;
+          $("#mapModal").style.display = "none";
+          document.body.style.overflow = "auto";
+        } else {
+          alert("Por favor, seleccioná una ubicación en el mapa.");
+        }
+      });
 
       $("#mapModal").addEventListener("click", function (e) {
         if (e.target.id === "mapModal") {
@@ -2530,143 +2588,104 @@ $("#confirmAddress").addEventListener("click", function () {
       });
 
       /* WhatsApp */
-      function sendWhatsApp() {
-        if (isSubmitting) return;
-        isSubmitting = true;
+      async function sendWhatsApp() {
+  if (isSubmitting) return;
+  isSubmitting = true;
 
-        setTimeout(() => {
-          isSubmitting = false;
-        }, 1000);
+  const nameEl = document.getElementById("custName");
+  const phoneEl = document.getElementById("custPhone");
+  let name = nameEl ? nameEl.value.trim() : "";
+  let phone = phoneEl ? phoneEl.value.trim() : "";
 
-        if (cart.length === 0) {
-          alert("Tu carrito está vacío.");
-          scrollToProducts();
-          isSubmitting = false;
-          return;
-        }
+  if (!name || !phone) {
+    alert("Por favor, completá nombre y teléfono.");
+    isSubmitting = false;
+    return;
+  }
 
-        const nameEl = document.getElementById("custName");
-        const phoneEl = document.getElementById("custPhone");
-        let name = nameEl ? nameEl.value.trim() : "";
-        let phone = phoneEl ? phoneEl.value.trim() : "";
-        if (!name) {
-          alert("Ingresá tu nombre.");
-          scrollToForm();
-          isSubmitting = false;
-          return;
-        }
-        if (!phone) {
-          alert("Ingresá tu teléfono.");
-          scrollToForm();
-          isSubmitting = false;
-          return;
-        }
+  let mode = $("#deliveryMode").value;
+  let address = $("#custAddress").value.trim();
+  let ref = $("#custRef").value.trim();
+  let pay = $("#paymentMethod").value;
+  let notes = $("#custNotes").value.trim();
+  const orderId = generateOrderId();
 
-        let mode = $("#deliveryMode").value;
-        let address = val("custAddress");
+  // --- CÁLCULO DE TOTALES ---
+  const subtotalPedido = cart.reduce((s, it) => s + calcItemTotal(it), 0);
+  const totalFinal = Math.max(0, subtotalPedido - appliedDiscount);
 
-        if (mode === "delivery" && !address) {
-          alert("Ingresá la dirección.");
-          scrollToForm();
-          isSubmitting = false;
-          return;
-        }
+  // --- CONSTRUIR MENSAJE PARA WHATSAPP ---
+  let text = "🍦 *Thai Cream - NUEVO PEDIDO* 🍦\n";
+  text += `🆔 *Pedido:* ${orderId}\n\n`;
+  text += "*Productos:*\n";
+  
+  cart.forEach((it, i) => {
+    text += `${i + 1}) ${it.qty}× ${it.flavorName}\n`;
+    text += `   Toppings: ${it.toppings.join(", ") || "Sin toppings"}\n`;
+    text += `   Salsa: ${it.sauce || "Sin salsa"}\n`;
+    text += `   Subtotal: ${fmt(calcItemTotal(it))}\n\n`;
+  });
 
-        const lat = val("custLat");
-        const lng = val("custLng");
-        const mapsLink = (lat && lng) ? `https://www.google.com/maps/search/?api=1&query=${lat},${lng}` : "";
+  text += `--------------------------\n`;
+  text += `*Subtotal:* ${fmt(subtotalPedido)}\n`;
+  
+  if (appliedDiscount > 0) {
+    text += `*Descuento (${appliedCouponCode}):* -${fmt(appliedDiscount)}\n`;
+  }
+  
+  text += `*TOTAL A PAGAR: ${fmt(totalFinal)}*\n`;
+  text += `--------------------------\n\n`;
 
+  text += `👤 *Cliente:* ${name}\n`;
+  text += `📞 *Tel:* ${phone}\n`;
+  text += `🛵 *Modo:* ${mode === "delivery" ? "Envío a domicilio" : "Retiro"}\n`;
+  
+  if (mode === "delivery") {
+    text += `📍 *Dirección:* ${address}\n`;
+    if (ref) text += `🏠 *Ref:* ${ref}\n`;
+  }
+  
+  text += `💳 *Pago:* ${pay}\n`;
+  if (notes) text += `📝 *Notas:* ${notes}\n`;
 
-        let pay = val("paymentMethod"); // paymentMethod existe pero usar val es seguro y consistente
-        let notes = val("custNotes"); // opcional, ahora seguro
-        let ref = val("custRef"); // opcional, ahora seguro
+  // --- ENVIAR DATOS A GOOGLE SHEETS ---
+  // IMPORTANTE: Aquí enviamos los datos que tu Apps Script espera
+  const orderData = {
+    orderId: orderId,
+    name: name,
+    phone: phone,
+    mode: mode,
+    address: address + (ref ? " - Ref: " + ref : ""),
+    lat: $("#custLat").value,
+    lng: $("#custLng").value,
+    items: cart,
+    subtotal: subtotalPedido,
+    discountAmount: appliedDiscount, // <--- Esto es vital para el descuento
+    couponCode: appliedCouponCode,   // <--- Esto es vital para restar el cupón
+    payment: pay,
+    notes: notes,
+    status: "new"
+  };
 
-        //Gemerar numero de orden   
-        const orderId = generateOrderId();
-        document.getElementById("orderId").value = orderId; // guardarlo en hidden
+  try {
+    // Usamos fetch normal para asegurar que llegue la data
+    fetch(WEB_APP_URL, {
+      method: "POST",
+      mode: "no-cors", // Para evitar errores de dominio, aunque no podamos leer la respuesta
+      body: JSON.stringify(orderData)
+    });
 
-        // Construir mensaje
-        let text = " Thai Cream - NUEVO PEDIDO \n";
-        text += `🆔 Pedido: ${orderId}\n\n`;
-        text += "Productos:*\n";
-        cart.forEach((it, i) => {
-          text += `${i + 1}) ${it.qty}× ${it.flavorName}\n`;
-          text += `   Toppings: ${
-            it.toppings && it.toppings.length
-              ? it.toppings.join(", ")
-              : "Sin toppings"
-          }\n`;
-          text += `   Salsa: ${it.sauce || "Sin salsa"}\n`;
-          text += `   Cucharita: ${it.cucharita ? "Sí" : "No"}\n`;
-          text += `   Subtotal: ${fmt(calcItemTotal(it))}\n\n`;
-        });
+    // Abrir WhatsApp
+    const waUrl = `https://wa.me/${PHONE}?text=${encodeURIComponent(text)}`;
+    window.open(waUrl, "_blank");
 
-        const totalAmount = cart.reduce((s, it) => s + calcItemTotal(it), 0);
-        text += `*Total:* ${fmt(totalAmount)}\n\n`;
-        text += "*Datos del cliente:*\n";
-        text += `• Nombre: ${name}\n`;
-        text += `• Teléfono: ${phone}\n`;
-        text += `• Entrega: ${
-          mode === "pickup" ? "Retiro" : "Envío a domicilio"
-        }\n`;
-        if (mode === "delivery") {
-            text += `\uD83D\uDCCD Dirección: ${address}\n`;
-            if (mapsLink) text += `• Mapa: ${mapsLink}\n`;
-            if (ref) text += `• Referencia: ${ref}\n`;
-        }
-        text += `• Pago: ${pay === "cash" ? "Efectivo" : "Transferencia"}\n`;
-        if (notes) text += `• Notas: ${notes}\n`;
-
-        text = text.normalize("NFC");
-
-        
-        
-        const sheetUrl = "https://script.google.com/macros/s/AKfycbxzKjIstQEc64Uj9CtpNqQ0jSDpwynqHodobu8sUWJsIKMLPoEDYD342O-VL2D4plE1oA/exec"; // tu web app url
-        const orderObj = {
-        orderId,
-        name,
-        phone,
-        mode,
-        address,
-        lat,
-        lng,
-        items: cart, // o estructura que uses
-        total: totalAmount,
-        payment: pay,
-        notes: notes,
-        status: "new",
-        };
-
-        // Enviar como application/x-www-form-urlencoded (sin preflight)
-        const form = new URLSearchParams();
-        form.append('payload', JSON.stringify(orderObj));
-
-        fetch(sheetUrl, {
-        method: 'POST',
-        body: form
-        })
-        .then(response => {
-        // Apps Script devuelve JSON, intentamos leerlo
-        return response.text().then(txt => {
-            try { return JSON.parse(txt); } catch(_){ return txt; }
-        });
-        })
-        .then(data => {
-        console.log('Sheets response:', data);
-        })
-        .catch(err => {
-        console.error('Error Sheets:', err);
-        });
-
-
-
-
-        // abrir WhatsApp
-        const url = `https://wa.me/${PHONE}?text=${encodeURIComponent(text)}`;
-
-        window.open(url, "_blank");
-        isSubmitting = false;
-      }
+  } catch (err) {
+    console.error("Error al guardar en Sheets:", err);
+    alert("Hubo un error al procesar el pedido en el servidor, pero intentaremos enviarlo por WhatsApp igual.");
+  } finally {
+    isSubmitting = false;
+  }
+}
 
       /* Funciones de scroll */
       function scrollToProducts() {
@@ -2748,7 +2767,7 @@ $("#confirmAddress").addEventListener("click", function () {
         return el ? el.value.trim() : "";
       }
 
-        function generateOrderId() {
+      function generateOrderId() {
         const now = new Date();
         const y = now.getFullYear();
         const m = String(now.getMonth() + 1).padStart(2, "0");
@@ -2756,111 +2775,185 @@ $("#confirmAddress").addEventListener("click", function () {
         const h = String(now.getHours()).padStart(2, "0");
         const min = String(now.getMinutes()).padStart(2, "0");
         return `${y}${m}${d}-${h}${min}`;
-}
-    // Función para verificar si se necesita scroll
-function checkMapScroll() {
-  const mapContent = document.querySelector('.map-content-wrapper');
-  const mapContainer = document.querySelector('.map-container');
-  const mapFooter = document.querySelector('.map-footer');
-  
-  if (!mapContent || !mapContainer) return;
-  
-  const contentHeight = mapContent.scrollHeight;
-  const containerHeight = mapContainer.clientHeight;
-  const headerHeight = document.querySelector('.map-header').clientHeight;
-  const footerHeight = mapFooter.clientHeight;
-  
-  const availableHeight = containerHeight - headerHeight - footerHeight;
-  
-  // Si el contenido es más alto que el espacio disponible, hacer scrollable
-  if (contentHeight > availableHeight) {
-    mapContent.style.overflowY = 'auto';
-    mapContent.style.maxHeight = availableHeight + 'px';
-  } else {
-    mapContent.style.overflowY = 'visible';
-    mapContent.style.maxHeight = 'none';
-  }
-}
+      }
+      // Función para verificar si se necesita scroll
+      function checkMapScroll() {
+        const mapContent = document.querySelector(".map-content-wrapper");
+        const mapContainer = document.querySelector(".map-container");
+        const mapFooter = document.querySelector(".map-footer");
 
-// Función para inicializar el mapa con ajustes responsive
-function initMap() {
-  const posadasCoords = [-27.3671, -55.8961];
+        if (!mapContent || !mapContainer) return;
 
-  map = L.map("map").setView(posadasCoords, 13);
+        const contentHeight = mapContent.scrollHeight;
+        const containerHeight = mapContainer.clientHeight;
+        const headerHeight = document.querySelector(".map-header").clientHeight;
+        const footerHeight = mapFooter.clientHeight;
 
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-  }).addTo(map);
+        const availableHeight = containerHeight - headerHeight - footerHeight;
 
-  marker = L.marker(posadasCoords, { draggable: true }).addTo(map);
-  selectedLocation = { lat: posadasCoords[0], lng: posadasCoords[1] };
+        // Si el contenido es más alto que el espacio disponible, hacer scrollable
+        if (contentHeight > availableHeight) {
+          mapContent.style.overflowY = "auto";
+          mapContent.style.maxHeight = availableHeight + "px";
+        } else {
+          mapContent.style.overflowY = "visible";
+          mapContent.style.maxHeight = "none";
+        }
+      }
 
-  updateAddressFromMarker();
+      // Función para inicializar el mapa con ajustes responsive
+      function initMap() {
+        const posadasCoords = [-27.3671, -55.8961];
 
-  marker.on("dragend", function (e) {
-    selectedLocation = {
-      lat: e.target.getLatLng().lat,
-      lng: e.target.getLatLng().lng,
-    };
-    updateAddressFromMarker();
-  });
+        map = L.map("map").setView(posadasCoords, 13);
 
-  map.on("click", function (e) {
-    selectedLocation = {
-      lat: e.latlng.lat,
-      lng: e.latlng.lng,
-    };
-    marker.setLatLng(e.latlng);
-    updateAddressFromMarker();
-  });
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          attribution:
+            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        }).addTo(map);
 
-  // Ajustar el mapa después de que se cargue
-  setTimeout(() => {
-    map.invalidateSize();
-    checkMapScroll();
-  }, 300);
-}
+        marker = L.marker(posadasCoords, { draggable: true }).addTo(map);
+        selectedLocation = { lat: posadasCoords[0], lng: posadasCoords[1] };
 
-// Modificar el evento de abrir el mapa
-$("#openMapBtn").addEventListener("click", function () {
-  $("#mapModal").style.display = "flex";
-  document.body.style.overflow = "hidden";
+        updateAddressFromMarker();
 
-  // Pequeño delay para que el DOM se renderice
-  setTimeout(() => {
-    if (!map) {
-      initMap();
-    } else {
-      map.invalidateSize();
-    }
-    
-    // Verificar scroll después de que todo esté cargado
-    setTimeout(checkMapScroll, 100);
-  }, 50);
-});
+        marker.on("dragend", function (e) {
+          selectedLocation = {
+            lat: e.target.getLatLng().lat,
+            lng: e.target.getLatLng().lng,
+          };
+          updateAddressFromMarker();
+        });
 
-// Agregar eventos para cerrar el mapa
-$("#closeMap").addEventListener("click", function () {
-  $("#mapModal").style.display = "none";
-  document.body.style.overflow = "auto";
-});
+        map.on("click", function (e) {
+          selectedLocation = {
+            lat: e.latlng.lat,
+            lng: e.latlng.lng,
+          };
+          marker.setLatLng(e.latlng);
+          updateAddressFromMarker();
+        });
 
-$("#closeMapBottom").addEventListener("click", function () {
-  $("#mapModal").style.display = "none";
-  document.body.style.overflow = "auto";
-});
+        // Ajustar el mapa después de que se cargue
+        setTimeout(() => {
+          map.invalidateSize();
+          checkMapScroll();
+        }, 300);
+      }
 
-// Cerrar al hacer clic fuera del contenido
-$("#mapModal").addEventListener("click", function (e) {
-  if (e.target.id === "mapModal") {
-    $("#mapModal").style.display = "none";
-    document.body.style.overflow = "auto";
-  }
-});
+      // Modificar el evento de abrir el mapa
+      $("#openMapBtn").addEventListener("click", function () {
+        $("#mapModal").style.display = "flex";
+        document.body.style.overflow = "hidden";
 
-// Recalcular scroll al cambiar tamaño de ventana
-window.addEventListener('resize', checkMapScroll);
+        // Pequeño delay para que el DOM se renderice
+        setTimeout(() => {
+          if (!map) {
+            initMap();
+          } else {
+            map.invalidateSize();
+          }
 
+          // Verificar scroll después de que todo esté cargado
+          setTimeout(checkMapScroll, 100);
+        }, 50);
+      });
+
+      // Agregar eventos para cerrar el mapa
+      $("#closeMap").addEventListener("click", function () {
+        $("#mapModal").style.display = "none";
+        document.body.style.overflow = "auto";
+      });
+
+      $("#closeMapBottom").addEventListener("click", function () {
+        $("#mapModal").style.display = "none";
+        document.body.style.overflow = "auto";
+      });
+
+      // Cerrar al hacer clic fuera del contenido
+      $("#mapModal").addEventListener("click", function (e) {
+        if (e.target.id === "mapModal") {
+          $("#mapModal").style.display = "none";
+          document.body.style.overflow = "auto";
+        }
+      });
+
+      // Recalcular scroll al cambiar tamaño de ventana
+      window.addEventListener("resize", checkMapScroll);
+
+      // --- VARIABLES GLOBALES PARA CUPONES ---
+      let appliedDiscount = 0;
+      let appliedCouponCode = "";
+
+      const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzW8fbDFSGwiqaNTzLQP392p_cXWELceEzgGUwG6BdjJ6X6UHio57QqvUGhhSKZhtuvTQ/exec"; // <--- ASEGÚRATE DE PONER TU URL REAL
+
+      async function handleApplyCoupon() {
+        const btn = document.getElementById("applyCouponBtn");
+        const input = document.getElementById("couponInput");
+        const msg = document.getElementById("couponMessage");
+        const code = input.value.trim().toUpperCase();
+
+        if (!code) {
+          alert("Por favor, ingresá un código.");
+          return;
+        }
+
+        // --- ANIMACIÓN DE CARGA ---
+        const originalText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<span class="loading-spinner"></span>...';
+        msg.innerText = "Validando...";
+        msg.style.color = "var(--muted)";
+
+        try {
+          const response = await fetch(WEB_APP_URL, {
+            method: "POST",
+            body: JSON.stringify({ action: "validateCoupon", code: code }),
+          });
+
+          const result = await response.json();
+
+          if (result.status === "ok") {
+            // FIX: Obtenemos el total usando el ID correcto de tu HTML ("total")
+            const totalTexto = document.getElementById("total").innerText;
+            let subtotalActual =
+              parseFloat(
+                totalTexto.replace("$", "").replace(".", "").replace(",", ".")
+              ) || 0;
+
+            if (result.data.type === "PERCENT") {
+              appliedDiscount = subtotalActual * (result.data.value / 100);
+            } else {
+              appliedDiscount = result.data.value;
+            }
+
+            appliedCouponCode = code;
+
+            msg.innerText = `¡Cupón ${code} aplicado! Descuento: $${appliedDiscount.toLocaleString(
+              "es-AR"
+            )}`;
+            msg.style.color = "green";
+
+            // Refrescamos el carrito para que se vea el nuevo total
+            renderCart();
+          } else {
+            appliedDiscount = 0;
+            appliedCouponCode = "";
+            msg.innerText = "❌ " + result.message;
+            msg.style.color = "red";
+            renderCart(); // Para limpiar si había uno antes
+          }
+        } catch (error) {
+          console.error("Error validando cupón:", error);
+          alert(
+            "Error al conectar con el servidor. Revisá tu URL de Apps Script."
+          );
+          msg.innerText = "";
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML = originalText;
+        }
+      }
     </script>
   </body>
 </html>
