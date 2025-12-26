@@ -54,6 +54,8 @@
         padding-top: 70px;
         color: #333;
         padding-bottom: 80px;
+        margin: 0;
+        padding: 0;
       }
 
       img {
@@ -67,79 +69,7 @@
         padding: 20px;
       }
 
-      /* ============================
-        NAVBAR
-        ============================ */
-      .navbar {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 70px;
-        background: rgba(255, 255, 255, 0.98);
-        backdrop-filter: blur(10px);
-        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-        z-index: 1000;
-        display: flex;
-        align-items: center;
-        padding: 0 20px;
-        box-shadow: 0 2px 10px rgba(137, 45, 30, 0.05);
-      }
-
-      .nav-inner {
-        max-width: 1100px;
-        width: 100%;
-        margin: 0 auto;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      }
-
-      .nav-brand {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-      }
-
       /* LOGO MEJORADO */
-      .nav-brand img {
-        width: 70px;
-        height: 70px;
-        object-fit: contain;
-        background: transparent;
-        padding: 0;
-        filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.15));
-        transition: all 0.3s ease;
-      }
-
-      .nav-brand img:hover {
-        transform: scale(1.05);
-        filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.2));
-      }
-
-      .nav-text {
-        display: flex;
-        flex-direction: column;
-        line-height: 1.2;
-      }
-
-      .nav-text strong {
-        font-size: 20px;
-        font-weight: 800;
-        color: var(--primary);
-        letter-spacing: -0.3px;
-      }
-
-      .nav-text span {
-        font-size: 13px;
-        color: var(--muted);
-        font-weight: 500;
-      }
-
-      .nav-actions {
-        display: flex;
-        gap: 12px;
-      }
 
       .social-btn {
         width: 46px;
@@ -218,7 +148,7 @@
       }
 
       .whatsapp-icon {
-        fill: #25d366;
+        fill: #25d366 !important; /* Color verde oficial de WhatsApp */
       }
 
       .social-btn:hover .instagram-icon {
@@ -980,20 +910,6 @@
       }
 
       @media (max-width: 768px) {
-        .navbar {
-          height: 65px;
-          padding: 0 15px;
-        }
-
-        .nav-brand img {
-          width: 55px;
-          height: 55px;
-        }
-
-        .nav-text strong {
-          font-size: 18px;
-        }
-
         .social-btn {
           width: 42px;
           height: 42px;
@@ -1139,15 +1055,6 @@
           grid-template-columns: repeat(2, 1fr);
         }
 
-        .nav-brand img {
-          width: 50px;
-          height: 50px;
-        }
-
-        .nav-text strong {
-          font-size: 16px;
-        }
-
         /* Ajustes adicionales para pantallas muy pequeñas */
         .fixed-footer {
           padding: 8px 10px;
@@ -1173,10 +1080,6 @@
       @media (max-width: 360px) {
         .products {
           grid-template-columns: 1fr;
-        }
-
-        .nav-text span {
-          font-size: 12px;
         }
 
         .social-btn {
@@ -1676,95 +1579,127 @@
       }
 
       /* --- NUEVOS ESTILOS NAVBAR Y ESTADO --- */
-      .nav-inner {
-        display: flex;
-        align-items: center;
-        justify-content: space-between; /* Distribuye: Izquierda, Centro, Derecha */
+      /* --- NUEVA NAVEGACIÓN PROFESIONAL --- */
+      .navbar {
+        background: var(--card);
+        padding: 10px 0; /* Ajustamos un poco para que no sea gigante */
+        border-bottom: 2px solid var(--secondary);
+        position: sticky;
+        top: 0; /* Pegado al techo */
+        margin-top: 0; /* Elimina cualquier margen superior */
+        z-index: 1000;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
       }
 
-      /* Estado a la izquierda */
-      .status-container {
-        flex: 1; /* Ocupa el espacio izquierdo */
+      .nav-inner {
+        max-width: 1200px;
+        margin: 0 auto;
         display: flex;
+        justify-content: space-between; /* Separa los 3 grupos */
         align-items: center;
+        padding: 0 20px;
+      }
+
+      /* 1. Lado Izquierdo: Estado del Negocio */
+      .status-container {
+        flex: 1;
+        display: flex;
+        justify-content: flex-start;
       }
 
       .status-badge {
         display: flex;
         align-items: center;
         gap: 8px;
-        background: rgba(0, 0, 0, 0.05);
+        background: #f8f9fa;
         padding: 6px 12px;
-        border-radius: 20px;
-        font-size: 13px;
+        border-radius: 30px;
+        font-size: 13px; /* Tamaño legible */
         font-weight: 700;
+        border: 1px solid #eee;
       }
 
       .status-dot {
         width: 10px;
         height: 10px;
         border-radius: 50%;
-        position: relative;
       }
 
-      /* Animación para Abierto (Verde) */
       .status-open .status-dot {
         background: #2ecc71;
-      }
-      .status-open .status-dot::after {
-        content: "";
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        background: #2ecc71;
-        border-radius: 50%;
-        animation: status-pulse 2s infinite;
+        box-shadow: 0 0 8px #2ecc71;
+        animation: pulse-green 2s infinite;
       }
 
-      /* Animación para Cerrado (Gris/Rojo) */
       .status-closed .status-dot {
-        background: #95a5a6;
-      }
-      .status-closed .status-badge {
-        color: #7f8c8d;
+        background: #e74c3c;
       }
 
-      @keyframes status-pulse {
-        0% {
-          transform: scale(1);
-          opacity: 0.8;
-        }
-        100% {
-          transform: scale(2.8);
-          opacity: 0;
-        }
-      }
-
-      /* Logo al centro */
-      .nav-logo-center {
-        flex: 2; /* Más espacio para el centro */
+      /* 2. Centro: El Logo (Ahora mucho más grande) */
+      .nav-logo {
+        flex: 2;
         display: flex;
         justify-content: center;
       }
 
-      .nav-logo-center img {
-        height: 60px; /* Logo grande */
+      .nav-logo img {
+        height: 90px; /* Tamaño grande en PC */
         width: auto;
-        transition: transform 0.3s;
+        filter: drop-shadow(
+          0 4px 6px rgba(0, 0, 0, 0.1)
+        ); /* Hace que resalte */
+        transition: transform 0.3s ease;
       }
 
-      /* Redes a la derecha */
+      /* Estilo para los iconos de redes para que tengan buen tamaño */
+      .nav-actions .social-btn .icon {
+        width: 24px;
+        height: 24px;
+        fill: var(--primary); /* O el color que prefieras */
+      }
+
+      /* 3. Lado Derecho: Redes */
       .nav-actions {
         flex: 1;
+        display: flex;
         justify-content: flex-end;
+        gap: 15px;
       }
 
-      @media (max-width: 768px) {
-        .status-badge span {
-          display: none;
-        } /* En móvil ocultamos el texto, dejamos el punto */
-        .nav-logo-center img {
-          height: 50px;
+      /* --- AJUSTES PARA CELULARES --- */
+      @media (max-width: 600px) {
+        .nav-inner {
+          padding: 0 10px;
+        }
+
+        .nav-logo img {
+          height: 65px; /* Tamaño destacado en móvil */
+        }
+
+        .status-badge {
+          padding: 4px 8px;
+          font-size: 11px; /* Un poco más chico para que entre bien */
+          gap: 5px;
+        }
+
+        /* Aquí eliminamos el 'display:none' para que el texto SÍ se vea en móvil */
+        #statusText {
+          display: inline-block !important;
+        }
+      }
+
+      @keyframes pulse-green {
+        0% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        50% {
+          transform: scale(1.3);
+          opacity: 0.7;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
         }
       }
     </style>
@@ -1774,20 +1709,17 @@
     <!-- ===================================== -->
     <!-- NAVBAR CON BOTONES DE REDES SOCIALES  -->
     <!-- ===================================== -->
-    <header class="navbar">
+    <nav class="navbar">
       <div class="nav-inner">
         <div class="status-container">
-          <div id="businessStatus" class="status-badge">
+          <div id="businessStatus" class="status-badge status-closed">
             <div class="status-dot"></div>
-            <span id="statusText">Verificando...</span>
+            <span id="statusText">Cargando...</span>
           </div>
         </div>
 
-        <div class="nav-logo-center">
-          <img
-            src="img/logosb.png"
-            alt="Thai Cream"
-          />
+        <div class="nav-logo">
+          <img src="img/ultlogo.png" alt="Thai Cream" />
         </div>
 
         <div class="nav-actions">
@@ -1796,14 +1728,14 @@
             target="_blank"
             class="social-btn instagram"
           >
-            <svg class="icon instagram-icon" viewBox="0 0 24 24">
+            <svg class="icon" viewBox="0 0 24 24">
               <path
                 d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"
               />
             </svg>
           </a>
           <a
-            href="https://wa.me/5493764223240"
+            href="https://wa.me/5493764800072"
             target="_blank"
             class="social-btn whatsapp"
           >
@@ -1815,7 +1747,7 @@
           </a>
         </div>
       </div>
-    </header>
+    </nav>
 
     <div class="wrap">
       <div class="layout">
@@ -2133,8 +2065,18 @@
       const flavors = [
         { id: "oreo", name: "Oreo", price: 2500, img: "img/oreo.webp" },
         { id: "dura", name: "Durazno", price: 2500, img: "img/durazno.webp" },
-        { id: "fruit", name: "Frutilla", price: 2500, img: "img/frutilla.webp" },
-        { id: "chocot", name: "Chocotorta", price: 2500, img: "img/chocolina.webp" },
+        {
+          id: "fruit",
+          name: "Frutilla",
+          price: 2500,
+          img: "img/frutilla.webp",
+        },
+        {
+          id: "chocot",
+          name: "Chocotorta",
+          price: 2500,
+          img: "img/chocolina.webp",
+        },
         { id: "pepi", name: "Pepitos", price: 2500, img: "img/pepitos.webp" },
         { id: "mara", name: "Maracuya", price: 2500, img: "img/maracuya.webp" },
         { id: "bana", name: "Banana", price: 2500, img: "img/banana.webp" },
@@ -2976,7 +2918,7 @@
       let appliedCouponCode = "";
 
       const WEB_APP_URL =
-        "https://script.google.com/macros/s/AKfycbyjvFMLJxJBpvY0OIrFtNhQ0aP3GhTYI6Gr7AII4gdeUC2QJlE96hpkwcyavEClNu1XlA/exec"; // <--- ASEGÚRATE DE PONER TU URL REAL
+        "https://script.google.com/macros/s/AKfycbyIkCzTP8qww7medQoQX2epLT3MC-Mjt172OkOE-9OiiVPqFGsWoF9ULETu63zcK4uJ1w/exec"; // <--- ASEGÚRATE DE PONER TU URL REAL
 
       async function handleApplyCoupon() {
         const btn = document.getElementById("applyCouponBtn");
@@ -3056,20 +2998,22 @@
             method: "POST",
             body: JSON.stringify({ action: "getBusinessStatus" }),
           });
+
           const result = await response.json();
 
-          if (result.open) {
-            container.className = "status-badge status-open";
+          // IMPORTANTE: Accedemos a result.data.open porque el servidor lo envía así
+          if (result.status === "ok" && result.data.open) {
+            container.classList.remove("status-closed");
+            container.classList.add("status-open");
             text.innerText = "Abierto";
           } else {
-            container.className = "status-badge status-closed";
+            container.classList.remove("status-open");
+            container.classList.add("status-closed");
             text.innerText = "Cerrado";
-            // Opcional: Podrías deshabilitar el botón de enviar pedido si está cerrado
-            // document.getElementById("sendOrderBtn").disabled = true;
           }
         } catch (error) {
           console.error("Error al obtener estado:", error);
-          text.innerText = "Estado no disponible";
+          text.innerText = "Error de conexión";
         }
       }
 
