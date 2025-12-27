@@ -4,7 +4,28 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Thai Cream — Pedidos</title>
-    <link rel="icon" type="/favicon.png" href="/favicon.png?v=1">
+    <meta
+      name="description"
+      content="Pedí los mejores helados tailandeses de Posadas. Armá tu Thai Cream con tus toppings favoritos."
+    />
+    <meta
+      name="keywords"
+      content="Helados, Thai Cream, Posadas, Helado Tailandés, Delivery, Helado Posadas, Eventos Helado, Puesto Helado, Servicio Evento"
+    />
+
+    <meta property="og:title" content="Thai Cream — Pedidos Online" />
+    <meta
+      property="og:description"
+      content="¡Armá tu helado y te lo llevamos!"
+    />
+    <meta
+      property="og:image"
+      content="https://i.postimg.cc/9QLq7JY6/ipost.png"
+    />
+    <meta property="og:url" content="https://thaicreamposadas.com" />
+    <meta property="og:type" content="website" />
+
+    <link rel="icon" type="/favicon.png" href="/favicon.png?v=1" />
 
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap"
@@ -1703,6 +1724,96 @@
           opacity: 1;
         }
       }
+
+      .btn-remove {
+        background-color: var(--light); /* El color cremita de tu paleta */
+        color: var(--primary); /* Tu bordó principal */
+        border: 1px solid rgba(137, 45, 30, 0.2);
+        border-radius: 8px; /* Un poco menos redondeado, más moderno */
+        width: 70px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.3s ease;
+        box-shadow: 2px 2px 0px var(--primary); /* Efecto sombra sólida tipo sticker */
+      }
+
+      .btn-remove:active {
+        transform: translate(2px, 2px);
+        box-shadow: 0px 0px 0px var(--primary);
+      }
+
+      .btn-remove::before {
+        content: "✕"; /* Una X elegante */
+        font-weight: bold;
+      }
+
+      .btn-remove:hover {
+        background-color: rgba(
+          255,
+          77,
+          77,
+          0.1
+        ); /* Fondo rojizo suave al pasar el mouse */
+        color: #cc0000; /* Rojo más fuerte */
+        transform: scale(1.1);
+      }
+
+      /* Si usás un ícono o una 'X', esto lo centra */
+      .btn-remove svg,
+      .btn-remove i {
+        width: 18px;
+        height: 18px;
+      }
+
+      /* Ajuste del item del carrito para que el botón se vea bien al final */
+      .cart-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #eee;
+      }
+
+      #toast-container {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 9999;
+      }
+
+      .toast {
+        background: #333;
+        color: white;
+        padding: 12px 25px;
+        border-radius: 25px;
+        margin-top: 10px;
+        font-size: 14px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        animation: fadeInUp 0.3s ease, fadeOut 0.3s ease 2.7s;
+      }
+
+      .toast.error {
+        background: #e74c3c;
+      }
+      .toast.success {
+        background: #2ecc71;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
     </style>
   </head>
 
@@ -2602,7 +2713,7 @@
           $("#mapModal").style.display = "none";
           document.body.style.overflow = "auto";
         } else {
-          alert("Por favor, seleccioná una ubicación en el mapa.");
+          showToast("Por favor, seleccioná una ubicación en el mapa.");
         }
       });
 
@@ -2615,6 +2726,12 @@
 
       /* WhatsApp */
       async function sendWhatsApp() {
+        if (cart.length === 0) {
+          showToast(
+            "🛒 ¡Tu carrito está vacío! Agregá al menos un helado para continuar."
+          );
+          return;
+        }
         if (isSubmitting) return;
         isSubmitting = true;
 
@@ -2624,7 +2741,7 @@
         let phone = phoneEl ? phoneEl.value.trim() : "";
 
         if (!name || !phone) {
-          alert("Por favor, completá nombre y teléfono.");
+          showToast("Por favor, completá nombre y teléfono.");
           isSubmitting = false;
           return;
         }
@@ -2675,7 +2792,7 @@
           if (ref) text += `🏠 *Ref:* ${ref}\n`;
         }
 
-        text += `💳 *Pago:* ${pay}\n`;
+        text += `💳 *Pago:* ${pay === "cash" ? "Efectivo" : "Transferencia"}\n`;
         if (notes) text += `📝 *Notas:* ${notes}\n`;
 
         // --- ENVIAR DATOS A GOOGLE SHEETS ---
@@ -2712,7 +2829,7 @@
           window.open(waUrl, "_blank");
         } catch (err) {
           console.error("Error al guardar en Sheets:", err);
-          alert(
+          showToast(
             "Hubo un error al procesar el pedido en el servidor, pero intentaremos enviarlo por WhatsApp igual."
           );
         } finally {
@@ -2928,7 +3045,7 @@
         const code = input.value.trim().toUpperCase();
 
         if (!code) {
-          alert("Por favor, ingresá un código.");
+          showToast("Por favor, ingresá un código.");
           return;
         }
 
@@ -2979,7 +3096,7 @@
           }
         } catch (error) {
           console.error("Error validando cupón:", error);
-          alert(
+          showToast(
             "Error al conectar con el servidor. Revisá tu URL de Apps Script."
           );
           msg.innerText = "";
@@ -3020,6 +3137,20 @@
 
       // Llamar a la función cuando cargue la página
       window.addEventListener("DOMContentLoaded", updateBusinessStatus);
+
+      function showToast(message, type = "info") {
+        const container = document.getElementById("toast-container");
+        const toast = document.createElement("div");
+        toast.className = `toast ${type}`;
+        toast.innerText = message;
+        container.appendChild(toast);
+
+        setTimeout(() => {
+          toast.remove();
+        }, 3000);
+      }
     </script>
+
+    <div id="toast-container"></div>
   </body>
 </html>
