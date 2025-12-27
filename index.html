@@ -558,16 +558,20 @@
       }
 
       .fixed-button {
-        background: linear-gradient(135deg, var(--primary), var(--dark));
-        color: white;
-        padding: 10px 20px;
-        border-radius: 12px;
+        background-color: var(--primary) !important;
+        color: var(--secondary) !important; /* Letras en el amarillo cremita */
+        width: 150px;
+        height: 60px;
+        border-radius: 15px;
+        font-size: 15px !important;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
         border: none;
-        font-weight: 800;
-        cursor: pointer;
-        transition: all 0.3s;
-        font-size: 14px;
-        white-space: nowrap;
+        box-shadow: 0 4px 15px rgba(137, 45, 30, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
       .fixed-button:hover {
@@ -1730,7 +1734,7 @@
         color: var(--primary); /* Tu bordó principal */
         border: 1px solid rgba(137, 45, 30, 0.2);
         border-radius: 8px; /* Un poco menos redondeado, más moderno */
-        width: 70px;
+        width: 75px;
         height: 30px;
         display: flex;
         align-items: center;
@@ -1780,15 +1784,16 @@
 
       #toast-container {
         position: fixed;
-        bottom: 20px;
+        top: 30px;
         left: 50%;
         transform: translateX(-50%);
         z-index: 9999;
       }
 
       .toast {
-        background: #333;
-        color: white;
+        background: var(--primary);
+        color: var(--secondary);
+        border: 1px solid var(--secondary);
         padding: 12px 25px;
         border-radius: 25px;
         margin-top: 10px;
@@ -1813,6 +1818,18 @@
           opacity: 1;
           transform: translateY(0);
         }
+      }
+
+      .payment-msg {
+        display: none; /* Empieza oculto */
+        background-color: #fff0f0;
+        color: var(--primary);
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px dashed var(--primary);
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-top: 10px;
       }
     </style>
   </head>
@@ -2725,39 +2742,67 @@
       });
 
       /* WhatsApp */
+      /* WhatsApp con Auto-Scroll y Validaciones - VERSIÓN FINAL FIEL AL CÓDIGO */
       async function sendWhatsApp() {
         if (cart.length === 0) {
           showToast(
-            "🛒 ¡Tu carrito está vacío! Agregá al menos un helado para continuar."
+            "🛒 ¡Tu carrito está vacío! Agregá al menos un producto para continuar."
           );
+          
+          // --- AUTO-SCROLL A SABORES ---
+          const saboresSec = document.getElementById("productsArea");
+          if (saboresSec) {
+            saboresSec.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
           return;
         }
         if (isSubmitting) return;
-        isSubmitting = true;
 
+        // 1. OBTENER ELEMENTOS (Usando tus IDs reales: custName, custPhone, deliveryMode, custAddress)
         const nameEl = document.getElementById("custName");
         const phoneEl = document.getElementById("custPhone");
-        let name = nameEl ? nameEl.value.trim() : "";
-        let phone = phoneEl ? phoneEl.value.trim() : "";
+        const deliveryModeEl = document.getElementById("deliveryMode");
+        const custAddressEl = document.getElementById("custAddress");
+        const openMapBtn = document.getElementById("openMapBtn");
 
-        if (!name || !phone) {
-          showToast("Por favor, completá nombre y teléfono.");
-          isSubmitting = false;
+        // 2. VALIDACIONES CON AUTO-SCROLL (Sin romper nada)
+        if (!nameEl.value.trim()) {
+          showToast("Por favor, ingresá tu nombre", "error");
+          nameEl.scrollIntoView({ behavior: "smooth", block: "center" });
+          nameEl.focus();
           return;
         }
 
-        let mode = $("#deliveryMode").value;
-        let address = $("#custAddress").value.trim();
-        let ref = $("#custRef").value.trim();
-        let pay = $("#paymentMethod").value;
-        let notes = $("#custNotes").value.trim();
+        if (!phoneEl.value.trim()) {
+          showToast("Necesitamos un teléfono de contacto", "error");
+          phoneEl.scrollIntoView({ behavior: "smooth", block: "center" });
+          phoneEl.focus();
+          return;
+        }
+
+        if (deliveryModeEl.value === "delivery" && !custAddressEl.value.trim()) {
+          showToast("Por favor, seleccioná tu dirección en el mapa", "error");
+          openMapBtn.scrollIntoView({ behavior: "smooth", block: "center" });
+          return;
+        }
+
+        // --- A partir de aquí, tu lógica original intacta ---
+        isSubmitting = true;
+
+        let name = nameEl.value.trim();
+        let phone = phoneEl.value.trim();
+        let mode = deliveryModeEl.value;
+        let address = custAddressEl.value.trim();
+        let ref = document.getElementById("custRef").value.trim();
+        let pay = document.getElementById("paymentMethod").value;
+        let notes = document.getElementById("custNotes").value.trim();
         const orderId = generateOrderId();
 
-        // --- CÁLCULO DE TOTALES ---
+        // --- CÁLCULO DE TOTALES (Tu lógica original) ---
         const subtotalPedido = cart.reduce((s, it) => s + calcItemTotal(it), 0);
         const totalFinal = Math.max(0, subtotalPedido - appliedDiscount);
 
-        // --- CONSTRUIR MENSAJE PARA WHATSAPP ---
+        // --- CONSTRUIR MENSAJE PARA WHATSAPP (Tu formato original) ---
         let text = "🍦 *Thai Cream - NUEVO PEDIDO* 🍦\n";
         text += `🆔 *Pedido:* ${orderId}\n\n`;
         text += "*Productos:*\n";
@@ -2773,9 +2818,7 @@
         text += `*Subtotal:* ${fmt(subtotalPedido)}\n`;
 
         if (appliedDiscount > 0) {
-          text += `*Descuento (${appliedCouponCode}):* -${fmt(
-            appliedDiscount
-          )}\n`;
+          text += `*Descuento (${appliedCouponCode}):* -${fmt(appliedDiscount)}\n`;
         }
 
         text += `*TOTAL A PAGAR: ${fmt(totalFinal)}*\n`;
@@ -2783,9 +2826,7 @@
 
         text += `👤 *Cliente:* ${name}\n`;
         text += `📞 *Tel:* ${phone}\n`;
-        text += `🛵 *Modo:* ${
-          mode === "delivery" ? "Envío a domicilio" : "Retiro"
-        }\n`;
+        text += `🛵 *Modo:* ${mode === "delivery" ? "Envío a domicilio" : "Retiro"}\n`;
 
         if (mode === "delivery") {
           text += `📍 *Dirección:* ${address}\n`;
@@ -2795,43 +2836,36 @@
         text += `💳 *Pago:* ${pay === "cash" ? "Efectivo" : "Transferencia"}\n`;
         if (notes) text += `📝 *Notas:* ${notes}\n`;
 
-        // --- ENVIAR DATOS A GOOGLE SHEETS ---
-        // IMPORTANTE: Aquí enviamos los datos que tu Apps Script espera
+        // --- ENVIAR DATOS A GOOGLE SHEETS (Tu lógica original) ---
         const orderData = {
           orderId: orderId,
           name: name,
           phone: phone,
           mode: mode,
           address: address + (ref ? " - Ref: " + ref : ""),
-          lat: $("#custLat").value,
-          lng: $("#custLng").value,
+          lat: document.getElementById("custLat").value,
+          lng: document.getElementById("custLng").value,
           items: cart,
           subtotal: subtotalPedido,
-          discountAmount: appliedDiscount, // <--- Esto es vital para el descuento
-          couponCode: appliedCouponCode, // <--- Esto es vital para restar el cupón
+          discountAmount: appliedDiscount,
+          couponCode: appliedCouponCode,
           payment: pay,
           notes: notes,
           status: "new",
         };
 
         try {
-          // Usamos fetch normal para asegurar que llegue la data
           fetch(WEB_APP_URL, {
             method: "POST",
-            mode: "no-cors", // Para evitar errores de dominio, aunque no podamos leer la respuesta
+            mode: "no-cors",
             body: JSON.stringify(orderData),
           });
 
-          // Abrir WhatsApp
-          const waUrl = `https://wa.me/${PHONE}?text=${encodeURIComponent(
-            text
-          )}`;
+          const waUrl = `https://wa.me/${PHONE}?text=${encodeURIComponent(text)}`;
           window.open(waUrl, "_blank");
         } catch (err) {
           console.error("Error al guardar en Sheets:", err);
-          showToast(
-            "Hubo un error al procesar el pedido en el servidor, pero intentaremos enviarlo por WhatsApp igual."
-          );
+          showToast("Error en servidor, pero enviando WhatsApp...");
         } finally {
           isSubmitting = false;
         }
@@ -3149,6 +3183,44 @@
           toast.remove();
         }, 3000);
       }
+
+      // --- LÓGICA DE PAGO SEGÚN ENTREGA ---
+      const deliveryMode = document.getElementById("deliveryMode");
+      const paymentMethod = document.getElementById("paymentMethod");
+      const paymentNotice = document.getElementById("paymentNotice");
+
+      function updatePaymentLogic() {
+        const isDelivery = deliveryMode.value === "delivery";
+
+        if (isDelivery) {
+          // 1. Forzamos el valor a transferencia
+          paymentMethod.value = "transfer";
+
+          // 2. Deshabilitamos la opción de efectivo en la lista
+          const cashOption = paymentMethod.querySelector(
+            'option[value="cash"]'
+          );
+          if (cashOption) cashOption.disabled = true;
+
+          // 3. Mostramos el aviso
+          paymentNotice.style.display = "block";
+        } else {
+          // 1. Volvemos a habilitar la opción de efectivo
+          const cashOption = paymentMethod.querySelector(
+            'option[value="cash"]'
+          );
+          if (cashOption) cashOption.disabled = false;
+
+          // 2. Ocultamos el aviso
+          paymentNotice.style.display = "none";
+        }
+      }
+
+      // Escuchamos el cambio en el selector de entrega
+      deliveryMode.addEventListener("change", updatePaymentLogic);
+
+      // Lo ejecutamos una vez al cargar por si el navegador recordó la selección anterior
+      document.addEventListener("DOMContentLoaded", updatePaymentLogic);
     </script>
 
     <div id="toast-container"></div>
